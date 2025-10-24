@@ -1,23 +1,10 @@
 
 local va    = vim.api
 local vfn   = vim.fn
-local ts    = vim.treesitter
-   -- local vauto = vim.api.nvim_create_autocmd
--- local vc    = vim.cmd
+-- local ts    = vim.treesitter
 
--- local function concat_table (...)
---   local new_table = {}
---   for _,t in ipairs({...}) do
---     if (type(t) == table) then
---       for _,v in concat_table(t) do
---         table.insert(new_table, v)
---       end
---     else
---       table.insert(new_table, t)
---     end
---   end
---   return new_table
--- end
+-- local vauto = va.nvim_create_autocmd
+-- local vc    = vim.cmd
 
 function EnvVarCheck(var)
   local e = os.getenv(var)
@@ -29,9 +16,9 @@ function EnvVarCheck(var)
 end
 
 function ClipBoardExit()
-    if EnvVarCheck("$DISPLAY") and va.executable("xclip") then
-        va.system('xclip -selection clipboard -i -r <<< ', va.getreg('a'))
-    end
+  if EnvVarCheck("$DISPLAY") and va.executable("xclip") then
+    va.system('xclip -selection clipboard -i -r <<< ', va.getreg('a'))
+  end
 end
 
 function Contains(t, check_value, callback)
@@ -45,15 +32,14 @@ function Contains(t, check_value, callback)
 end
 
 function Cycle(check_var, list, func)
-  local o = vim.api.nvim_get_option(check_var)
+  local o = va.nvim_get_option(check_var)
   if not func then
-    func = (function(l) vim.api.nvim_set_option(check_var, l[2]) return l[1] end)
+    func = (function(l) va.nvim_set_option_value(check_var, l[2], { scope = "global"}) return l[1] end)
   end
   if #list <= 0 then return end
   for i,v in ipairs(list) do
     if v[2] == o then
-      local j = (i) % (#list)+1
-      return func(list[j])
+      return func(list[(i) % (#list)+1])
     end
   end
   return func(list[1])
@@ -67,6 +53,9 @@ function CorrectColors()
       vim.cmd("hi " .. comm .. " " .. table.concat(hl_table, " "))
     end
   end
+  va.nvim_set_option_value( "winhighlight",
+    "NormalNC:WindowInactive",
+    { scope = "global" })
   Main("", vim.g.my_highlight)
 end
 
@@ -86,38 +75,36 @@ function AutoSessionStatusLine()
   return require("auto-session.lib").current_session_name(true)
 end
 
--- function ReloadConfig()
---   for i, v in pairs(package.loaded) do
---     print(i, vim.inspect(package.loaded))
---   end
--- end
+function GetNested(table, keys) 
+  local current = table
+  for i =1, #keys do
+    if keys[i] == nil then
+      return false
+    end
+    current = current[key]
+  end
+  return current
+end
+function IsEmpty(table)
+  return next(table) == nil
+end
+function ToggleHighlight(highlights)
+  local seton = IsEmpty( va.nvim_get_hl(0, { name = highlights[1] }) )
+  for _,c in pairs(highlights) do
+    if seton then
+      if vfn.exists("g:toggle_value_"..c) == 0 then
+        vim.notify("Variable, toggle_value__"..c..", doesn't exist.", "error", {
+          title="ToggeHighlight(highlights)"
+        })
+      else
+        va.nvim_set_hl(0, c, vim.api.nvim_get_var("toggle_value_"..c))
+      end
+    else
+      va.nvim_set_var("toggle_value__"..c, va.nvim_get_hl(0, {name = highlights[1]}) )
+      va.nvim_set_hl(0, c, {})
+    end
+  end
+end
 
-
--- function CommentExpr(lnum)
---   if not lnum then
---     return 0
---   end
--- end
-
--- function SearchMyMappings(s)
--- end
--- function SubAllBuffs(s)
---   vim.api.nvim_set_option_value("autowriteall", "true")
--- end
--- function SearchAllBuffs(s)
---   -- vim.cmd.buf
---   -- vim.cmd.
--- end
-
--- function Format(t)
--- end
-
--- function SearchMaps(search_string)
---   for i,v in pairs(ALL_MAPPINGS) do
---   end
--- end
--- function SearchBuffers(s)
---   vc( {cmd="vimgrep", args={s, "##"} } )
--- end
 
 

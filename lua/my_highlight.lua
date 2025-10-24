@@ -1,35 +1,42 @@
-
+-- hi 
+-- hi InactiveWindow ctermbg=233 guibg=#3a3a3a
 vim.g.my_highlight = {
   [""] = {
-    ["Comment"]  = { "ctermbg=blue",  "ctermfg=black", "gui=italic",    "guibg=NONE",      "guifg=#225FEF", },
+    -- ["Comment"]  = { "ctermbg=blue",  "ctermfg=black", "gui=NONE",    "guibg=NONE",      "guifg=#1144AA", },
     ["ModeMsg"]  = { "cterm=NONE",    "gui=NONE",      "guibg=#009900", "guifg=#000000", },
     ["SpellBad"] = { "gui=undercurl", "guibg=NONE",    "guifg=#AAAAAA", "guisp=#FF0000", },
     ["clear"]    = { "@lsp.mod",},
-    ["ColorColumn"]     = { "gui=NONE",      "guibg=#222222", "guifg=NONE",      },
-    ["EndOfBuffer"]     = { "gui=NONE",      "guibg=NONE",    "guifg=#333333",   },
+    ["ColorColumn"]     = { "gui=underdotted",      "guibg=#222222", "guifg=#999999",      },
+    -- ["EndOfBuffer"]     = { "gui=NONE",      "guibg=NONE",    "guifg=#333333",   },
     ["ExtraWhiteSpace"] = { "gui=NONE",      "guibg=#0099FF", "guifg=NONE",      },
-    ["FoldColumn"]      = { "gui=italic",    "guibg=NONE",    "guifg=#00FF00",   },
-    ["Folded"]          = { "gui=italic",    "guibg=#777777", "guifg=#000000",   },
+    ["FoldColumn"]      = { "gui=NONE",      "guibg=NONE",    "guifg=#00FF00",   },
+    ["Folded"]          = { "gui=NONE",      "guibg=#222222", "guifg=#999999",   },
     ["HLspStatus"]      = { "gui=NONE",      "guibg=NONE",    "guifg=#00FF00",   },
     ["HStatusFullFile"] = { "gui=NONE",      "guibg=NONE",    "guifg=#999999",   },
     ["IncSearch"]       = { "gui=NONE",      "guibg=#FF0000", "guifg=#000000",   },
-    ["LineNr"]          = { "gui=NONE",      "guibg=#000000", "guifg=#CCCCCC",   },
-    ["LineNrAbove"]     = { "gui=NONE",      "guibg=#000000", "guifg=#00AAFF",   },
+    ["LineNrAbove"]     = { "gui=NONE",      "guibg=NONE",    "guifg=#990099",   },
+    ["LineNr"]          = { "gui=NONE",      "guibg=NONE",    "guifg=#999999",   },
     ["MatchParen"]      = { "gui=NONE",      "guibg=#AAAAAA", "guifg=#000000",   },
-    ["Normal"]          = { "gui=NONE",      "guibg=NONE",    "guifg=#D0D0D0",   },
+    -- ["Normal"]          = { "gui=NONE",      "guibg=NONE",    "guifg=#D0D0D0",   },
     ["Search"]          = { "gui=NONE",      "guibg=#FF00FF", "guifg=#000000",   },
     ["SignColumn"]      = { "gui=NONE",      "guibg=NONE",    "guifg=NONE",      },
     ["TabLine"]         = { "gui=NONE",      "guibg=NONE",    "guifg=#999999",   },
     ["TabLineSel"]      = { "gui=NONE",      "guibg=NONE",    "guifg=#00FF00",   },
     ["TermCursor"]      = { "gui=NONE",      "guibg=NONE",    "guifg=#00AA00",   },
-    ["WinSeparator"]    = { "gui=NONE",      "guibg=NONE",    "guifg=#009900",   },
+    ["WinSeparator"]    = { "gui=NONE",      "guibg=NONE",    "guifg=#FFFF00",   },
     ["lCursor"]         = { "gui=NONE",      "guibg=NONE",    "guifg=NONE",      },
+    ["DiagnosticUnderlineWarn"] = { "gui=underdouble", "guisp=#999999" },
+    ["DiagnosticUnderlineError"] = {  "gui=underdouble", "guisp=#FF0000" },
     ["Function"]        = { "gui=NONE" },
     ["Keyword"]         = { "gui=NONE" },
     -- Tree Sitter --
     ["TSCurrentScope"]  = { "gui=NONE", "guibg=#090909" },
   },
-
+  -- For use with set
+  ["Window"] = {
+    ["Active"]   = { "guibg=NONE" },
+    ["Inactive"] = { "guibg=#1a1a1a" },
+  },
   ["StatusLine"] = {
     [""]         = { "gui=NONE",      "guibg=NONE",    "guifg=#229922", },
     ["NC"]       = { "gui=NONE",      "guibg=NONE",    "guifg=#999999", },
@@ -45,9 +52,9 @@ vim.g.my_highlight = {
   },
 
   ["CursorLine"] = {
-    [""]     = { "gui=BOLD", "guibg=#101010", "guifg=NONE", },
-    ["Nr"]   = { "gui=NONE",      "guibg=NONE",    "guifg=#FFFF00", },
-    ["Sign"] = { "gui=NONE",      "guibg=#000022", "guifg=#000000", },
+    [""]     = { "gui=bold,underline", "guisp=#444444", "guibg=#000000", "guifg=NONE",    },
+    ["Nr"]   = { "gui=NONE", "guibg=#111111", "guifg=#FF9900", },
+    ["Sign"] = { "gui=NONE", "guibg=#000000", "guifg=#000000", },
   },
 
   ["Diagnostic"] = {
@@ -65,10 +72,10 @@ vim.g.my_highlight = {
     [""]           = { "guibg=#010101", "guifg=#22FF22",            },
     ["Normal"]     = { "guibg=#010101", "guifg=#00FF00",            },
     ["Float"]      = { "guibg=#010101",                             },
-    -- ["Group"]      = { "guibg=NONE",                                },
+    ["Border"]     = { "guibg=NONE", "guifg=#444444",               },
+    ["Group"]      = { "guibg=NONE", "guifg=#999999",               },
     -- ["Separator"]  = { "guibg=NONE",                                },
     -- ["Desc"]       = { "guibg=NONE",                                },
-    -- ["Border"]     = { "guibg=NONE", "guifg=#777777",               },
     -- ["Value"]      = { "gui=italic", "guibg=NONE", "guifg=#777777", },
   },
 

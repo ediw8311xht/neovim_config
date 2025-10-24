@@ -1,7 +1,7 @@
 
 local home  = vim.env.HOME
 local va    = vim.api
-local vfn   = vim.fn
+-- local vfn   = vim.fn
 local vauto = vim.api.nvim_create_autocmd
 local vc    = vim.cmd
 
@@ -10,9 +10,7 @@ LanguageSpecificDir = ConfigDir .. "/language_specific"
 TemplateDir = home .. "/.config/nvim/language_specific/templates"
 MaxLinesCMP = 2000
 
----------------------------------
--- Disable CMP For Large Files --
----------------------------------
+------------------------------Disable_CMP_For_Large_Files
 vauto({ "BufEnter", "BufWinEnter" }, { pattern = { "*" },
   callback = function(args)
     if va.nvim_buf_line_count(args.buf) > MaxLinesCMP then
@@ -21,15 +19,12 @@ vauto({ "BufEnter", "BufWinEnter" }, { pattern = { "*" },
   end
 })
 
+---------------------------------------Check-File-Updates
 vauto({ "FocusGained", "CursorHold", "CursorHoldI" }, { pattern = { "*" },
-  callback = function()
-    vc("silent! checktime")
-  end
+  callback = function() vc("silent! checktime") end
 })
 
--------------------------
--- BufNewFile, BufRead --
--------------------------
+------------------------------------------Buffer-Specific
 local function bufnew_bufread(glob, comms)
   vauto({ "BufNewFile", "BufRead" }, { pattern = glob,
     callback = function() for _,com in ipairs(comms) do vc(com) end end
@@ -42,9 +37,7 @@ local function bufnr_add(globcomms)
   end
 end
 
--------------------------
--- Templates ------------
--------------------------
+------------------------------------------------Templates
 local function template_add(glob, template_file)
   vauto({ "BufNewFile" }, { pattern = glob,
     callback = function()
@@ -61,50 +54,40 @@ local function template_add_e(exts)
   end
 end
 
--------------------------
--- VimLeave -------------
--------------------------
+------------------------------------------------VimLeave 
 vauto({ "VimLeave" }, { pattern = "*",
   callback = function() ClipBoardExit() end
 })
 
--------------------------
--- TermOpen -------------
--------------------------
+------------------------------------------------TermOpen
 vauto({ "TermOpen" }, { pattern = "*",
   callback = function() vc("setlocal statusline=%{b:term_title}") end
 })
 
-------------------------
--- FileType Formatting --
--------------------------
+-------------------------------------FileType_Formatting
 vauto({ "FileType" }, { pattern = "*",
   callback = function() vc("setlocal formatoptions-=c formatoptions-=r formatoptions-=o") end
 })
 
 
--------------------------
--- YankedText -----------
--------------------------
---
--- -- For use with MapCommandsToReg
--- vim.g.reg_filter_map = {
---   [ 'normal' ] = { 'd', 'c', 'D', 'C' },
---   [ 'visual' ] = { 'd', 'c', 'D', 'C', 'p', 'P' },
--- }
--- function MapCommandsToReg(event)
---   if event['regname'] ~= "" then
---     return
---   end
---   local reg = vim.g.reg_filter_map['normal'][event['operator']]
---   -- if event['visual'] and 
---   -- else
---   -- end
---   -- if Contains(vim.g.reg_filter_map, event["operator"]) then
---   --   print(vim.inspect(event))
---   -- end
--- end
-
+----------------------------------------------YankedText
+ -- -- For use with MapCommandsToReg
+ -- vim.g.reg_filter_map = {
+ --   [ 'normal' ] = { 'd', 'c', 'D', 'C' },
+ --   [ 'visual' ] = { 'd', 'c', 'D', 'C', 'p', 'P' },
+ -- }
+ -- function MapCommandsToReg(event)
+ --   if event['regname'] ~= "" then
+ --     return
+ --   end
+ --   local reg = vim.g.reg_filter_map['normal'][event['operator']]
+ --   -- if event['visual'] and 
+ --   -- else
+ --   -- end
+ --   -- if Contains(vim.g.reg_filter_map, event["operator"]) then
+ --   --   print(vim.inspect(event))
+ --   -- end
+ -- end
 vauto({ "TextYankPost" }, {
   pattern = "*",
   callback = function()
@@ -113,9 +96,7 @@ vauto({ "TextYankPost" }, {
   end
 })
 
--------------------------
--- EXTENSION SPECIFIC ---
--------------------------
+---------------------------------------ExtensionSpecific
 local exts = { "sh", "py", "kalker", "exs", "tex", "ex", "html", "cpp", "md", "lisp", "hs" }
 
 local globcomms = {
@@ -145,4 +126,5 @@ local globcomms = {
 
 template_add_e(exts)
 bufnr_add(globcomms)
+
 

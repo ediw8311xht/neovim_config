@@ -6,7 +6,7 @@ require("my_highlight")
 vim.g.MyDefaultScheme = { 'pop-punk', 'lua CorrectColors()' }
 vim.g.MySchemes = {
     vim.g.MyDefaultScheme ,
-    { 'vividchalk'     ,   "."  },
+    { 'wildcharm'      ,   "."  },
     { 'cyberpunk-neon' ,   "."  },
     { 'eldar'          ,   "."  },
     { 'elflord'        ,   "."  },
@@ -16,10 +16,11 @@ vim.g.MySchemes = {
     { 'peachpuff'      ,   "."  },
     { 'industry'       ,   "."  },
     { 'murphy'         ,   "."  },
+    { 'vividchalk'     ,   "."  },
 }
 
 vim.g.MyColorTable = {
-  { "#010101", "."       },
+  { "NONE",    "."       },
   { "#333333", "."       },
   { "#111111", "."       },
   { "#220000", "."       },
@@ -27,6 +28,7 @@ vim.g.MyColorTable = {
   { "#000022", "."       },
   { "#002244", "#aaawaa" },
   { "NONE",    "."       },
+  { "#010101", "."       },
 }
 
 vim.g.python3_host_prog="/usr/bin/python"

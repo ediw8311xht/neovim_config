@@ -7,6 +7,7 @@ require('mappings')
 require('textobjects')
 -- My own module for using treesitter to navigate stuff
 require("my_treesitter_module").create_commands()
+-- Configs
 require('config/config_cmp')
 require('config/config_lsp')
 require('config/config_elixir')
@@ -25,8 +26,6 @@ auto_session.setup({
   auto_save = false,
   suppressed_dirs = { "${HOME}/", "${HOME}/bin/" },
 })
-
-
 
 require('rainbow-delimiters.setup').setup {
     strategy = {

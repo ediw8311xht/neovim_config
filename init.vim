@@ -31,6 +31,6 @@ lua require('base')
 "                                   #-IGNORE-#
 "lua require('config_treesitter')   #-IGNORE-#
 
-call nvim_set_option("statusline", g:my_statuslines[0][1])
+call nvim_set_option_value("statusline", g:my_statuslines[0][1], {})
 colorscheme pop-punk
 lua CorrectColors()

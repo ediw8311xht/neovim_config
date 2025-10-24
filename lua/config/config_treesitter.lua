@@ -2,7 +2,7 @@
 -- DisabledLangs = { "txt", "help", "vimdoc", "vim", "doc", "man", "plantuml", "latex" }
 -- DisabledLangs = {}
 local treesitter = require('nvim-treesitter')
---
+  --
   --   -- MINE --
   -- -- disable = function(lang, buf)
   -- --     if Contains(DisabledLangs, lang) then

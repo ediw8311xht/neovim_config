@@ -11,6 +11,7 @@ which_key.setup({
     {"m"        , mode = "nixostc"},
     {"M"        , mode = "nixostc"},
     {"<leader>" , mode = "vnixostc"},
+    {"<auto>"    , mode = "i" },
   },
   -- sort = { "group", "local", "alphanum" },
   sort = { "alphanum" },
