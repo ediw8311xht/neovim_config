@@ -75,16 +75,16 @@ function AutoSessionStatusLine()
   return require("auto-session.lib").current_session_name(true)
 end
 
-function GetNested(table, keys) 
-  local current = table
-  for i =1, #keys do
-    if keys[i] == nil then
-      return false
-    end
-    current = current[key]
-  end
-  return current
-end
+-- function GetNested(table, keys)
+--   local current = table
+--   for i =1, #keys do
+--     if keys[i] == nil then
+--       return false
+--     end
+--     current = current[key]
+--   end
+--   return current
+-- end
 function IsEmpty(table)
   return next(table) == nil
 end
@@ -92,12 +92,12 @@ function ToggleHighlight(highlights)
   local seton = IsEmpty( va.nvim_get_hl(0, { name = highlights[1] }) )
   for _,c in pairs(highlights) do
     if seton then
-      if vfn.exists("g:toggle_value_"..c) == 0 then
+      if vfn.exists("g:toggle_value__"..c) == 0 then
         vim.notify("Variable, toggle_value__"..c..", doesn't exist.", "error", {
           title="ToggeHighlight(highlights)"
         })
       else
-        va.nvim_set_hl(0, c, vim.api.nvim_get_var("toggle_value_"..c))
+        va.nvim_set_hl(0, c, vim.api.nvim_get_var("toggle_value__"..c))
       end
     else
       va.nvim_set_var("toggle_value__"..c, va.nvim_get_hl(0, {name = highlights[1]}) )

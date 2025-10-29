@@ -2,7 +2,7 @@
 -- hi InactiveWindow ctermbg=233 guibg=#3a3a3a
 vim.g.my_highlight = {
   [""] = {
-    -- ["Comment"]  = { "ctermbg=blue",  "ctermfg=black", "gui=NONE",    "guibg=NONE",      "guifg=#1144AA", },
+    -- ["Comment"]  = { "gui=ITALIC",    "guibg=NONE",      "guifg=#708081", },
     ["ModeMsg"]  = { "cterm=NONE",    "gui=NONE",      "guibg=#009900", "guifg=#000000", },
     ["SpellBad"] = { "gui=undercurl", "guibg=NONE",    "guifg=#AAAAAA", "guisp=#FF0000", },
     ["clear"]    = { "@lsp.mod",},
@@ -52,7 +52,7 @@ vim.g.my_highlight = {
   },
 
   ["CursorLine"] = {
-    [""]     = { "gui=bold,underline", "guisp=#444444", "guibg=#000000", "guifg=NONE",    },
+    [""]     = { "gui=underline", "guisp=#444444", "guibg=#000000", "guifg=NONE",    },
     ["Nr"]   = { "gui=NONE", "guibg=#111111", "guifg=#FF9900", },
     ["Sign"] = { "gui=NONE", "guibg=#000000", "guifg=#000000", },
   },
@@ -69,13 +69,14 @@ vim.g.my_highlight = {
   },
 
   ["WhichKey"] = {
-    [""]           = { "guibg=#010101", "guifg=#22FF22",            },
-    ["Normal"]     = { "guibg=#010101", "guifg=#00FF00",            },
-    ["Float"]      = { "guibg=#010101",                             },
-    ["Border"]     = { "guibg=NONE", "guifg=#444444",               },
-    ["Group"]      = { "guibg=NONE", "guifg=#999999",               },
-    -- ["Separator"]  = { "guibg=NONE",                                },
-    -- ["Desc"]       = { "guibg=NONE",                                },
+    ["Title"]      = { "guibg=#010101" ,   "guifg=#774400" ,           },
+    [""]           = { "guibg=#010101" ,   "guifg=#229922" ,           },
+    ["Normal"]     = { "guibg=#010101" ,   "guifg=#119911" ,           },
+    ["Float"]      = { "guibg=#010101" ,                               },
+    ["Border"]     = { "guibg=NONE"    ,   "guifg=#444444" ,           },
+    ["Group"]      = { "guibg=#777777" ,   "guifg=#000000" ,           },
+    ["Separator"]  = { "guibg=#000000" ,   "guifg=#0099FF" ,           },
+    ["Desc"]       = { "guibg=#000000" ,   "guifg=#AAAAAA" ,           },
     -- ["Value"]      = { "gui=italic", "guibg=NONE", "guifg=#777777", },
   },
 
@@ -90,12 +91,12 @@ vim.g.my_highlight = {
     },
   },
   ["RainbowDelimiter"] = {
-    [ '1' ] = { "gui=ITALIC", "guifg=#E6194B", }, -- Red
-    [ '2' ] = { "gui=ITALIC", "guifg=#F58231", }, -- Orange
-    [ '3' ] = { "gui=ITALIC", "guifg=#FFE119", }, -- Yellow
-    [ '4' ] = { "gui=ITALIC", "guifg=#3CB44B", }, -- Green
-    [ '5' ] = { "gui=ITALIC", "guifg=#4363D8", }, -- Blue
-    [ '6' ] = { "gui=ITALIC", "guifg=#911EB4", }, -- Purple
-    [ '7' ] = { "gui=ITALIC", "guifg=#F032E6", }, -- Magenta
+    [ '1' ] = { "gui=NONE", "guifg=#E6194B", }, -- Red
+    [ '2' ] = { "gui=NONE", "guifg=#F58231", }, -- Orange
+    [ '3' ] = { "gui=NONE", "guifg=#FFE119", }, -- Yellow
+    [ '4' ] = { "gui=NONE", "guifg=#3CB44B", }, -- Green
+    [ '5' ] = { "gui=NONE", "guifg=#4363D8", }, -- Blue
+    [ '6' ] = { "gui=NONE", "guifg=#911EB4", }, -- Purple
+    [ '7' ] = { "gui=NONE", "guifg=#F032E6", }, -- Magenta
   }
 }

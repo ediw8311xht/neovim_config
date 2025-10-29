@@ -27,7 +27,9 @@ vauto({ "FocusGained", "CursorHold", "CursorHoldI" }, { pattern = { "*" },
 ------------------------------------------Buffer-Specific
 local function bufnew_bufread(glob, comms)
   vauto({ "BufNewFile", "BufRead" }, { pattern = glob,
-    callback = function() for _,com in ipairs(comms) do vc(com) end end
+    callback = function() for _,com in ipairs(comms) do vc(com)
+    end
+  end
   })
 end
 

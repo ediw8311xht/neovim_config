@@ -7,7 +7,7 @@ filetype plugin on
 syntax enable
 "set tags=$HOME/.config/.ctags
 set title
-set shada=!,'500,<200,:100,s10,h
+set shada=!,'500,<2000,:200,s100,h
 set termguicolors
 set autoread
 set nocindent

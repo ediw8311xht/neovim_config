@@ -13,6 +13,8 @@
 "<==============================================================================>
 "<==============================================================================>
 
+"call before so plugins/settings don't mess up things
+lua require("autocmd")
 source $XDG_CONFIG_HOME/nvim/vim/settings.vim
 source $XDG_CONFIG_HOME/nvim/vim/slimv_settings.vim
 source $XDG_CONFIG_HOME/nvim/vim/plugins.vim

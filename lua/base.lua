@@ -1,6 +1,5 @@
 
 -- my stuff
-require('autocmd')
 require('variables')
 require('functions')
 require('mappings')
