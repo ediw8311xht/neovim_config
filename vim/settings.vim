@@ -89,3 +89,12 @@ let g:vimtex_view_method='zathura'
 let g:NERDTreeHijackNetrw = 0 " Add this line if you use NERDTree
 let g:lf_replace_netrw = 1
 
+lua <<EOF
+    vim.filetype.add({
+        extension = {
+            ['kitty-session'] = 'kitty-session',
+            [ "md" ]          = "markdown",
+        }
+    })
+EOF
+

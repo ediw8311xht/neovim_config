@@ -86,88 +86,89 @@ local function template_add(glob, template_file)
       vc("silent w")
       vc("silent !chmod 700 %")
     end})
+end
+
+local function template_add_e(exts)
+  for _,ext in ipairs(exts) do
+    template_add("*." .. ext, "/template." .. ext)
   end
+end
 
-  local function template_add_e(exts)
-    for _,ext in ipairs(exts) do
-      template_add("*." .. ext, "/template." .. ext)
-    end
+------------------------------------------------VimLeave
+vauto({ "VimLeave" }, {
+  pattern = "*",
+  callback = function() ClipBoardExit() end
+})
+
+------------------------------------------------TermOpen
+vauto({ "TermOpen" }, {
+  pattern = "*",
+  callback = function() vc("setlocal statusline=%{b:term_title}") end
+})
+
+-------------------------------------FileType_Formatting
+vauto({ "FileType" }, {
+  pattern = "*",
+  callback = function() vc("setlocal formatoptions-=c formatoptions-=r formatoptions-=o") end
+})
+vauto({"FileType"}, {
+  pattern = "help",
+  command = "wincmd R",
+})
+
+----------------------------------------------YankedText
+-- -- For use with MapCommandsToReg
+-- vim.g.reg_filter_map = {
+  --   [ 'normal' ] = { 'd', 'c', 'D', 'C' },
+  --   [ 'visual' ] = { 'd', 'c', 'D', 'C', 'p', 'P' },
+  -- }
+  -- function MapCommandsToReg(event)
+    --   if event['regname'] ~= "" then
+    --     return
+    --   end
+    --   local reg = vim.g.reg_filter_map['normal'][event['operator']]
+    --   -- if event['visual'] and
+    --   -- else
+    --   -- end
+    --   -- if Contains(vim.g.reg_filter_map, event["operator"]) then
+    --   --   print(vim.inspect(event))
+    --   -- end
+    -- end
+vauto({ "TextYankPost" }, {
+  pattern = "*",
+  callback = function()
+    vim.hl.on_yank( { higroup="Visual", timeout=300 } )
+    -- MapCommandsToReg(vim.v.event)
   end
+})
 
-  ------------------------------------------------VimLeave
-  vauto({ "VimLeave" }, {
-    pattern = "*",
-    callback = function() ClipBoardExit() end
-  })
+---------------------------------------ExtensionSpecific
+local exts = { "sh", "py", "kalker", "exs", "tex", "ex", "html", "cpp", "md", "lisp", "hs" }
 
-  ------------------------------------------------TermOpen
-  vauto({ "TermOpen" }, {
-    pattern = "*",
-    callback = function() vc("setlocal statusline=%{b:term_title}") end
-  })
+local globcomms = {
+  ---- Syntax ----
+  [ home .. "/bashrc_files/*" ]              = { "setfiletype bash"      } ,
+  [ "*.sh" ]                                 = { "setfiletype bash"      } ,
+  [ home .. "/.config/polybar/*.ini" ]       = { "setfiletype dosini"    } ,
+  [ home .. "/.config/polybar/*/*.ini" ]     = { "setfiletype dosini"    } ,
+  [ "*.kalker" ]                             = { "setfiletype kalker"    } ,
+  [ home .. "/.config/i3/*" ]                = { "setfiletype i3"        } ,
+  [ "*.ex,*.exs" ]                           = { "setfiletype elixir"    } ,
+  [ "*.schema" ]                             = { "setfiletype sql"       } ,
+  [ home .. "/.config/zathura/*" ]           = { "set syntax=zathurarc"  } ,
+  ---- Special ----
+  [ home .. "/.bashrc"] = {
+    "setfiletype bash",
+    "source ${HOME}/.config/nvim/language_specific/bashrc.vim"
+  },
+  [ home .. "/.config/joplin-desktop/userstyle.css"] = {
+    "source ${HOME}/.config/nvim/language_specific/joplin_userstyle.vim"
+  },
+  [ home .. "/TEST/QUICK/*.cpp" ] = {
+    "source" .. LanguageSpecificDir .. "/quick_cpp.vim"
+  },
+}
 
-  -------------------------------------FileType_Formatting
-  vauto({ "FileType" }, {
-    pattern = "*",
-    callback = function() vc("setlocal formatoptions-=c formatoptions-=r formatoptions-=o") end
-  })
-
-
-  ----------------------------------------------YankedText
-  -- -- For use with MapCommandsToReg
-  -- vim.g.reg_filter_map = {
-    --   [ 'normal' ] = { 'd', 'c', 'D', 'C' },
-    --   [ 'visual' ] = { 'd', 'c', 'D', 'C', 'p', 'P' },
-    -- }
-    -- function MapCommandsToReg(event)
-      --   if event['regname'] ~= "" then
-      --     return
-      --   end
-      --   local reg = vim.g.reg_filter_map['normal'][event['operator']]
-      --   -- if event['visual'] and
-      --   -- else
-      --   -- end
-      --   -- if Contains(vim.g.reg_filter_map, event["operator"]) then
-      --   --   print(vim.inspect(event))
-      --   -- end
-      -- end
-      vauto({ "TextYankPost" }, {
-        pattern = "*",
-        callback = function()
-          vim.hl.on_yank( { higroup="Visual", timeout=300 } )
-          -- MapCommandsToReg(vim.v.event)
-        end
-      })
-
-      ---------------------------------------ExtensionSpecific
-      local exts = { "sh", "py", "kalker", "exs", "tex", "ex", "html", "cpp", "md", "lisp", "hs" }
-
-      local globcomms = {
-        ---- Syntax ----
-        [ home .. "/bashrc_files/*" ]              = { "setfiletype bash"      } ,
-        [ "*.sh" ]                                 = { "setfiletype bash"      } ,
-        [ home .. "/.config/polybar/*.ini" ]       = { "setfiletype dosini"    } ,
-        [ home .. "/.config/polybar/*/*.ini" ]     = { "setfiletype dosini"    } ,
-        [ "*.kalker" ]                             = { "setfiletype kalker"    } ,
-        [ home .. "/.config/i3/*" ]                = { "setfiletype i3"        } ,
-        [ "*.ex,*.exs" ]                           = { "setfiletype elixir"    } ,
-        [ "*.schema" ]                             = { "setfiletype sql"       } ,
-        [ "*.md" ]                                 = { "setfiletype markdown"  } ,
-        [ home .. "/.config/zathura/*" ]           = { "set syntax=zathurarc"  } ,
-        ---- Special ----
-        [ home .. "/.bashrc"] = {
-          "setfiletype bash",
-          "source ${HOME}/.config/nvim/language_specific/bashrc.vim"
-        },
-        [ home .. "/.config/joplin-desktop/userstyle.css"] = {
-          "source ${HOME}/.config/nvim/language_specific/joplin_userstyle.vim"
-        },
-        [ home .. "/TEST/QUICK/*.cpp" ] = {
-          "source" .. LanguageSpecificDir .. "/quick_cpp.vim"
-        },
-      }
-
-      template_add_e(exts)
-      bufnr_add(globcomms)
-
+template_add_e(exts)
+bufnr_add(globcomms)
 

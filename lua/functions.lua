@@ -156,7 +156,6 @@ function LspDocumentHighlight()
     -- https://github.com/neovim/neovim/issues/18939
   for _,v in ipairs(vim.lsp.get_clients({bufnr=0})) do
     if v.server_capabilities.documentHighlightProvider then
-      print("HI")
       vim.lsp.buf.document_highlight()
       return
     end
