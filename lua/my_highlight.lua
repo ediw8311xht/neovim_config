@@ -1,8 +1,8 @@
--- hi 
--- hi InactiveWindow ctermbg=233 guibg=#3a3a3a
+
+-- # Highlighting that runs on starting vim and with CorrectColors.
 vim.g.my_highlight = {
   [""] = {
-    -- ["Comment"]  = { "gui=ITALIC",    "guibg=NONE",      "guifg=#708081", },
+    ["Comment"]  = { "gui=NONE",    "guibg=NONE",      "guifg=#005faf", },
     ["ModeMsg"]  = { "cterm=NONE",    "gui=NONE",      "guibg=#009900", "guifg=#000000", },
     ["SpellBad"] = { "gui=undercurl", "guibg=NONE",    "guifg=#AAAAAA", "guisp=#FF0000", },
     ["clear"]    = { "@lsp.mod",},
@@ -64,6 +64,11 @@ vim.g.my_highlight = {
     ["Warn"]     = { "guifg=#000000", "guibg=#AA8500", },
   },
 
+  ["LspReference"] = {
+    ["Text"] =  { 'gui=REVERSE' }, -- , 'guibg=#009999' },
+    ["Read"] =  { 'gui=REVERSE' }, -- , 'guibg=#009999' },
+    ["Target"] =  { 'gui=REVERSE' }, -- , 'guibg=#009999' },
+  },
   ["GitSigns"] = {
     ["Add"] = { "guifg=#00DD00", },
   },

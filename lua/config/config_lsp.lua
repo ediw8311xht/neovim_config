@@ -6,7 +6,6 @@ local cmp_capabilities  = require('cmp_nvim_lsp').default_capabilities()
 local actions_preview   = require('actions-preview')
 local lang_servers      = { 'cssls', 'html', 'jsonls', 'ts_ls', 'vimls', 'eslint', 'pyright', 'tailwindcss', 'lua_ls', 'bashls', 'clangd', 'hls' }
 
--- vim.lsp.enable('marksman')
 actions_preview.setup({})
 
 -- vim.lsp.config('*', {
@@ -83,7 +82,7 @@ lspconfig('clangd', {
   filetypes = {'c', 'cpp'},
   init_options = {
     fallbackFlags = {
-      -- '--std=gnu++20',
+      '--std=gnu++23',
       -- '-DMAGICKCORE_HDRI_ENABLE=1',
     }
   }
@@ -100,8 +99,6 @@ for _,v in ipairs(lang_servers) do
   vim.lsp.enable(v)
 end
 -- lspconfig.jedi_language_server.setup( { capabilities = cmp_capabilities , })
--- lspconfig.marksman.setup({
--- })
 -- lspconfig.pyright.setup{
 --   on_attach = lsp_status.on_attach,
 --   capabilities = cmp_capabilities,

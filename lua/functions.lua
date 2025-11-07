@@ -106,5 +106,59 @@ function ToggleHighlight(highlights)
   end
 end
 
+function KeyMapSetter(map, pre, buffer_only, with_which_key)
+  local which_key = require("which-key")
+  for mode, mode_map in pairs(map) do
+    for key, tbl in pairs(mode_map) do
+      if with_which_key then which_key.add({ pre .. key, desc = tbl[2], mode = mode }) end
+      vim.keymap.set(mode, pre .. key, tbl[3], { remap = tbl[1], buffer = buffer_only, desc = tbl[2] } )
+    end
+  end
+end
 
+function DeepCopy(value)
+  local deep_copy = {}
+  if type(value) ~= table then
+    return value
+  end
+  for k,v in table do
+    deep_copy[DeepCopy(k)] = DeepCopy(v)
+  end
+  return deep_copy
+end
 
+function TableDifference(table_a, table_b, in_place)
+  -- allow editing in place or passing new table
+  local output = (in_place ~= nil) and table_a or DeepCopy(table_a)
+  for i,j in pairs(table_b) do
+    output[i] = j
+  end
+  return output
+end
+
+vim.g.my_floating_preview_options = {
+  border = 'rounded',
+  max_height = 90,
+  max_width = 90,
+  offset_x = 20,
+}
+local original_floating_preview = vim.lsp.util.open_floating_preview
+function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
+  local n_opts = TableDifference(vim.g.my_floating_preview_options, opts)
+  return original_floating_preview(contents, syntax, n_opts, ...)
+end
+
+function LspDocumentHighlight()
+  local ignore_modes = { "i", "niI", "niR", "niV", "nt" }
+  vim.lsp.buf.clear_references()
+    -- if in vim.lsp.get_active_clients method="" filter doesn't work for some reason....
+    -- oh wait they are just retards
+    -- https://github.com/neovim/neovim/issues/18939
+  for _,v in ipairs(vim.lsp.get_clients({bufnr=0})) do
+    if v.server_capabilities.documentHighlightProvider then
+      print("HI")
+      vim.lsp.buf.document_highlight()
+      return
+    end
+  end
+end

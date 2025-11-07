@@ -1,7 +1,7 @@
 
 local home  = vim.env.HOME
 local va    = vim.api
--- local vfn   = vim.fn
+local vfn   = vim.fn
 local vauto = vim.api.nvim_create_autocmd
 local vc    = vim.cmd
 
@@ -11,7 +11,42 @@ TemplateDir = home .. "/.config/nvim/language_specific/templates"
 MaxLinesCMP = 2000
 
 ------------------------------Disable_CMP_For_Large_Files
-vauto({ "BufEnter", "BufWinEnter" }, { pattern = { "*" },
+
+
+-- va.nvim_create_augroup("highlight_symbol_treesitter", { clear = true })
+
+-- function ToggleLspDocumentHighlight()
+--   if vfn.exists("highlight_symbol_treesitter")
+--     vim.g.enabled_lsp_document_highlight = false
+--     vauto({ "CursorMoved" }, {
+--       group = "highlight_symbol_treesitter",
+--       callback = LspDocumentHighlight
+--     })
+--     vauto({"CursorMovedI" }, {
+--       group = "highlight_symbol_treesitter",
+--       callback = function()
+--         vim.lsp.buf.clear_references()
+--       end
+--     })
+--   end
+-- ToggleLspDocumentHighlight()
+
+va.nvim_create_augroup("cursorline_hide_inactive_buffer", { clear = true })
+vauto({ "BufLeave", "WinLeave" }, {
+  group = "cursorline_hide_inactive_buffer",
+  callback = function()
+    vim.opt_local.cursorline = false
+  end
+})
+vauto({ "BufEnter", "WinEnter" }, {
+  group ="cursorline_hide_inactive_buffer",
+  callback = function()
+    vim.opt_local.cursorline = true
+  end
+})
+
+vauto({ "BufEnter", "BufWinEnter" }, {
+  pattern = { "*" },
   callback = function(args)
     if va.nvim_buf_line_count(args.buf) > MaxLinesCMP then
       require('cmp').setup.buffer( { enabled = false } )
@@ -20,17 +55,19 @@ vauto({ "BufEnter", "BufWinEnter" }, { pattern = { "*" },
 })
 
 ---------------------------------------Check-File-Updates
-vauto({ "FocusGained", "CursorHold", "CursorHoldI" }, { pattern = { "*" },
+vauto({ "FocusGained", "CursorHold", "CursorHoldI" }, {
+  pattern = { "*" },
   callback = function() vc("silent! checktime") end
 })
 
 ------------------------------------------Buffer-Specific
 local function bufnew_bufread(glob, comms)
-  vauto({ "BufNewFile", "BufRead" }, { pattern = glob,
+  vauto({ "BufNewFile", "BufRead" }, {
+    pattern = glob,
     callback = function() for _,com in ipairs(comms) do vc(com)
     end
   end
-  })
+})
 end
 
 local function bufnr_add(globcomms)
@@ -41,92 +78,96 @@ end
 
 ------------------------------------------------Templates
 local function template_add(glob, template_file)
-  vauto({ "BufNewFile" }, { pattern = glob,
+  vauto({ "BufNewFile" }, {
+    pattern = glob,
     callback = function()
       local full_path = TemplateDir .. template_file
       vc("keepalt 0read " .. full_path)
       vc("silent w")
       vc("silent !chmod 700 %")
     end})
-end
-
-local function template_add_e(exts)
-  for _,ext in ipairs(exts) do
-    template_add("*." .. ext, "/template." .. ext)
   end
-end
 
-------------------------------------------------VimLeave 
-vauto({ "VimLeave" }, { pattern = "*",
-  callback = function() ClipBoardExit() end
-})
-
-------------------------------------------------TermOpen
-vauto({ "TermOpen" }, { pattern = "*",
-  callback = function() vc("setlocal statusline=%{b:term_title}") end
-})
-
--------------------------------------FileType_Formatting
-vauto({ "FileType" }, { pattern = "*",
-  callback = function() vc("setlocal formatoptions-=c formatoptions-=r formatoptions-=o") end
-})
-
-
-----------------------------------------------YankedText
- -- -- For use with MapCommandsToReg
- -- vim.g.reg_filter_map = {
- --   [ 'normal' ] = { 'd', 'c', 'D', 'C' },
- --   [ 'visual' ] = { 'd', 'c', 'D', 'C', 'p', 'P' },
- -- }
- -- function MapCommandsToReg(event)
- --   if event['regname'] ~= "" then
- --     return
- --   end
- --   local reg = vim.g.reg_filter_map['normal'][event['operator']]
- --   -- if event['visual'] and 
- --   -- else
- --   -- end
- --   -- if Contains(vim.g.reg_filter_map, event["operator"]) then
- --   --   print(vim.inspect(event))
- --   -- end
- -- end
-vauto({ "TextYankPost" }, {
-  pattern = "*",
-  callback = function()
-    vim.hl.on_yank( { higroup="Visual", timeout=300 } )
-    -- MapCommandsToReg(vim.v.event)
+  local function template_add_e(exts)
+    for _,ext in ipairs(exts) do
+      template_add("*." .. ext, "/template." .. ext)
+    end
   end
-})
 
----------------------------------------ExtensionSpecific
-local exts = { "sh", "py", "kalker", "exs", "tex", "ex", "html", "cpp", "md", "lisp", "hs" }
+  ------------------------------------------------VimLeave
+  vauto({ "VimLeave" }, {
+    pattern = "*",
+    callback = function() ClipBoardExit() end
+  })
 
-local globcomms = {
-  ---- Syntax ----
-  [ home .. "/bashrc_files/*" ]              = { "setfiletype bash"      } ,
-  [ "*.sh" ]                                 = { "setfiletype bash"      } ,
-  [ home .. "/.config/polybar/*.ini" ]       = { "setfiletype dosini"    } ,
-  [ home .. "/.config/polybar/*/*.ini" ]     = { "setfiletype dosini"    } ,
-  [ "*.kalker" ]                             = { "setfiletype kalker"    } ,
-  [ home .. "/.config/i3/*" ]                = { "setfiletype i3"        } ,
-  [ "*.ex,*.exs" ]                           = { "setfiletype elixir"    } ,
-  [ "*.schema" ]                             = { "setfiletype sql"       } ,
-  [ "*.md" ]                                 = { "setfiletype markdown"  } ,
-  [ home .. "/.config/zathura/*" ]           = { "set syntax=zathurarc"  } ,
-  ---- Special ----
-  [ home .. "/.bashrc"] = {
-      "setfiletype bash",
-      "source ${HOME}/.config/nvim/language_specific/bashrc.vim"
-  },
-  [ home .. "/.config/joplin-desktop/userstyle.css"] = {
-      "source ${HOME}/.config/nvim/language_specific/joplin_userstyle.vim"
-  },
-  [ home .. "/TEST/QUICK/*.cpp" ] = {
-      "source" .. LanguageSpecificDir .. "/quick_cpp.vim"
-  },
-}
+  ------------------------------------------------TermOpen
+  vauto({ "TermOpen" }, {
+    pattern = "*",
+    callback = function() vc("setlocal statusline=%{b:term_title}") end
+  })
 
-template_add_e(exts)
-bufnr_add(globcomms)
+  -------------------------------------FileType_Formatting
+  vauto({ "FileType" }, {
+    pattern = "*",
+    callback = function() vc("setlocal formatoptions-=c formatoptions-=r formatoptions-=o") end
+  })
+
+
+  ----------------------------------------------YankedText
+  -- -- For use with MapCommandsToReg
+  -- vim.g.reg_filter_map = {
+    --   [ 'normal' ] = { 'd', 'c', 'D', 'C' },
+    --   [ 'visual' ] = { 'd', 'c', 'D', 'C', 'p', 'P' },
+    -- }
+    -- function MapCommandsToReg(event)
+      --   if event['regname'] ~= "" then
+      --     return
+      --   end
+      --   local reg = vim.g.reg_filter_map['normal'][event['operator']]
+      --   -- if event['visual'] and
+      --   -- else
+      --   -- end
+      --   -- if Contains(vim.g.reg_filter_map, event["operator"]) then
+      --   --   print(vim.inspect(event))
+      --   -- end
+      -- end
+      vauto({ "TextYankPost" }, {
+        pattern = "*",
+        callback = function()
+          vim.hl.on_yank( { higroup="Visual", timeout=300 } )
+          -- MapCommandsToReg(vim.v.event)
+        end
+      })
+
+      ---------------------------------------ExtensionSpecific
+      local exts = { "sh", "py", "kalker", "exs", "tex", "ex", "html", "cpp", "md", "lisp", "hs" }
+
+      local globcomms = {
+        ---- Syntax ----
+        [ home .. "/bashrc_files/*" ]              = { "setfiletype bash"      } ,
+        [ "*.sh" ]                                 = { "setfiletype bash"      } ,
+        [ home .. "/.config/polybar/*.ini" ]       = { "setfiletype dosini"    } ,
+        [ home .. "/.config/polybar/*/*.ini" ]     = { "setfiletype dosini"    } ,
+        [ "*.kalker" ]                             = { "setfiletype kalker"    } ,
+        [ home .. "/.config/i3/*" ]                = { "setfiletype i3"        } ,
+        [ "*.ex,*.exs" ]                           = { "setfiletype elixir"    } ,
+        [ "*.schema" ]                             = { "setfiletype sql"       } ,
+        [ "*.md" ]                                 = { "setfiletype markdown"  } ,
+        [ home .. "/.config/zathura/*" ]           = { "set syntax=zathurarc"  } ,
+        ---- Special ----
+        [ home .. "/.bashrc"] = {
+          "setfiletype bash",
+          "source ${HOME}/.config/nvim/language_specific/bashrc.vim"
+        },
+        [ home .. "/.config/joplin-desktop/userstyle.css"] = {
+          "source ${HOME}/.config/nvim/language_specific/joplin_userstyle.vim"
+        },
+        [ home .. "/TEST/QUICK/*.cpp" ] = {
+          "source" .. LanguageSpecificDir .. "/quick_cpp.vim"
+        },
+      }
+
+      template_add_e(exts)
+      bufnr_add(globcomms)
 
 

@@ -18,7 +18,15 @@ require('config/config_treesitter')
 -- Rest
 local auto_session  = require('auto-session')
 
-require('telescope').setup({})
+require('telescope').setup({
+  defaults = {
+    mappings = {
+      i = {
+        ['<C-t>'] = require("telescope.actions.layout").toggle_preview
+      }
+    }
+  }
+})
 auto_session.setup({
   auto_delete_empty_sessions = true,
   auto_restore = false,

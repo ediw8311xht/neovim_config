@@ -36,3 +36,11 @@ lua require('base')
 call nvim_set_option_value("statusline", g:my_statuslines[0][1], {})
 colorscheme pop-punk
 lua CorrectColors()
+
+"  exe "lcd " . original_dir
+"  let cmd = [&shell, &shellcmdflag, cmd]
+"  let a:jobopts.on_exit = funcref('LfCallback', [lf_tmpfile, lastdir_tmpfile])
+"  echoerr a:jobopts
+"  "call luaeval("vim.notify("..lf_tmpfile..")")
+"  return [v:false, cmd]
+"endfunction

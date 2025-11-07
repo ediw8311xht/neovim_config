@@ -37,7 +37,6 @@ silent! call mkdir(vimtmp, "p", 0700)
 let &backupdir=nvim_backup_swap
 let &directory=nvim_backup_swap
 set undodir=~/.mynvim/undo_dir
-set backup
 set timeoutlen=500
 set ttimeoutlen=0
 set wildmode=longest,list,full
@@ -67,7 +66,7 @@ let g:mapleader = " "
 let g:maplocalleader = ","
 
 "------------------- Plugin options -------------------"
-let g:NERDTreeIgnore = ['\.o$']
+let g:NERDTreeIgnore = ['\.o$','.cache$','.git$']
 let g:floaterm_opener='edit'
 let g:html_mode      = 1
 let g:is_bash        = 1
@@ -85,4 +84,8 @@ let g:vimtex_compiler_latexmk = { 'out_dir' : '/tmp', }
 let g:vimtex_quickfix_mode=0
 let g:vimtex_view_continuous=1
 let g:vimtex_view_method='zathura'
+
+"-------------------------------------lf
+let g:NERDTreeHijackNetrw = 0 " Add this line if you use NERDTree
+let g:lf_replace_netrw = 1
 

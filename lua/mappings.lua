@@ -104,10 +104,10 @@ REGULAR_MAPPINGS={
     [ '<C-S-Tab>'] = {F, 'Previous tab',           ':tabprevious<CR>'                           },
     [ '<C-S-s>'  ] = {F, 'Substitute +char +vmagic', ':%s/\\v'                                  },
     [ '<C-Tab>'  ] = {F, 'Next tab',               ':tabnext<CR>'                               },
-    [ '<C-h>'    ] = {F, 'Left Pane',              '<C-w>h'                                     },
-    [ '<C-j>'    ] = {F, 'Down Pane',              '<C-w>j'                                     },
-    [ '<C-k>'    ] = {F, 'Up Pane',                '<C-w>k'                                     },
-    [ '<C-l>'    ] = {F, 'Right Pane',             '<C-w>l'                                     },
+    -- [ '<C-h>'    ] = {F, 'Left Pane',              '<C-w>h'                                     },
+    -- [ '<C-j>'    ] = {F, 'Down Pane',              '<C-w>j'                                     },
+    -- [ '<C-k>'    ] = {F, 'Up Pane',                '<C-w>k'                                     },
+    -- [ '<C-l>'    ] = {F, 'Right Pane',             '<C-w>l'                                     },
     [ '<C-n>'    ] = {F, '+Nerd Tree',             ':NERDTreeToggle<CR>'                        },
     [ '<C-s>'    ] = {F, 'Substitute i',           ':%s/\\v\\c'                                 },
     [ '<C-w>n'   ] = {F, 'New Buffer Right',       ':new<ESC><C-w>L'                            },
@@ -132,7 +132,7 @@ REGULAR_MAPPINGS={
     [ '`'        ] = {F, '',                       'zf'                                         },
   }, [i] = {
     -- [ '<C-k>'    ] = {F, 'Delete to end of line',  '<C-g>u<C-o>D'                               },
-    -- CTRL-U		Delete all entered characters before the cursor in the current line.
+    -- CTRL-U   Delete all entered characters before the cursor in the current line.
     [ 'jk'       ] = {F, 'Exit Insert[m]',                 '<ESC>'                              },
     [ '<C-u>'    ] = {F, 'Delete entered chars b4 cursor', '<C-g>u<C-u>'                        },
     [ '<C-S-b>'  ] = {F, 'Backward whole word',            '<C-o>B'                             },
@@ -190,9 +190,11 @@ LEADER_MAPPINGS = {
     [ 'IN'      ] = { F, 'Goto prev error',        ':lua vim.diagnostic.goto_prev()<ESC>'                                 },
     [ 'Ic'      ] = { F, 'Show code-action',       ':lua require("actions-preview").code_actions()<ESC>'                  },
     [ 'Ii'      ] = { F, 'Show diagnostics',       ':lua vim.diagnostic.open_float(nil, {focus=T, scope="cursor"})<ESC>'  },
+    [ 'Il'      ] = { F, 'hover lsp info',         ':lua vim.lsp.buf.hover()<ESC>'                                        },
     [ 'In'      ] = { F, 'Goto next error',        ':lua vim.diagnostic.goto_next()<ESC>'                                 },
     [ 'Ip'      ] = { F, 'Goto prev error',        ':lua vim.diagnostic.goto_prev()<ESC>'                                 },
-    [ 'Oo'      ] = { F, 'Recent files',           ':Telescope oldfiles<CR>'                                              },
+    [ 'Ih'      ] = { F, 'Lsp Highlight Symbol',   ':lua LspDocumentHighlight()<ESC>' },
+    [ 'IH'      ] = { F, 'Clear Lsp Highlight Symbol',   ':lua vim.lsp.buf.clear_references()<ESC>' },
     [ 'SX'      ] = { F, 'Execute with args',      ':!%'                                                                  },
     [ 'Sl'      ] = { F, 'Luafile',                ':luafile %<CR>'                                                       },
     [ 'Ss'      ] = { F, 'Source file',            ':%so<CR>'                                                             },
@@ -205,6 +207,7 @@ LEADER_MAPPINGS = {
     [ 'cA'      ] = { F, 'Start LSP',              ':LspStart()<CR>'                                                      },
     [ 'cB'      ] = { F, 'Prev Background',        ':call CyBack(-1)<CR>'                                                 },
     [ 'cC'      ] = { F, '! Folds in gutter',      ':call TogFoldColumn()<CR>'                                            },
+    [ 'cF'      ] = { F, 'Format [Prettier]',      ':!prettier -w %<CR><CR>'                                              },
     [ 'cJ'      ] = { F, 'Prev Scheme',            ':call SetColScheme(-1)<CR>'                                           },
     [ 'cL'      ] = { F, 'Cycle Statusline',       ':lua = Cycle("statusline", vim.g.my_statuslines)<CR>'                 },
     [ 'cS'      ] = { F, '! Spell',                ':set spell!<CR>'                                                      },
@@ -213,7 +216,7 @@ LEADER_MAPPINGS = {
     [ 'cb'      ] = { F, 'Next Background',        ':call CyBack(+1)<CR>'                                                 },
     [ 'cc'      ] = { F, '! Line Length Indicator',':call TogColorColumn()<CR>'                                           },
     [ 'ce'      ] = { F, '! CursorColumn',         ':set cuc!<CR>'                                                        },
-    [ 'cf'      ] = { F, 'Format',                 ':!prettier -w %<CR><CR>'                                              },
+    [ 'cf'      ] = { F, 'Format',                 ':Autoformat<CR>'                                                      },
     [ 'cg'      ] = { F, '! Git Signs',            ':Gitsigns toggle_signs<CR>'                                           },
     [ 'cj'      ] = { F, 'Next Scheme',            ':call SetColScheme(+1)<CR>'                                           },
     [ 'ck'      ] = { F, 'CorrectColors()',        ':lua CorrectColors()<CR>'                                             },
@@ -227,7 +230,8 @@ LEADER_MAPPINGS = {
     [ 'gh'      ] = { F, 'Get Highlight',          ':call GetHL()<ESC>'                                                   },
     [ 'gm'      ] = { F, 'Print Mappings',         ':call GMaps()<CR>'                                                    },
     [ 'gn'      ] = { F, 'New File',               ':enew<ESC>'                                                           },
-    [ 'grg'     ] = { F, 'Search in All Buffers',  ':Telescope live_grep<CR>'                                             },
+
+    [ 'grg'     ] = { F, 'Search in All Buffers',  ':lua require("telescope.builtin").live_grep({grep_open_files = true})<CR>'  },
     [ 'i'       ] = { F, 'Show diagnostics',       ':lua vim.diagnostic.open_float(nil, {focus=T, scope="cursor"})<ESC>'  },
     [ 'mH'      ] = { F, 'Helpgrep',               ':vert helpgrep '                                                      },
     [ 'mc'      ] = { F, 'Clear Notifications',    ':lua require("notify").dismiss({silent = true})<ESC>'                 },
@@ -235,9 +239,12 @@ LEADER_MAPPINGS = {
     [ 'mm'      ] = { F, 'Messages',               ':messages<ESC>'                                                       },
     [ 'ob'      ] = { F, 'Open in Browser',        ':silent !"${BROWSER:-"brave"}"  %<CR>'                                },
     [ 'oq'      ] = { F, 'Open in Qutebrowser',    ':silent !"qutebrowser" %<CR>'                                         },
+    [ 'or'      ] = { F, 'Recent files',           ':Telescope oldfiles<CR>'                                              },
     [ 'q'       ] = { F, 'Delete buffer',          ':bd'                                                                  },
     [ 's'       ] = { F, 'Switch pane',            '<C-w><C-p>'                                                           },
     [ 'u'       ] = { F, 'lf file manager',        ':Lf<ESC>'                                                             },
+    [ 'U'       ] = { F, 'lf cd',                  ':Lfcd<ESC>'                                                           },
+    [ 'vt'      ] = { F, 'title case',             ':s/\\v\\c\\w(\\a*(\'\\a{0,1})?\\w)?/\\u\\0/g | nohl<CR>'              },
     [ 'wj'      ] = { F, 'Decrease Size Split',    '40<c-w><'                                                             },
     [ 'wk'      ] = { F, 'Increase Size Split',    '40<c-w>>'                                                             },
     [ 'wo'      ] = { F, 'Toggle Only One',        ':lua ToggleOne()<CR>'                                                 },
@@ -264,18 +271,7 @@ LEADER_MAPPINGS = {
   }
 }
 
-ALL_MAPPINGS = { [""] = REGULAR_MAPPINGS, ["<LEADER>"] = LEADER_MAPPINGS }
-local which_key = require("which-key")
-
-function KeyMapSetter(map, pre)
-  for mode, mode_map in pairs(map) do
-    for key, tbl in pairs(mode_map) do
-      which_key.add({ pre .. key, desc = tbl[2], mode = mode })
-      vim.keymap.set(mode, pre .. key, tbl[3], { remap = tbl[1], desc = tbl[2] } )
-    end
-  end
-end
-
+PERSONAL_MAPPINGS = { ["regular"] = REGULAR_MAPPINGS, ["leader"] = LEADER_MAPPINGS }
 KeyMapSetter(LEADER_MAPPINGS, "<leader>")
 KeyMapSetter(REGULAR_MAPPINGS, "")
 -- vim.keymap.set('n', 'gd', function() vim.lsp.buf.definition() end)
@@ -296,4 +292,5 @@ KeyMapSetter(REGULAR_MAPPINGS, "")
 -- local _l = '<leader>'
 -- { n, 'I'   ,  F, '+ lsp_lines',            ':lua require("lsp_lines").toggle()<CR>'                            },
 -- [ '<C-p>'    ] = {F, 'Substitute',             '<C-i>'                                      },
+
 
