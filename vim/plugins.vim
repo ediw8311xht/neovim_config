@@ -42,7 +42,7 @@ let g:my_plugins['slimv']              = [ 'kovisoft', 'slimv' ]
 let g:my_plugins['elixir']              = [ 'elixir-tools',     'elixir-tools.nvim'             ]
 let g:my_plugins['elixirfiledetect']    = [ 'elixir-editors',   'vim-elixir'                    ]
 "-- Tools
-let g:my_plugins['plenary [req telescope]'] = [  'nvim-lua',         'plenary.nvim'                  ]
+let g:my_plugins['plenary [telescope]'] = [  'nvim-lua',         'plenary.nvim'                 ]
 let g:my_plugins['telescope']           = [ 'nvim-telescope',   'telescope.nvim',               { 'branch': 'master' } ]
 let g:my_plugins['file explorer']       = [ 'preservim',        'nerdtree'                      ]
 let g:my_plugins['neoterm']             = [ 'kassio',           'neoterm'                       ]
@@ -55,15 +55,16 @@ let g:my_plugins['lf']                  = [ 'ptzz',             'lf.vim'        
 "-- Key Hints
 let g:my_plugins['whichkeys']           = [ 'folke',            'which-key.nvim'                ]
 "-- UI/Formatting/Appearance
+let g:my_plugins['colorful comp menu']  = [ 'xzbdmw',           'colorful-menu.nvim'            ]
 let g:my_plugins['notify (dep: noice)'] = [ 'rcarriga',         'nvim-notify'                   ]
-let g:my_plugins['nui (dep: noice)']    = [ 'MunifTanjim',        'nui.nvim'                      ]
+let g:my_plugins['nui (dep: noice)']    = [ 'MunifTanjim',      'nui.nvim'                      ]
 let g:my_plugins['rainbow delimeters']  = [ 'HiPhish',          'rainbow-delimiters.nvim'       ]
 let g:my_plugins['autoformat']          = [ 'vim-autoformat',   'vim-autoformat'                ]
 let g:my_plugins['gitsigns']            = [ 'lewis6991',        'gitsigns.nvim'                 ]
 let g:my_plugins['marks']               = [ 'chentoast',        'marks.nvim'                    ]
 "-- Treesitter
 let g:my_plugins['treesitter']          = [ 'nvim-treesitter',  'nvim-treesitter',              { 'branch': 'main', 'do': ':TSUpdate'} ]
-let g:my_plugins['treesitter-textobjs'] = [ 'nvim-treesitter',  'nvim-treesitter-textobjects',   {'branch': 'main'} ]
+let g:my_plugins['treesitter-textobjs'] = [ 'nvim-treesitter',  'nvim-treesitter-textobjects',  {'branch': 'main'} ]
 "-- Syntax
 let g:my_plugins['Syntax i3']           = [ 'PotatoesMaster',   'i3-vim-syntax'                 ]
 let g:my_plugins['Syntax lfrc']         = [ 'VebbNix',          'lf-vim'                        ]
@@ -85,6 +86,7 @@ let g:my_plugins['tokyonight']          = [ 'folke',            'tokyonight.nvim
 "let g:my_plugins["comceal__conceal_comments"]   = [ 'vim-scripts',      'Comceal'                       ]
 "let g:my_plugins["ufo_req_1"]                   = [ 'kevinhwang91',     'promise-async'                 ]
 "let g:my_plugins["ufo"]                         = [ 'kevinhwang91',     'nvim-ufo'                      ]
+"let g:my_plugins['autoformat']          = [ 'stevearc',         'conform.nvim'                  ]
 " -------------------------------------------------------------------------------------------------------- "
 " -------------------------------------------------------------------------------------------------------- "
 " -------------------------------------------------------------------------------------------------------- "

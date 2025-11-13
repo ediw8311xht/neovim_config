@@ -10,13 +10,13 @@ let g:slimv_repl_syntax  = 1            "enable syntax highlighting in repl
 let g:slimv_swank_path   = expand('~/quicklisp/slime-helper.el')
 let g:slimv_balloon      = 1
 let g:slimv_strip_ansi   = 1
+let g:slimv_swank_cmd = '! kitty @ launch --type=tab --keep-focus --tab-title="slimv" sbcl --load "${XDG_DATA_HOME}/nvim/plugged/slimv/slime/start-swank.lisp" &'
 
 "fu! SetReplMappings() 
 "    echo "HI"
 "endfu
 "
 "autocmd Filetype commonlisp call SetReplMappings()
-"let g:slimv_swank_cmd = '! kitty -e sbcl --load /usr/share/common-lisp/source/slime/start-swank.lisp &'
 
 " ------------------------------------------- INFO -------------------------------- "
 "                                                             *g:slimv_repl_split*  "

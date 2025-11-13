@@ -15,8 +15,27 @@ require('config/config_notify')
 require('config/config_marks')
 require('config/config_which_key')
 require('config/config_treesitter')
+-- require('config/config_conform') -- formatting
 -- Rest
 local auto_session  = require('auto-session')
+
+
+local fullscreen_window_toggle = {
+  command_name = "ToggleFullscreen",
+  namespace    = "fullscreen",
+  scope        = "t",
+  var          = "on",
+  on = function()
+    vim.t.fullscreen_state = vim.fn.winrestcmd()
+    vim.cmd("vertical resize")
+    vim.cmd("horizontal resize")
+  end,
+  off = function()
+    vim.cmd("execute t:fullscreen_state")
+  end
+}
+
+CreateToggle(fullscreen_window_toggle)
 
 require('telescope').setup({
   defaults = {

@@ -76,7 +76,6 @@
 --  ||    !         | Shell or external command is executing                           ||
 --  ||    t         | Terminal mode: keys go to the job                                ||
 --  ||_________________________________________________________________________________||
-
 local F = false;
 local T = true;
 local c = 'c';
@@ -85,8 +84,6 @@ local i = 'i';
 local n = 'n';
 local t = 't';
 local v = 'v';
--- local l = 'l';
--- [ '<C-p>'    ] = {F, 'Substitute [All Buffs]', ':%s/\\v\\c'                              },
 
 REGULAR_MAPPINGS={
   [e] = {
@@ -104,10 +101,6 @@ REGULAR_MAPPINGS={
     [ '<C-S-Tab>'] = {F, 'Previous tab',           ':tabprevious<CR>'                           },
     [ '<C-S-s>'  ] = {F, 'Substitute +char +vmagic', ':%s/\\v'                                  },
     [ '<C-Tab>'  ] = {F, 'Next tab',               ':tabnext<CR>'                               },
-    -- [ '<C-h>'    ] = {F, 'Left Pane',              '<C-w>h'                                     },
-    -- [ '<C-j>'    ] = {F, 'Down Pane',              '<C-w>j'                                     },
-    -- [ '<C-k>'    ] = {F, 'Up Pane',                '<C-w>k'                                     },
-    -- [ '<C-l>'    ] = {F, 'Right Pane',             '<C-w>l'                                     },
     [ '<C-n>'    ] = {F, '+Nerd Tree',             ':NERDTreeToggle<CR>'                        },
     [ '<C-s>'    ] = {F, 'Substitute i',           ':%s/\\v\\c'                                 },
     [ '<C-w>n'   ] = {F, 'New Buffer Right',       ':new<ESC><C-w>L'                            },
@@ -120,19 +113,15 @@ REGULAR_MAPPINGS={
     [ '}'        ] = {F, 'Next Function Start',    ':GotoNextFunctionStart<CR>'                 },
     [ 'gne'      ] = {F, 'Next Function End',      ':GotoNextFunctionEnd<CR>'                   },
     [ '<C-S-g>'  ] = {F, '! Floating Term',        ':FloatermToggle!<ESC>'                      },
-    [ 'ZC'       ] = { F, 'Delete Buffer',          ':bd<ESC>'                                  },
+    [ 'ZC'       ] = {F, 'Delete Buffer',          ':bd<ESC>'                                   },
   }, [t] = {
     [ '<C-w>'    ] = {T, 'Normal Mode Terminal',   '<C-\\><C-n>'                                },
     [ '<C-S-g>'  ] = {T, '! Floating Term',        '<C-w>:FloatermToggle!<ESC>'                 },
   }, [v] = {
-    -- [ '{'        ] = {F, 'Prev Function Start',    ':GotoPrevFunctionStart<CR>'              },
-    -- [ '}'        ] = {F, 'Next Function Start',    ':GotoNextFunctionStart<CR>'              },
     [ '<C-S-s>'  ] = {F, 'Sub +vmagic',            ':s/\\%V\\v'                                 },
     [ '<C-s>'    ] = {F, 'Sub +i +vmagic',         ':s/\\%V\\v\\c'                              },
     [ '`'        ] = {F, '',                       'zf'                                         },
   }, [i] = {
-    -- [ '<C-k>'    ] = {F, 'Delete to end of line',  '<C-g>u<C-o>D'                               },
-    -- CTRL-U   Delete all entered characters before the cursor in the current line.
     [ 'jk'       ] = {F, 'Exit Insert[m]',                 '<ESC>'                              },
     [ '<C-u>'    ] = {F, 'Delete entered chars b4 cursor', '<C-g>u<C-u>'                        },
     [ '<C-S-b>'  ] = {F, 'Backward whole word',            '<C-o>B'                             },
@@ -173,16 +162,9 @@ REGULAR_MAPPINGS={
 -- beginning
 LEADER_MAPPINGS = {
   [n] = {
-    -- [ 'S'       ] = { F, 'Source vim config',      ':source ~/.config/nvim/init.vim<ESC>'                                 },
-    -- [ 'cp'      ] = { F, '! Rainbow Parenth',      ':RainbowToggle<CR>'                                                   },
-    -- [ 'W'       ] = { F, 'VimwikiIndex',           '<Plug>VimwikiIndex'                                                   },
-    -- Execute --
-    -- Session --
-    -- [ 'pP'      ] = { F, 'Paste as line above',    'k:put="a' },
-    -- [ 'pp'      ] = { F, 'Paste as line below',    '' },
     [ 'Cb'      ] = { F, 'Copy Buffer to Clip',    'gg"+yG<c-o>'                                                          },
     [ 'D'       ] = { F, 'Delete Buffer',          ':bd<ESC><enter>'                                                      },
-    [ 'E'       ] = { F, 'CWD Edit',               ':call feedkeys(":e " . FilePathFull() . "/")<CR>'                     },
+    [ 'E'       ] = { F, 'CWD Edit',               'feedkeys(":e " . FilePathFull() . "/")', expr=true                    },
     [ 'FS'      ] = { F, 'Session Save',           ':AutoSession save<CR>'                                                },
     [ 'Fa'      ] = { F, '! Session Auto Save',    ':AutoSession toggle<CR>'                                              },
     [ 'Fc'      ] = { F, 'Session Search',         ':AutoSession search<CR>'                                              },
@@ -193,8 +175,8 @@ LEADER_MAPPINGS = {
     [ 'Il'      ] = { F, 'hover lsp info',         ':lua vim.lsp.buf.hover()<ESC>'                                        },
     [ 'In'      ] = { F, 'Goto next error',        ':lua vim.diagnostic.goto_next()<ESC>'                                 },
     [ 'Ip'      ] = { F, 'Goto prev error',        ':lua vim.diagnostic.goto_prev()<ESC>'                                 },
-    [ 'Ih'      ] = { F, 'Lsp Highlight Symbol',   ':lua LspDocumentHighlight()<ESC>' },
-    [ 'IH'      ] = { F, 'Clear Lsp Highlight Symbol',   ':lua vim.lsp.buf.clear_references()<ESC>' },
+    [ 'Ih'      ] = { F, 'Lsp Highlight Symbol',   ':lua LspDocumentHighlight()<ESC>'                                     },
+    [ 'IH'      ] = { F, 'Clear Lsp Highlight Symbol',   ':lua vim.lsp.buf.clear_references()<ESC>'                       },
     [ 'SX'      ] = { F, 'Execute with args',      ':!%'                                                                  },
     [ 'Sl'      ] = { F, 'Luafile',                ':luafile %<CR>'                                                       },
     [ 'Ss'      ] = { F, 'Source file',            ':%so<CR>'                                                             },
@@ -205,36 +187,35 @@ LEADER_MAPPINGS = {
     [ 'W'       ] = { F, 'Write',                  ':w<ESC>'                                                              },
     [ 'b'       ] = { F, 'open buffer',            ':Buffers<ESC>'                                                        },
     [ 'cA'      ] = { F, 'Start LSP',              ':LspStart()<CR>'                                                      },
-    [ 'cB'      ] = { F, 'Prev Background',        ':call CyBack(-1)<CR>'                                                 },
-    [ 'cC'      ] = { F, '! Folds in gutter',      ':call TogFoldColumn()<CR>'                                            },
-    [ 'cF'      ] = { F, 'Format [Prettier]',      ':!prettier -w %<CR><CR>'                                              },
-    [ 'cJ'      ] = { F, 'Prev Scheme',            ':call SetColScheme(-1)<CR>'                                           },
+    [ 'cB'      ] = { F, 'Prev Background',        'CyBack(-1)', expr=true                                                },
+    [ 'cC'      ] = { F, '! Folds in gutter',      'TogFoldColumn()', expr=true                                           },
+    [ 'cF'      ] = { F, 'Format [Prettier]',      function() vim.lsp.buf.format() end                                    },
+    [ 'cJ'      ] = { F, 'Prev Scheme',            'SetColScheme(-1)', expr=true                                          },
     [ 'cL'      ] = { F, 'Cycle Statusline',       ':lua = Cycle("statusline", vim.g.my_statuslines)<CR>'                 },
     [ 'cS'      ] = { F, '! Spell',                ':set spell!<CR>'                                                      },
     [ 'cV'      ] = { F, '! lsp_lines',            ':lua require("lsp_lines").toggle()<CR>'                               },
     [ 'ca'      ] = { F, 'Stop LSP',               ':LspStop<CR>'                                                         },
-    [ 'cb'      ] = { F, 'Next Background',        ':call CyBack(+1)<CR>'                                                 },
-    [ 'cc'      ] = { F, '! Line Length Indicator',':call TogColorColumn()<CR>'                                           },
+    [ 'cb'      ] = { F, 'Next Background',        'CyBack(+1)', expr=true                                                },
+    [ 'cc'      ] = { F, '! Line Length Indicator','TogColorColumn()', expr=true                                          },
     [ 'ce'      ] = { F, '! CursorColumn',         ':set cuc!<CR>'                                                        },
-    [ 'cf'      ] = { F, 'Format',                 ':Autoformat<CR>'                                                      },
+    [ 'cf'      ] = { F, 'Format',                 function() RunKeepCursorPosition(function() vim.cmd(":Autoformat") end) end  },
     [ 'cg'      ] = { F, '! Git Signs',            ':Gitsigns toggle_signs<CR>'                                           },
-    [ 'cj'      ] = { F, 'Next Scheme',            ':call SetColScheme(+1)<CR>'                                           },
+    [ 'cj'      ] = { F, 'Next Scheme',            'SetColScheme(+1)', expr=true                                          },
     [ 'ck'      ] = { F, 'CorrectColors()',        ':lua CorrectColors()<CR>'                                             },
     [ 'cl'      ] = { F, '! CursorLine',           ':lua ToggleHighlight({"CursorLine"})<CR>'                             },
     [ 'co'      ] = { F, 'Vim options',            ':Telescope vim_options<CR>'                                           },
-    [ 'cr'      ] = { F, 'Toggle Rainbow',         ':call rainbow_delimiters#toggle(0)<CR>'                               },
-    [ 'cs'      ] = { F, '! Statusline',           ':call TogLastStatus()<CR>'                                            },
-    [ 'cv'      ] = { F, '! Virtualedit',          ':call TogVirtualEdit()<CR>'                                           },
+    [ 'cr'      ] = { F, '! Rainbow',              'rainbow_delimiters#toggle(0)', expr=true                              },
+    [ 'cs'      ] = { F, '! Statusline',           'TogLastStatus()', expr=true                                           },
+    [ 'cv'      ] = { F, '! Virtualedit',          'TogVirtualEdit()', expr=true                                          },
     [ 'cw'      ] = { F, '! Wrap',                 ':set wrap!<ESC>'                                                      },
     [ 'df'      ] = { F, 'Find Space EOL',         ':%s/\\s\\+\\ze$//gc<CR>'                                              },
-    [ 'gh'      ] = { F, 'Get Highlight',          ':call GetHL()<ESC>'                                                   },
-    [ 'gm'      ] = { F, 'Print Mappings',         ':call GMaps()<CR>'                                                    },
+    [ 'gh'      ] = { F, 'Get Highlight',          'GetHL()', expr=true                                                   },
+    [ 'gm'      ] = { F, 'Print Mappings',         'GMaps()', expr=true                                                   },
     [ 'gn'      ] = { F, 'New File',               ':enew<ESC>'                                                           },
-
-    [ 'grg'     ] = { F, 'Search in All Buffers',  ':lua require("telescope.builtin").live_grep({grep_open_files = true})<CR>'  },
+    [ 'grg'     ] = { F, 'Search in All Buffers',  function() require("telescope.builtin").live_grep({grep_open_files = true}) end },
     [ 'i'       ] = { F, 'Show diagnostics',       ':lua vim.diagnostic.open_float(nil, {focus=T, scope="cursor"})<ESC>'  },
     [ 'mH'      ] = { F, 'Helpgrep',               ':vert helpgrep '                                                      },
-    [ 'mc'      ] = { F, 'Clear Notifications',    ':lua require("notify").dismiss({silent = true})<ESC>'                 },
+    [ 'mc'      ] = { F, 'Clear Notifications',    function() require("notify").dismiss({silent = true}) end              },
     [ 'mh'      ] = { F, 'Checkhealth',            ':checkhealth<CR>'                                                     },
     [ 'mm'      ] = { F, 'Messages',               ':messages<ESC>'                                                       },
     [ 'ob'      ] = { F, 'Open in Browser',        ':silent !"${BROWSER:-"brave"}"  %<CR>'                                },
@@ -247,7 +228,7 @@ LEADER_MAPPINGS = {
     [ 'vt'      ] = { F, 'title case',             ':s/\\v\\c\\w(\\a*(\'\\a{0,1})?\\w)?/\\u\\0/g | nohl<CR>'              },
     [ 'wj'      ] = { F, 'Decrease Size Split',    '40<c-w><'                                                             },
     [ 'wk'      ] = { F, 'Increase Size Split',    '40<c-w>>'                                                             },
-    [ 'wo'      ] = { F, 'Toggle Only One',        ':lua ToggleOne()<CR>'                                                 },
+    [ 'wo'      ] = { F, 'Toggle Fullscreen',      ':ToggleFullscreen<CR>'                                                },
     [ 'x'       ] = { F, 'Execute',                ':!%:p<ESC>'                                                           },
     [ 'y'       ] = { F, 'bg transparent',         ':hi Normal guibg=Transparent<ESC>'                                    },
     [ 'z'       ] = { F, '',                       'z'                                                                    },
@@ -294,3 +275,20 @@ KeyMapSetter(REGULAR_MAPPINGS, "")
 -- [ '<C-p>'    ] = {F, 'Substitute',             '<C-i>'                                      },
 
 
+-- local l = 'l';
+-- [ '<C-p>'    ] = {F, 'Substitute [All Buffs]', ':%s/\\v\\c'                              },
+    -- [ '<C-k>'    ] = {F, 'Delete to end of line',  '<C-g>u<C-o>D'                               },
+    -- CTRL-U   Delete all entered characters before the cursor in the current line.
+    -- [ '{'        ] = {F, 'Prev Function Start',    ':GotoPrevFunctionStart<CR>'              },
+    -- [ '}'        ] = {F, 'Next Function Start',    ':GotoNextFunctionStart<CR>'              },
+    -- [ 'S'       ] = { F, 'Source vim config',      ':source ~/.config/nvim/init.vim<ESC>'                                 },
+    -- [ 'cp'      ] = { F, '! Rainbow Parenth',      ':RainbowToggle<CR>'                                                   },
+    -- [ 'W'       ] = { F, 'VimwikiIndex',           '<Plug>VimwikiIndex'                                                   },
+    -- Execute --
+    -- Session --
+    -- [ 'pP'      ] = { F, 'Paste as line above',    'k:put="a' },
+    -- [ 'pp'      ] = { F, 'Paste as line below',    '' },
+    -- [ '<C-h>'    ] = {F, 'Left Pane',              '<C-w>h'                                     },
+    -- [ '<C-j>'    ] = {F, 'Down Pane',              '<C-w>j'                                     },
+    -- [ '<C-k>'    ] = {F, 'Up Pane',                '<C-w>k'                                     },
+    -- [ '<C-l>'    ] = {F, 'Right Pane',             '<C-w>l'                                     },

@@ -113,7 +113,7 @@ vauto({ "FileType" }, {
 })
 vauto({"FileType"}, {
   pattern = "help",
-  command = "wincmd R",
+  command = "wincmd L",
 })
 
 ----------------------------------------------YankedText
@@ -143,8 +143,8 @@ vauto({ "TextYankPost" }, {
 })
 
 ---------------------------------------ExtensionSpecific
-local exts = { "sh", "py", "kalker", "exs", "tex", "ex", "html", "cpp", "md", "lisp", "hs" }
 
+-- eventually will move this to settings.vim
 local globcomms = {
   ---- Syntax ----
   [ home .. "/bashrc_files/*" ]              = { "setfiletype bash"      } ,
@@ -169,6 +169,7 @@ local globcomms = {
   },
 }
 
+local exts = { "sh", "py", "kalker", "exs", "tex", "ex", "html", "cpp", "md", "lisp", "hs" }
 template_add_e(exts)
 bufnr_add(globcomms)
 
