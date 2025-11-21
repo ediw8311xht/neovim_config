@@ -85,6 +85,7 @@ local n = 'n';
 local t = 't';
 local v = 'v';
 
+-- note to self: look into using `<cmd>` and `<expr>` more IGNORE
 REGULAR_MAPPINGS={
   [e] = {
     [ '+'        ] = {T, 'End of line',            'g_'                                         },
@@ -164,18 +165,19 @@ LEADER_MAPPINGS = {
   [n] = {
     [ 'Cb'      ] = { F, 'Copy Buffer to Clip',    'gg"+yG<c-o>'                                                          },
     [ 'D'       ] = { F, 'Delete Buffer',          ':bd<ESC><enter>'                                                      },
-    [ 'E'       ] = { F, 'CWD Edit',               'feedkeys(":e " . FilePathFull() . "/")', expr=true                    },
+    [ 'E'       ] = { F, 'CWD Edit',               'feedkeys(":e " . FilePathFull() . "/")',                    expr=true },
     [ 'FS'      ] = { F, 'Session Save',           ':AutoSession save<CR>'                                                },
     [ 'Fa'      ] = { F, '! Session Auto Save',    ':AutoSession toggle<CR>'                                              },
     [ 'Fc'      ] = { F, 'Session Search',         ':AutoSession search<CR>'                                              },
     [ 'Fs'      ] = { F, '[Args] Session Save',    ':AutoSession save '                                                   },
-    [ 'IN'      ] = { F, 'Goto prev error',        ':lua vim.diagnostic.goto_prev()<ESC>'                                 },
-    [ 'Ic'      ] = { F, 'Show code-action',       ':lua require("actions-preview").code_actions()<ESC>'                  },
-    [ 'Ii'      ] = { F, 'Show diagnostics',       ':lua vim.diagnostic.open_float(nil, {focus=T, scope="cursor"})<ESC>'  },
-    [ 'Il'      ] = { F, 'hover lsp info',         ':lua vim.lsp.buf.hover()<ESC>'                                        },
-    [ 'In'      ] = { F, 'Goto next error',        ':lua vim.diagnostic.goto_next()<ESC>'                                 },
-    [ 'Ip'      ] = { F, 'Goto prev error',        ':lua vim.diagnostic.goto_prev()<ESC>'                                 },
-    [ 'Ih'      ] = { F, 'Lsp Highlight Symbol',   ':lua LspDocumentHighlight()<ESC>'                                     },
+    [ 'IN'      ] = { F, 'Goto prev error',        'lua vim.diagnostic.goto_prev()',                            cmd=true  },
+    [ 'Ic'      ] = { F, 'Show code-action',       'lua require("actions-preview").code_actions()',             cmd=true  },
+    [ 'Ii'      ] = { F, 'Show diagnostics',       'lua vim.diagnostic.open_float(nil, {focus=T, scope="cursor"})', cmd=true },
+    [ 'Il'      ] = { F, 'hover lsp info',         'lua vim.lsp.buf.hover()',                                   cmd=true  },
+    [ 'In'      ] = { F, 'Goto next error',        'lua vim.diagnostic.goto_next()',                            cmd=true  },
+    [ 'Ip'      ] = { F, 'Goto prev error',        'lua vim.diagnostic.goto_prev()',                            cmd=true  },
+    [ 'Ih'      ] = { F, 'Highlight Symbol',       'lua LspDocumentHighlight()',                                cmd=true  },
+    [ 'Id'      ] = { F, 'Go to definition',       'lua vim.lsp.buf.definition()',                              cmd=true  },
     [ 'IH'      ] = { F, 'Clear Lsp Highlight Symbol',   ':lua vim.lsp.buf.clear_references()<ESC>'                       },
     [ 'SX'      ] = { F, 'Execute with args',      ':!%'                                                                  },
     [ 'Sl'      ] = { F, 'Luafile',                ':luafile %<CR>'                                                       },
@@ -187,30 +189,31 @@ LEADER_MAPPINGS = {
     [ 'W'       ] = { F, 'Write',                  ':w<ESC>'                                                              },
     [ 'b'       ] = { F, 'open buffer',            ':Buffers<ESC>'                                                        },
     [ 'cA'      ] = { F, 'Start LSP',              ':LspStart()<CR>'                                                      },
-    [ 'cB'      ] = { F, 'Prev Background',        'CyBack(-1)', expr=true                                                },
-    [ 'cC'      ] = { F, '! Folds in gutter',      'TogFoldColumn()', expr=true                                           },
+    [ 'cB'      ] = { F, 'Prev Background',        'CyBack(-1)',                                                expr=true },
+    [ 'cC'      ] = { F, '! Folds in gutter',      'TogFoldColumn()',                                           expr=true },
     [ 'cF'      ] = { F, 'Format [Prettier]',      function() vim.lsp.buf.format() end                                    },
-    [ 'cJ'      ] = { F, 'Prev Scheme',            'SetColScheme(-1)', expr=true                                          },
+    [ 'cJ'      ] = { F, 'Prev Scheme',            'SetColScheme(-1)',                                          expr=true },
     [ 'cL'      ] = { F, 'Cycle Statusline',       ':lua = Cycle("statusline", vim.g.my_statuslines)<CR>'                 },
     [ 'cS'      ] = { F, '! Spell',                ':set spell!<CR>'                                                      },
     [ 'cV'      ] = { F, '! lsp_lines',            ':lua require("lsp_lines").toggle()<CR>'                               },
     [ 'ca'      ] = { F, 'Stop LSP',               ':LspStop<CR>'                                                         },
-    [ 'cb'      ] = { F, 'Next Background',        'CyBack(+1)', expr=true                                                },
-    [ 'cc'      ] = { F, '! Line Length Indicator','TogColorColumn()', expr=true                                          },
+    [ 'cb'      ] = { F, 'Next Background',        'CyBack(+1)',                                                expr=true },
+    [ 'cc'      ] = { F, '! Line Length Indicator','TogColorColumn()',                                          expr=true },
     [ 'ce'      ] = { F, '! CursorColumn',         ':set cuc!<CR>'                                                        },
-    [ 'cf'      ] = { F, 'Format',                 function() RunKeepCursorPosition(function() vim.cmd(":Autoformat") end) end  },
-    [ 'cg'      ] = { F, '! Git Signs',            ':Gitsigns toggle_signs<CR>'                                           },
-    [ 'cj'      ] = { F, 'Next Scheme',            'SetColScheme(+1)', expr=true                                          },
+    [ 'cf'      ] = { F, 'Format',                 function() RunKeepCursorPosition(function() vim.cmd(":Autoformat") end) end    },
+    [ 'cg'      ] = { F, '! Git Signs',            'Gitsigns toggle_linehl',                                    cmd=true  },
+    [ 'cj'      ] = { F, 'Next Scheme',            'SetColScheme(+1)',                                          expr=true },
     [ 'ck'      ] = { F, 'CorrectColors()',        ':lua CorrectColors()<CR>'                                             },
     [ 'cl'      ] = { F, '! CursorLine',           ':lua ToggleHighlight({"CursorLine"})<CR>'                             },
     [ 'co'      ] = { F, 'Vim options',            ':Telescope vim_options<CR>'                                           },
-    [ 'cr'      ] = { F, '! Rainbow',              'rainbow_delimiters#toggle(0)', expr=true                              },
-    [ 'cs'      ] = { F, '! Statusline',           'TogLastStatus()', expr=true                                           },
-    [ 'cv'      ] = { F, '! Virtualedit',          'TogVirtualEdit()', expr=true                                          },
+    [ 'cr'      ] = { F, '! Rainbow',              'rainbow_delimiters#toggle(0)',                              expr=true },
+    [ 'cs'      ] = { F, '! Statusline',           'TogLastStatus()',                                           expr=true },
+    [ 'cv'      ] = { F, '! Virtualedit',          'TogVirtualEdit()',                                          expr=true },
     [ 'cw'      ] = { F, '! Wrap',                 ':set wrap!<ESC>'                                                      },
     [ 'df'      ] = { F, 'Find Space EOL',         ':%s/\\s\\+\\ze$//gc<CR>'                                              },
-    [ 'gh'      ] = { F, 'Get Highlight',          'GetHL()', expr=true                                                   },
-    [ 'gm'      ] = { F, 'Print Mappings',         'GMaps()', expr=true                                                   },
+    [ 'gu'      ] = { F, 'Get undo list',          'undolist',                                                  cmd=true  },
+    [ 'gh'      ] = { F, 'Get Highlight',          'GetHL()',                                                   expr=true },
+    [ 'gm'      ] = { F, 'Print Mappings',         ':call GMaps()',                                             cmd=true  },
     [ 'gn'      ] = { F, 'New File',               ':enew<ESC>'                                                           },
     [ 'grg'     ] = { F, 'Search in All Buffers',  function() require("telescope.builtin").live_grep({grep_open_files = true}) end },
     [ 'i'       ] = { F, 'Show diagnostics',       ':lua vim.diagnostic.open_float(nil, {focus=T, scope="cursor"})<ESC>'  },
@@ -223,8 +226,8 @@ LEADER_MAPPINGS = {
     [ 'or'      ] = { F, 'Recent files',           ':Telescope oldfiles<CR>'                                              },
     [ 'q'       ] = { F, 'Delete buffer',          ':bd'                                                                  },
     [ 's'       ] = { F, 'Switch pane',            '<C-w><C-p>'                                                           },
-    [ 'u'       ] = { F, 'lf file manager',        ':Lf<ESC>'                                                             },
-    [ 'U'       ] = { F, 'lf cd',                  ':Lfcd<ESC>'                                                           },
+    [ 'u'       ] = { F, 'lf file manager',        'Lf',                                                         cmd=true },
+    [ 'U'       ] = { F, 'lf cd',                  'Lfcd',                                                       cmd=true },
     [ 'vt'      ] = { F, 'title case',             ':s/\\v\\c\\w(\\a*(\'\\a{0,1})?\\w)?/\\u\\0/g | nohl<CR>'              },
     [ 'wj'      ] = { F, 'Decrease Size Split',    '40<c-w><'                                                             },
     [ 'wk'      ] = { F, 'Increase Size Split',    '40<c-w>>'                                                             },
@@ -233,8 +236,8 @@ LEADER_MAPPINGS = {
     [ 'y'       ] = { F, 'bg transparent',         ':hi Normal guibg=Transparent<ESC>'                                    },
     [ 'z'       ] = { F, '',                       'z'                                                                    },
     [ ','       ] = { F, 'Alternate File',         '<C-^>'                                                                },
-    [ ']'       ] = { F, 'Next Buffer',            ':bnext<CR>'                                                           },
-    [ '['       ] = { F, 'Prev Buffer',            ':bprevious<CR>'                                                       },
+    [ ']'       ] = { F, 'Next Buffer',            'bnext',                                                      cmd=true },
+    [ '['       ] = { F, 'Prev Buffer',            'bprevious',                                                  cmd=true },
     [ '-'       ] = { F, 'Resize Split -20',       '20<c-w><'                                                             },
     [ '='       ] = { F, 'Resize Split +20',       '20<c-w>>'                                                             },
     [ '<C-S-x>' ] = { F, 'Execute with args',      ':!%:p '                                                               },
@@ -253,8 +256,8 @@ LEADER_MAPPINGS = {
 }
 
 PERSONAL_MAPPINGS = { ["regular"] = REGULAR_MAPPINGS, ["leader"] = LEADER_MAPPINGS }
-KeyMapSetter(LEADER_MAPPINGS, "<leader>")
-KeyMapSetter(REGULAR_MAPPINGS, "")
+KeyMapSetter(LEADER_MAPPINGS, "<leader>", false, true)
+KeyMapSetter(REGULAR_MAPPINGS, "", false, true)
 -- vim.keymap.set('n', 'gd', function() vim.lsp.buf.definition() end)
 -- vim.keymap.set('n', 'grr', function() vim.lsp.buf.references() end)
 -- vim.keymap.set('n', '<C-m>', function() vim.diagnostic.open_float() end)

@@ -86,12 +86,45 @@ function ToggleHighlight(highlights)
   end
 end
 
+-- function KeyMapSetter2(map, pre, buffer_only, with_which_key)
+--   local which_key = require("which-key")
+--   for mode, mode_map in pairs(map) do
+--     for key, tbl in pairs(mode_map) do
+--       local expression
+--
+--       if tbl.vim_function then
+--         expression = "<CMD> call " .. tbl.key .. "<CR>"
+--       elseif tbl.lua_function then
+--         expression = "<CMD> lua " .. tbl.key .. "<CR>"
+--       elseif tbl.cmd then
+--         expression = "<CMD>" .. tbl.key .. "<CR>"
+--       else
+--         expression = tbl.key
+--       end
+--       if with_which_key then
+--         which_key.add({ pre .. key, desc = tbl.desc, mode = mode })
+--       end
+--       vim.keymap.set(mode, pre .. key, expression, {
+--         remap  = tbl.remap or false,
+--         desc   = tbl.desc,
+--         buffer = buffer_only or tbl.buffer_only,
+--         expr   = tbl.expr,
+--       })
+--     end
+--   end
+-- end
 function KeyMapSetter(map, pre, buffer_only, with_which_key)
   local which_key = require("which-key")
   for mode, mode_map in pairs(map) do
     for key, tbl in pairs(mode_map) do
       if with_which_key then which_key.add({ pre .. key, desc = tbl[2], mode = mode }) end
-      vim.keymap.set(mode, pre .. key, tbl[3], { remap = tbl[1], buffer = buffer_only, desc = tbl[2], expr = tbl.expr } )
+      local keymap_cmd = (tbl.cmd and   "<CMD>" .. tbl[3] .. "<CR>") or tbl[3]
+      vim.keymap.set(mode, pre .. key, keymap_cmd, {
+        remap  = tbl[1],
+        desc   = tbl[2],
+        buffer = buffer_only,
+        expr   = tbl.expr,
+      })
     end
   end
 end

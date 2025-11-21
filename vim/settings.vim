@@ -24,7 +24,7 @@ set nowrap
 set number
 set relativenumber
 set ruler
-set signcolumn=auto:1-5
+set signcolumn=auto
 set splitright
 set t_Co=256
 set textwidth=0
@@ -42,9 +42,9 @@ set ttimeoutlen=0
 set wildmode=longest,list,full
 set showmode
 set virtualedit=none
-set softtabstop=4
-set tabstop=4
-set shiftwidth=4
+set shiftwidth=2
+set softtabstop=2
+set tabstop=2
 set expandtab
 set backspace=2
 set guicursor=n:block90,i:ver20
@@ -90,13 +90,12 @@ let g:NERDTreeHijackNetrw = 0 " Add this line if you use NERDTree
 let g:lf_replace_netrw = 1
 
 lua <<EOF
-    vim.filetype.add({
-        extension = {
-            ['kitty-session'] = 'kitty-session',
-            [ "md" ]          = "markdown",
-        }
-
-    })
+  vim.filetype.add({
+    extension = {
+      ['kitty-session'] = 'kitty-session',
+      [ "md" ]          = "markdown",
+    }
+  })
 EOF
 
 

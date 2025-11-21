@@ -10,7 +10,7 @@ let g:slimv_repl_syntax  = 1            "enable syntax highlighting in repl
 let g:slimv_swank_path   = expand('~/quicklisp/slime-helper.el')
 let g:slimv_balloon      = 1
 let g:slimv_strip_ansi   = 1
-let g:slimv_swank_cmd = '! kitty @ launch --type=tab --keep-focus --tab-title="slimv" sbcl --load "${XDG_DATA_HOME}/nvim/plugged/slimv/slime/start-swank.lisp" &'
+let g:slimv_swank_cmd = '! kitty @ launch --type=tab --location=first --keep-focus --tab-title="slimv" sbcl --load "${XDG_DATA_HOME}/nvim/plugged/slimv/slime/start-swank.lisp" &'
 
 "fu! SetReplMappings() 
 "    echo "HI"
