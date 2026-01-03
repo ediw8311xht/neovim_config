@@ -28,6 +28,7 @@ let g:my_plugins['vim latex']           = [ 'lervag',           'vimtex'        
 let g:my_plugins['auto session']        = [ 'rmagatti',         'auto-session'                  ]
 let g:my_plugins['restore view']        = [ 'vim-scripts',      'restore_view.vim'              ]
 "-- Documentation
+"let g:my_plugins['dasht (docs)'] = [ 'sunaku',  'vim-dasht' ]
 let g:my_plugins['dasht (docs)'] = [ 'sunaku',  'vim-dasht' ]
 "-- Language Server
 let g:my_plugins['lspconfig']           = [ 'neovim',           'nvim-lspconfig'                ]

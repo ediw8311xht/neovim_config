@@ -77,20 +77,22 @@ local function bufnr_add(globcomms)
 end
 
 ------------------------------------------------Templates
-local function template_add(glob, template_file)
+local function template_add(glob, template_file, options)
   vauto({ "BufNewFile" }, {
     pattern = glob,
     callback = function()
       local full_path = TemplateDir .. template_file
       vc("keepalt 0read " .. full_path)
       vc("silent w")
-      vc("silent !chmod 700 %")
+      if options.chmod then
+        vc("silent !chmod " .. options.chmod .. " %")
+      end
     end})
 end
 
 local function template_add_e(exts)
-  for _,ext in ipairs(exts) do
-    template_add("*." .. ext, "/template." .. ext)
+  for ext, options in pairs(exts) do
+    template_add("*." .. ext, "/template." .. ext, options)
   end
 end
 
@@ -169,7 +171,21 @@ local globcomms = {
   },
 }
 
-local exts = { "sh", "py", "kalker", "exs", "tex", "ex", "html", "cpp", "md", "lisp", "hs" }
+local exts = {
+  ["sh"]     = { chmod = "700" },
+  ["py"]     = { chmod = "700" },
+  ["kalker"] = { chmod = "700" },
+  ["exs"]    = { chmod = "700" },
+  ["tex"]    = { chmod = "700" },
+  ["ex"]     = { chmod = "700" },
+  ["html"]   = { chmod = "700" },
+  ["cpp"]    = { chmod = "700" },
+  ["lisp"]   = { chmod = "700" },
+  ["hs"]     = { chmod = "700" },
+  ["md"]     = { },
+}
+
 template_add_e(exts)
 bufnr_add(globcomms)
+
 

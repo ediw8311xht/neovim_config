@@ -116,8 +116,8 @@ REGULAR_MAPPINGS={
     [ '<C-S-g>'  ] = {F, '! Floating Term',        ':FloatermToggle!<ESC>'                      },
     [ 'ZC'       ] = {F, 'Delete Buffer',          ':bd<ESC>'                                   },
   }, [t] = {
-    [ '<C-w>'    ] = {T, 'Normal Mode Terminal',   '<C-\\><C-n>'                                },
-    [ '<C-S-g>'  ] = {T, '! Floating Term',        '<C-w>:FloatermToggle!<ESC>'                 },
+    [ '<C-w>'    ] = {T, 'Normal Mode',     '<C-\\><C-n>'                },
+    [ '<C-S-g>'  ] = {T, '! Floating Term', '<C-w>:FloatermToggle!<ESC>' },
   }, [v] = {
     [ '<C-S-s>'  ] = {F, 'Sub +vmagic',            ':s/\\%V\\v'                                 },
     [ '<C-s>'    ] = {F, 'Sub +i +vmagic',         ':s/\\%V\\v\\c'                              },
@@ -163,29 +163,38 @@ REGULAR_MAPPINGS={
 -- beginning
 LEADER_MAPPINGS = {
   [n] = {
-    [ 'Cb'      ] = { F, 'Copy Buffer to Clip',    'gg"+yG<c-o>'                                                          },
-    [ 'D'       ] = { F, 'Delete Buffer',          ':bd<ESC><enter>'                                                      },
+    -- Buffers --
+    [ 'Bn'       ] = { F, 'New Buffer',             ':enew<ESC><enter>'  },
+    [ 'Bd'       ] = { F, 'Delete Buffer',          ':bd<ESC><enter>'    },
+    -- Copy --
+    [ 'Cb'      ] = { F, 'Copy Buffer to Clip',    'gg"+yG<c-o>' },
+    -- Auto Session --
+    [ 'Fss'     ] = { F, 'Session Save',           ':AutoSession save<CR>'   },
+    [ 'Fa'      ] = { F, '! Session Auto Save',    ':AutoSession toggle<CR>' },
+    [ 'Fc'      ] = { F, 'Session Search',         ':AutoSession search<CR>' },
+    [ 'Fsa'     ] = { F, '[Args] Session Save',    ':AutoSession save '      },
+    -- Code Actions / LSP --
+    [ 'Ic'      ] = { F, 'Show code-action',          'lua require("actions-preview").code_actions()',                 cmd=true  },
+    [ 'Ii'      ] = { F, 'Show diagnostics',          'lua vim.diagnostic.open_float(nil, {focus=T, scope="cursor"})', cmd=true  },
+    [ 'Il'      ] = { F, 'hover lsp info',            'lua vim.lsp.buf.hover()',                                       cmd=true  },
+    [ 'In'      ] = { F, 'Goto next error',           'lua vim.diagnostic.goto_next()',                                cmd=true  },
+    [ 'Ip'      ] = { F, 'Goto prev error',           'lua vim.diagnostic.goto_prev()',                                cmd=true  },
+    [ 'Ihs'     ] = { F, 'Highlight Symbol',          'lua LspDocumentHighlight()',                                    cmd=true  },
+    [ 'Id'      ] = { F, 'Go to definition',          'lua vim.lsp.buf.definition()',                                  cmd=true  },
+    [ 'Ihc'     ] = { F, 'Clear Lsp Highlight Symbol',   ':lua vim.lsp.buf.clear_references()<ESC>'                           },
+    -- Misc --
+    [ 'Me'      ] = { F, 'Telescope',                   ':Telescope<CR>' },
+    [ 'Mn'      ] = { F, 'New Tab',                     ':tabnew<ESC>'   },
+    [ 'Mc'      ] = { F, 'Set Dir to CWD of Open File', ':cd %:p:h<CR>' },
+    -- Sourcing / Execution --
+    [ 'SX'      ] = { F, 'Execute with args',      ':!%'            },
+    [ 'Sl'      ] = { F, 'Luafile',                ':luafile %<CR>' },
+    [ 'Ss'      ] = { F, 'Source file',            ':%so<CR>'       },
+    [ 'Sx'      ] = { F, 'Execute',                ':!%<CR>'        },
+    -- Terminal --
+    [ 'Tn'      ] = { F, 'New Terminal',           ':term<ESC>' },
+    -- One Key -- 
     [ 'E'       ] = { F, 'CWD Edit',               'feedkeys(":e " . FilePathFull() . "/")',                    expr=true },
-    [ 'FS'      ] = { F, 'Session Save',           ':AutoSession save<CR>'                                                },
-    [ 'Fa'      ] = { F, '! Session Auto Save',    ':AutoSession toggle<CR>'                                              },
-    [ 'Fc'      ] = { F, 'Session Search',         ':AutoSession search<CR>'                                              },
-    [ 'Fs'      ] = { F, '[Args] Session Save',    ':AutoSession save '                                                   },
-    [ 'IN'      ] = { F, 'Goto prev error',        'lua vim.diagnostic.goto_prev()',                            cmd=true  },
-    [ 'Ic'      ] = { F, 'Show code-action',       'lua require("actions-preview").code_actions()',             cmd=true  },
-    [ 'Ii'      ] = { F, 'Show diagnostics',       'lua vim.diagnostic.open_float(nil, {focus=T, scope="cursor"})', cmd=true },
-    [ 'Il'      ] = { F, 'hover lsp info',         'lua vim.lsp.buf.hover()',                                   cmd=true  },
-    [ 'In'      ] = { F, 'Goto next error',        'lua vim.diagnostic.goto_next()',                            cmd=true  },
-    [ 'Ip'      ] = { F, 'Goto prev error',        'lua vim.diagnostic.goto_prev()',                            cmd=true  },
-    [ 'Ih'      ] = { F, 'Highlight Symbol',       'lua LspDocumentHighlight()',                                cmd=true  },
-    [ 'Id'      ] = { F, 'Go to definition',       'lua vim.lsp.buf.definition()',                              cmd=true  },
-    [ 'IH'      ] = { F, 'Clear Lsp Highlight Symbol',   ':lua vim.lsp.buf.clear_references()<ESC>'                       },
-    [ 'SX'      ] = { F, 'Execute with args',      ':!%'                                                                  },
-    [ 'Sl'      ] = { F, 'Luafile',                ':luafile %<CR>'                                                       },
-    [ 'Ss'      ] = { F, 'Source file',            ':%so<CR>'                                                             },
-    [ 'Sx'      ] = { F, 'Execute',                ':!%<CR>'                                                              },
-    [ 'Te'      ] = { F, 'Telescope',              ':Telescope<CR>'                                                       },
-    [ 'Tn'      ] = { F, 'New Tab',                ':tabnew<ESC>'                                                         },
-    [ 'Tt'      ] = { F, 'Terminal',               ':term<ESC>'                                                           },
     [ 'W'       ] = { F, 'Write',                  ':w<ESC>'                                                              },
     [ 'b'       ] = { F, 'open buffer',            ':Buffers<ESC>'                                                        },
     [ 'cA'      ] = { F, 'Start LSP',              ':LspStart()<CR>'                                                      },

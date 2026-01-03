@@ -28,6 +28,13 @@ cmp.setup({
     ['<C-y>'] = cmp.mapping.confirm( { select = true} ),
     ['<C-S-y>'] = cmp.mapping.complete(),
     ['<C-S-e>'] = cmp.mapping.close(),
+    ['<C-S-p>'] = cmp.mapping.complete({
+      config = {
+        sources = {
+          { name = 'path' }
+        }
+      }
+    }),
   },
   sources = cmp.config.sources({
     { name = 'nvim_lsp' },

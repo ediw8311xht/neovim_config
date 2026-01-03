@@ -53,9 +53,9 @@ which_key.setup({
   },
 })
 
-which_key.add({
-  { "<leader>B", group = "buffers", expand = function()
-      return require("which-key.extras").expand.buf()
-    end
-  },
-})
+-- which_key.add({
+--   { "<leader>B", group = "buffers", expand = function()
+--       return require("which-key.extras").expand.buf()
+--     end
+--   },
+-- })

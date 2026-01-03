@@ -71,7 +71,7 @@ let g:floaterm_opener='edit'
 let g:html_mode      = 1
 let g:is_bash        = 1
 let g:markdown_recommended_style=0
-let g:neoterm_automap_keys=',Tt'
+"let g:neoterm_automap_keys=',Tt'
 let g:vimwiki_global_ext = 0 "Prevent vimwiki from running on markdown not in ~/vimwiki dir.
 
 "--------------------------------------------LF
