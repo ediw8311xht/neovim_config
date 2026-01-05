@@ -196,7 +196,7 @@ LEADER_MAPPINGS = {
     -- One Key -- 
     [ 'E'       ] = { F, 'CWD Edit',               'feedkeys(":e " . FilePathFull() . "/")',                    expr=true },
     [ 'W'       ] = { F, 'Write',                  ':w<ESC>'                                                              },
-    [ 'b'       ] = { F, 'open buffer',            ':Buffers<ESC>'                                                        },
+    [ 'b'       ] = { F, 'open buffer',            function() require("telescope.builtin").buffers() end },
     [ 'cA'      ] = { F, 'Start LSP',              ':LspStart()<CR>'                                                      },
     [ 'cB'      ] = { F, 'Prev Background',        'CyBack(-1)',                                                expr=true },
     [ 'cC'      ] = { F, '! Folds in gutter',      'TogFoldColumn()',                                           expr=true },
