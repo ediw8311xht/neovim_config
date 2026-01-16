@@ -147,6 +147,10 @@ vauto({ "TextYankPost" }, {
 ---------------------------------------ExtensionSpecific
 
 -- eventually will move this to settings.vim
+vim.filetype.add({
+  extension = { page = 'markdown' },
+})
+
 local globcomms = {
   ---- Syntax ----
   [ home .. "/bashrc_files/*" ]              = { "setfiletype bash"      } ,
@@ -182,6 +186,7 @@ local exts = {
   ["cpp"]    = { chmod = "700" },
   ["lisp"]   = { chmod = "700" },
   ["hs"]     = { chmod = "700" },
+  ["page"]   = { },
   ["md"]     = { },
 }
 
