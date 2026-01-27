@@ -31,9 +31,10 @@ function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
   return original_floating_preview(contents, syntax, n_opts, ...)
 end
 function ClipBoardExit()
-  if EnvVarCheck("$DISPLAY") and va.executable("xclip") then
-    va.system('xclip -selection clipboard -i -r <<< ', va.getreg('a'))
+  if EnvVarCheck("DISPLAY") and vfn.executable("xclip") then
+    vfn.system('xclip -selection clipboard -i -r <<< ',  vfn.shellescape(vfn.getreg('')))
   end
+    -- vim.cmd("echo '" .. vfn.getreg('') .. "'")
 end
 
 function AutoSessionStatusLine()

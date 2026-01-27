@@ -127,12 +127,6 @@ fu! GMaps()
   :e /tmp/nvim_mappings.txt
 endfunction
 
-fu! ClipBoardExit()
-  if executable("xclip")
-    call system('xclip -selection clipboard -i -r <<< ', getreg('a'))
-  endif
-endfunction
-
 fu! LspStatus() abort
   if luaeval('#vim.lsp.get_clients(bufnr) > 0')
     return luaeval("require('lsp-status').status()")

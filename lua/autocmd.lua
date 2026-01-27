@@ -162,6 +162,7 @@ local globcomms = {
   [ "*.ex,*.exs" ]                           = { "setfiletype elixir"    } ,
   [ "*.schema" ]                             = { "setfiletype sql"       } ,
   [ home .. "/.config/zathura/*" ]           = { "set syntax=zathurarc"  } ,
+  -- [  ],
   ---- Special ----
   [ home .. "/.bashrc"] = {
     "setfiletype bash",
