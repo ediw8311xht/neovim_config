@@ -98,25 +98,3 @@ lua <<EOF
   })
 EOF
 
-
-" eventually will move this into above
-"  [ home .. "/bashrc_files/*" ]              = { "setfiletype bash"      } ,
-"  [ "*.sh" ]                                 = { "setfiletype bash"      } ,
-"  [ home .. "/.config/polybar/*.ini" ]       = { "setfiletype dosini"    } ,
-"  [ home .. "/.config/polybar/*/*.ini" ]     = { "setfiletype dosini"    } ,
-"  [ "*.kalker" ]                             = { "setfiletype kalker"    } ,
-"  [ home .. "/.config/i3/*" ]                = { "setfiletype i3"        } ,
-"  [ "*.ex,*.exs" ]                           = { "setfiletype elixir"    } ,
-"  [ "*.schema" ]                             = { "setfiletype sql"       } ,
-"  [ home .. "/.config/zathura/*" ]           = { "set syntax=zathurarc"  } ,
-"  ---- Special ----
-"  [ home .. "/.bashrc"] = {
-"    "setfiletype bash",
-"    "source ${HOME}/.config/nvim/language_specific/bashrc.vim"
-"  },
-"  [ home .. "/.config/joplin-desktop/userstyle.css"] = {
-"    "source ${HOME}/.config/nvim/language_specific/joplin_userstyle.vim"
-"  },
-"  [ home .. "/TEST/QUICK/*.cpp" ] = {
-"    "source" .. LanguageSpecificDir .. "/quick_cpp.vim"
-"  },

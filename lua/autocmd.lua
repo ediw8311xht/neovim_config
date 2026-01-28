@@ -72,7 +72,7 @@ end
 
 local function bufnr_add(globcomms)
   for glob,comms in pairs(globcomms) do
-    bufnew_bufread(glob, comms)
+    bufnew_bufread(vfn.expand(glob), comms)
   end
 end
 
@@ -153,27 +153,20 @@ vim.filetype.add({
 
 local globcomms = {
   ---- Syntax ----
-  [ home .. "/bashrc_files/*" ]              = { "setfiletype bash"      } ,
-  [ "*.sh" ]                                 = { "setfiletype bash"      } ,
-  [ home .. "/.config/polybar/*.ini" ]       = { "setfiletype dosini"    } ,
-  [ home .. "/.config/polybar/*/*.ini" ]     = { "setfiletype dosini"    } ,
-  [ "*.kalker" ]                             = { "setfiletype kalker"    } ,
-  [ home .. "/.config/i3/*" ]                = { "setfiletype i3"        } ,
-  [ "*.ex,*.exs" ]                           = { "setfiletype elixir"    } ,
-  [ "*.schema" ]                             = { "setfiletype sql"       } ,
-  [ home .. "/.config/zathura/*" ]           = { "set syntax=zathurarc"  } ,
-  -- [  ],
+  [ "~/bashrc_files/*"           ] = { "setfiletype bash"      } ,
+  [ "*.sh"                       ] = { "setfiletype bash"      } ,
+  [ "~/.config/polybar/*.ini"    ] = { "setfiletype dosini"    } ,
+  [ "~/.config/polybar/*/*.ini"  ] = { "setfiletype dosini"    } ,
+  [ "*.kalker"                   ] = { "setfiletype kalker"    } ,
+  [ "~/.config/i3/*"             ] = { "setfiletype i3"        } ,
+  [ "*.ex,*.exs"                 ] = { "setfiletype elixir"    } ,
+  [ "*.schema"                   ] = { "setfiletype sql"       } ,
+  [ "~/.config/zathura/*"        ] = { "set syntax=zathurarc"  } ,
   ---- Special ----
-  [ home .. "/.bashrc"] = {
-    "setfiletype bash",
-    "source ${HOME}/.config/nvim/language_specific/bashrc.vim"
-  },
-  [ home .. "/.config/joplin-desktop/userstyle.css"] = {
-    "source ${HOME}/.config/nvim/language_specific/joplin_userstyle.vim"
-  },
-  [ home .. "/TEST/QUICK/*.cpp" ] = {
-    "source" .. LanguageSpecificDir .. "/quick_cpp.vim"
-  },
+  [ "*.page"                                 ] = { "source " .. LanguageSpecificDir .. "/gitit.vim"            },
+  [ "~/.bashrc"                              ] = { "source " .. LanguageSpecificDir .. "/bashrc.vim"           },
+  [ "~/.config/joplin-desktop/userstyle.css" ] = { "source " .. LanguageSpecificDir .. "/joplin_userstyle.vim" },
+  [ "~/TEST/QUICK/*.cpp"                     ] = { "source " .. LanguageSpecificDir .. "/quick_cpp.vim"        },
 }
 
 local exts = {

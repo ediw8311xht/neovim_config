@@ -1,81 +1,5 @@
 #!/usr/bin/lua
 
---
---  _____________________________________________________________________________
---  ||                                                                         ||
---  ||                                                         [*map-table*]   ||
---  ||            Mode  | Norm | Ins | Cmd | Vis | Sel | Opr | Term | Lang |   ||
---  ||   Command        +------+-----+-----+-----+-----+-----+------+------+   ||
---  ||   [nore]map      | yes  |  -  |  -  | yes | yes | yes |  -   |  -   |   ||
---  ||   n[nore]map     | yes  |  -  |  -  |  -  |  -  |  -  |  -   |  -   |   ||
---  ||   [nore]map!     |  -   | yes | yes |  -  |  -  |  -  |  -   |  -   |   ||
---  ||   i[nore]map     |  -   | yes |  -  |  -  |  -  |  -  |  -   |  -   |   ||
---  ||   c[nore]map     |  -   |  -  | yes |  -  |  -  |  -  |  -   |  -   |   ||
---  ||   v[nore]map     |  -   |  -  |  -  | yes | yes |  -  |  -   |  -   |   ||
---  ||   x[nore]map     |  -   |  -  |  -  | yes |  -  |  -  |  -   |  -   |   ||
---  ||   s[nore]map     |  -   |  -  |  -  |  -  | yes |  -  |  -   |  -   |   ||
---  ||   o[nore]map     |  -   |  -  |  -  |  -  |  -  | yes |  -   |  -   |   ||
---  ||   t[nore]map     |  -   |  -  |  -  |  -  |  -  |  -  | yes  |  -   |   ||
---  ||   l[nore]map     |  -   | yes | yes |  -  |  -  |  -  |  -   | yes  |   ||
---  ||_________________________________________________________________________||
---  ||                                                                         ||
---  ||   1.4 LISTING MAPPINGS                                [*map-listing*]   ||
---  ||                                                                         ||
---  ||   When listing mappings the characters in the first two columns are:    ||
---  ||                                                                         ||
---  ||    CHAR     MODE                                                        ||
---  ||   <Space>   Normal, Visual, Select and Operator-pending                 ||
---  ||      n      Normal                                                      ||
---  ||      v      Visual and Select                                           ||
---  ||      s      Select                                                      ||
---  ||      x      Visual                                                      ||
---  ||      o      Operator-pending                                            ||
---  ||      !      Insert and Command-line                                     ||
---  ||      i      Insert                                                      ||
---  ||      l      ":lmap" mappings for Insert, Command-line and Lang-Arg      ||
---  ||      c      Command-line                                                ||
---  ||      t      Terminal-Job                                                ||
---  ||-------------------------------------------------------------------------||
---  || mode([{expr}])                                             [*mode()*]   ||
---  ||_________________________________________________________________________||________
---  ||    n         | Normal                                                           ||
---  ||    no        | Op-pending                                                       ||
---  ||    nov       | Op-pending (forced charwise |o_v|)                               ||
---  ||    noV       | Op-pending (forced linewise |o_V|)                               ||
---  ||    noCTRL-V  | Op-pending (forced blockwise |o_CTRL-V|) CTRL-V is one character ||
---  ||    niI       | Normal using |i_CTRL-O| in |Insert-mode|                         ||
---  ||    niR       | Normal using |i_CTRL-O| in |Replace-mode|                        ||
---  ||    niV       | Normal using |i_CTRL-O| in |Virtual-Replace-mode|                ||
---  ||    nt        | Normal in |terminal-emulator| (insert goes to Terminal mode)     ||
---  ||    ntT       | Normal using |t_CTRL-\_CTRL-O| in |Terminal-mode|                ||
---  ||    v         | Visual by character                                              ||
---  ||    vs        | Visual by character using |v_CTRL-O| in Select mode              ||
---  ||    V         | Visual by line                                                   ||
---  ||    Vs        | Visual by line using |v_CTRL-O| in Select mode                   ||
---  ||    CTRL-V    | Visual blockwise                                                 ||
---  ||    CTRL-Vs   | Visual blockwise using |v_CTRL-O| in Select mode                 ||
---  ||    s         | Select by character                                              ||
---  ||    S         | Select by line                                                   ||
---  ||    CTRL-S    | Select blockwise                                                 ||
---  ||    i         | Insert                                                           ||
---  ||    ic        | Insert mode completion |compl-generic|                           ||
---  ||    ix        | Insert mode |i_CTRL-X| completion                                ||
---  ||    R         | Replace |R|                                                      ||
---  ||    Rc        | Replace mode completion |compl-generic|                          ||
---  ||    Rx        | Replace mode |i_CTRL-X| completion                               ||
---  ||    Rv        | Virtual Replace |gR|                                             ||
---  ||    Rvc       | Virtual Replace mode completion |compl-generic|                  ||
---  ||    Rvx       | Virtual Replace mode |i_CTRL-X| completion                       ||
---  ||    c         | Command-line editing                                             ||
---  ||    cr        | Command-line editing overstrike mode |c_<Insert>|                ||
---  ||    cv        | Vim Ex mode |gQ|                                                 ||
---  ||    cvr       | Vim Ex mode while in overstrike mode |c_<Insert>|                ||
---  ||    r         | Hit-enter prompt                                                 ||
---  ||    rm        | The -- more -- prompt                                            ||
---  ||    r?        | A |:confirm| query of some sort                                  ||
---  ||    !         | Shell or external command is executing                           ||
---  ||    t         | Terminal mode: keys go to the job                                ||
---  ||_________________________________________________________________________________||
 local F = false;
 local T = true;
 local c = 'c';
@@ -267,6 +191,7 @@ LEADER_MAPPINGS = {
 PERSONAL_MAPPINGS = { ["regular"] = REGULAR_MAPPINGS, ["leader"] = LEADER_MAPPINGS }
 KeyMapSetter(LEADER_MAPPINGS, "<leader>", false, true)
 KeyMapSetter(REGULAR_MAPPINGS, "", false, true)
+
 -- vim.keymap.set('n', 'gd', function() vim.lsp.buf.definition() end)
 -- vim.keymap.set('n', 'grr', function() vim.lsp.buf.references() end)
 -- vim.keymap.set('n', '<C-m>', function() vim.diagnostic.open_float() end)
@@ -304,3 +229,80 @@ KeyMapSetter(REGULAR_MAPPINGS, "", false, true)
     -- [ '<C-j>'    ] = {F, 'Down Pane',              '<C-w>j'                                     },
     -- [ '<C-k>'    ] = {F, 'Up Pane',                '<C-w>k'                                     },
     -- [ '<C-l>'    ] = {F, 'Right Pane',             '<C-w>l'                                     },
+
+--
+--  _____________________________________________________________________________
+--  ||                                                                         ||
+--  ||                                                         [*map-table*]   ||
+--  ||            Mode  | Norm | Ins | Cmd | Vis | Sel | Opr | Term | Lang |   ||
+--  ||   Command        +------+-----+-----+-----+-----+-----+------+------+   ||
+--  ||   [nore]map      | yes  |  -  |  -  | yes | yes | yes |  -   |  -   |   ||
+--  ||   n[nore]map     | yes  |  -  |  -  |  -  |  -  |  -  |  -   |  -   |   ||
+--  ||   [nore]map!     |  -   | yes | yes |  -  |  -  |  -  |  -   |  -   |   ||
+--  ||   i[nore]map     |  -   | yes |  -  |  -  |  -  |  -  |  -   |  -   |   ||
+--  ||   c[nore]map     |  -   |  -  | yes |  -  |  -  |  -  |  -   |  -   |   ||
+--  ||   v[nore]map     |  -   |  -  |  -  | yes | yes |  -  |  -   |  -   |   ||
+--  ||   x[nore]map     |  -   |  -  |  -  | yes |  -  |  -  |  -   |  -   |   ||
+--  ||   s[nore]map     |  -   |  -  |  -  |  -  | yes |  -  |  -   |  -   |   ||
+--  ||   o[nore]map     |  -   |  -  |  -  |  -  |  -  | yes |  -   |  -   |   ||
+--  ||   t[nore]map     |  -   |  -  |  -  |  -  |  -  |  -  | yes  |  -   |   ||
+--  ||   l[nore]map     |  -   | yes | yes |  -  |  -  |  -  |  -   | yes  |   ||
+--  ||_________________________________________________________________________||
+--  ||                                                                         ||
+--  ||   1.4 LISTING MAPPINGS                                [*map-listing*]   ||
+--  ||                                                                         ||
+--  ||   When listing mappings the characters in the first two columns are:    ||
+--  ||                                                                         ||
+--  ||    CHAR     MODE                                                        ||
+--  ||   <Space>   Normal, Visual, Select and Operator-pending                 ||
+--  ||      n      Normal                                                      ||
+--  ||      v      Visual and Select                                           ||
+--  ||      s      Select                                                      ||
+--  ||      x      Visual                                                      ||
+--  ||      o      Operator-pending                                            ||
+--  ||      !      Insert and Command-line                                     ||
+--  ||      i      Insert                                                      ||
+--  ||      l      ":lmap" mappings for Insert, Command-line and Lang-Arg      ||
+--  ||      c      Command-line                                                ||
+--  ||      t      Terminal-Job                                                ||
+--  ||-------------------------------------------------------------------------||
+--  || mode([{expr}])                                             [*mode()*]   ||
+--  ||_________________________________________________________________________||________
+--  ||    n         | Normal                                                           ||
+--  ||    no        | Op-pending                                                       ||
+--  ||    nov       | Op-pending (forced charwise |o_v|)                               ||
+--  ||    noV       | Op-pending (forced linewise |o_V|)                               ||
+--  ||    noCTRL-V  | Op-pending (forced blockwise |o_CTRL-V|) CTRL-V is one character ||
+--  ||    niI       | Normal using |i_CTRL-O| in |Insert-mode|                         ||
+--  ||    niR       | Normal using |i_CTRL-O| in |Replace-mode|                        ||
+--  ||    niV       | Normal using |i_CTRL-O| in |Virtual-Replace-mode|                ||
+--  ||    nt        | Normal in |terminal-emulator| (insert goes to Terminal mode)     ||
+--  ||    ntT       | Normal using |t_CTRL-\_CTRL-O| in |Terminal-mode|                ||
+--  ||    v         | Visual by character                                              ||
+--  ||    vs        | Visual by character using |v_CTRL-O| in Select mode              ||
+--  ||    V         | Visual by line                                                   ||
+--  ||    Vs        | Visual by line using |v_CTRL-O| in Select mode                   ||
+--  ||    CTRL-V    | Visual blockwise                                                 ||
+--  ||    CTRL-Vs   | Visual blockwise using |v_CTRL-O| in Select mode                 ||
+--  ||    s         | Select by character                                              ||
+--  ||    S         | Select by line                                                   ||
+--  ||    CTRL-S    | Select blockwise                                                 ||
+--  ||    i         | Insert                                                           ||
+--  ||    ic        | Insert mode completion |compl-generic|                           ||
+--  ||    ix        | Insert mode |i_CTRL-X| completion                                ||
+--  ||    R         | Replace |R|                                                      ||
+--  ||    Rc        | Replace mode completion |compl-generic|                          ||
+--  ||    Rx        | Replace mode |i_CTRL-X| completion                               ||
+--  ||    Rv        | Virtual Replace |gR|                                             ||
+--  ||    Rvc       | Virtual Replace mode completion |compl-generic|                  ||
+--  ||    Rvx       | Virtual Replace mode |i_CTRL-X| completion                       ||
+--  ||    c         | Command-line editing                                             ||
+--  ||    cr        | Command-line editing overstrike mode |c_<Insert>|                ||
+--  ||    cv        | Vim Ex mode |gQ|                                                 ||
+--  ||    cvr       | Vim Ex mode while in overstrike mode |c_<Insert>|                ||
+--  ||    r         | Hit-enter prompt                                                 ||
+--  ||    rm        | The -- more -- prompt                                            ||
+--  ||    r?        | A |:confirm| query of some sort                                  ||
+--  ||    !         | Shell or external command is executing                           ||
+--  ||    t         | Terminal mode: keys go to the job                                ||
+--  ||_________________________________________________________________________________||
