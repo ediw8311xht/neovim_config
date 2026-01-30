@@ -15,9 +15,9 @@ require('config/config_notify')
 require('config/config_marks')
 require('config/config_which_key')
 require('config/config_treesitter')
+require('config/config_auto_session')
 -- require('config/config_conform') -- formatting
 -- Rest
-local auto_session  = require('auto-session')
 
 
 local fullscreen_window_toggle = {
@@ -41,16 +41,11 @@ require('telescope').setup({
   defaults = {
     mappings = {
       i = {
-        ['<C-t>'] = require("telescope.actions.layout").toggle_preview
+        ['<C-t>']   = require("telescope.actions.layout").toggle_preview,
+        ['<C-S-t>'] = require("telescope.actions").select_tab,
       }
     }
   }
-})
-auto_session.setup({
-  auto_delete_empty_sessions = true,
-  auto_restore = false,
-  auto_save = false,
-  suppressed_dirs = { "${HOME}/", "${HOME}/bin/" },
 })
 
 require('rainbow-delimiters.setup').setup {
