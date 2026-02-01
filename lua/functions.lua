@@ -1,30 +1,13 @@
 
 local va    = vim.api
 local vfn   = vim.fn
+require("variables")
 require("helper_functions")
 -- local ts    = vim.treesitter
 -- local vauto = va.nvim_create_autocmd
 -- local vc    = vim.cmd
 
---[[
-function GetNested(table, keys)
-  local current = table
-  for i =1, #keys do
-    if keys[i] == nil then
-      return false
-    end
-    current = current[key]
-  end
-  return current
-end
-]]
 
-vim.g.my_floating_preview_options = {
-  border = 'rounded',
-  max_height = 90,
-  max_width = 90,
-  offset_x = 20,
-}
 local original_floating_preview = vim.lsp.util.open_floating_preview
 function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
   local n_opts = TableDifference(vim.g.my_floating_preview_options, opts)
@@ -86,6 +69,7 @@ function ToggleHighlight(highlights)
     end
   end
 end
+
 
 -- function KeyMapSetter2(map, pre, buffer_only, with_which_key)
 --   local which_key = require("which-key")

@@ -2,7 +2,7 @@
 require("auto-session").setup({
   suppressed_dirs = { "${HOME}/", "${HOME}/bin/" },
   auto_save = false,
-  preserve_buffer_on_restore = true,
+  preserve_buffer_on_restore = false,
   purge_after_minutes = nil,
 
   picker_opts = {

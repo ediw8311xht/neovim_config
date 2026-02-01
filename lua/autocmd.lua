@@ -5,8 +5,8 @@ local vfn   = vim.fn
 local vauto = vim.api.nvim_create_autocmd
 local vc    = vim.cmd
 
-ConfigDir = home .. "/.config/nvim"
-LanguageSpecificDir = ConfigDir .. "/language_specific"
+-- ConfigDir = vfn.stdpath("config")
+LanguageSpecificDir = vfn.stdpath("config") .. "/language_specific"
 TemplateDir = home .. "/.config/nvim/language_specific/templates"
 MaxLinesCMP = 2000
 

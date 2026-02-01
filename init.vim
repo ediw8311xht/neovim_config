@@ -22,25 +22,7 @@ source $XDG_CONFIG_HOME/nvim/vim/functions.vim
 
 lua require('base')
 
-"                                   #-IGNORE-#
-"lua require('cmp_config')          #-IGNORE-#
-"lua require('lsp_configs')         #-IGNORE-#
-"lua require('my_elixir')           #-IGNORE-#
-"lua require('gitsigns_config')     #-IGNORE-#
-"lua require('notify_config')       #-IGNORE-#
-"lua require('mappings')            #-IGNORE-#
-"lua require('textobjects')         #-IGNORE-#
-"                                   #-IGNORE-#
-"lua require('config_treesitter')   #-IGNORE-#
-
 call nvim_set_option_value("statusline", g:my_statuslines[0][1], {})
 colorscheme pop-punk
 lua CorrectColors()
 
-"  exe "lcd " . original_dir
-"  let cmd = [&shell, &shellcmdflag, cmd]
-"  let a:jobopts.on_exit = funcref('LfCallback', [lf_tmpfile, lastdir_tmpfile])
-"  echoerr a:jobopts
-"  "call luaeval("vim.notify("..lf_tmpfile..")")
-"  return [v:false, cmd]
-"endfunction

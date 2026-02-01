@@ -3,6 +3,8 @@
 -- vim.highlight.create
 
 require("my_highlight")
+vim.g.python3_host_prog="/usr/bin/python"
+
 vim.g.MyDefaultScheme = { 'pop-punk', 'lua CorrectColors()' }
 vim.g.MySchemes = {
     vim.g.MyDefaultScheme ,
@@ -31,11 +33,16 @@ vim.g.MyColorTable = {
   { "#010101", "."       },
 }
 
-vim.g.python3_host_prog="/usr/bin/python"
 
+vim.g.my_floating_preview_options = {
+  border = 'rounded',
+  max_height = 200,
+  max_width = 200,
+  offset_x = 20,
+}
 
 -- global return
-local sl_session = "[%{v:lua.require('auto-session.lib').current_session_name()}]"
+local sl_session    = "[%{v:lua.require('auto-session.lib').current_session_name()}]"
 local sl_lsp_status = "[%#HLspStatus#%{LspStatus()} %*]"
 local sl_filepath   = "[%F]"
 
@@ -58,7 +65,6 @@ vim.g.my_statuslines = {
 ----------------------------------------------------------
 ---------------------- FZF SETTINGS ----------------------
 ----------------------------------------------------------
-
 vim.g.fzf_vim = {
   [ 'buffers_options' ] = {
     '--style'        ,  'full'      ,

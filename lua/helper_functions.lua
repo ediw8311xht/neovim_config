@@ -3,6 +3,14 @@ function IsEmpty(table)
   return next(table) == nil
 end
 
+function Split(str, v, callback)
+  local l = {}
+  for catch,_ in string.gmatch(str .. v, "(..-)(".. v .. ")") do
+    callback(catch)
+  end
+  return l
+end
+
 function DeepCopy(value)
   local deep_copy = {}
   if type(value) ~= table then
