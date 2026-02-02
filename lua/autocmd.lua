@@ -148,20 +148,30 @@ vauto({ "TextYankPost" }, {
 
 -- eventually will move this to settings.vim
 vim.filetype.add({
-  extension = { page = 'markdown' },
+  extension = {
+    page   = 'markdown',
+    sh     = 'bash',
+    ex     = 'elixir',
+    exs    = 'exliir',
+    schema = 'sql',
+    scm    = 'scheme',
+    kalker = 'kalker',
+    lisp   = 'commonlisp',
+  },
+  pattern = {
+    [ '${HOME}/bashrc_files/.*'            ] = 'bash',
+    [ '${XDG_CONFIG_HOME}/polybar/.*%.ini' ] = 'dosini',
+    [ '${XDG_CONFIG_HOME}/i3/.*'           ] = 'i3',
+    [ '${XDG_CONFIG_HOME}/zathura/.*'      ] = 'zathurarc',
+    -- [ "~/.config/zathura/*"        ] = { "set syntax=zathurarc"  } ,
+    -- [ .config/polybar/*/*.ini"  ] = { "setfiletype dosini"    } ,
+  }
 })
+
 
 local globcomms = {
   ---- Syntax ----
-  [ "~/bashrc_files/*"           ] = { "setfiletype bash"      } ,
-  [ "*.sh"                       ] = { "setfiletype bash"      } ,
-  [ "~/.config/polybar/*.ini"    ] = { "setfiletype dosini"    } ,
-  [ "~/.config/polybar/*/*.ini"  ] = { "setfiletype dosini"    } ,
-  [ "*.kalker"                   ] = { "setfiletype kalker"    } ,
-  [ "~/.config/i3/*"             ] = { "setfiletype i3"        } ,
-  [ "*.ex,*.exs"                 ] = { "setfiletype elixir"    } ,
-  [ "*.schema"                   ] = { "setfiletype sql"       } ,
-  [ "~/.config/zathura/*"        ] = { "set syntax=zathurarc"  } ,
+  [ "~/.config/i3/*" ] = { "setfiletype i3"        } ,
   ---- Special ----
   [ "*.page"                                 ] = { "source " .. LanguageSpecificDir .. "/gitit.vim"            },
   [ "~/.bashrc"                              ] = { "source " .. LanguageSpecificDir .. "/bashrc.vim"           },

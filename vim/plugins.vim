@@ -4,24 +4,6 @@
 " -------------------------------------------------------------------------------------------------------- "
 "Yeah, I use way too many plugins....
 let g:my_plugins = {}
-"-- Cmp
-let g:my_plugins['nvim cmp']            = [ 'hrsh7th',          'nvim-cmp'                      ]
-let g:my_plugins['cmp lsp']             = [ 'hrsh7th',          'cmp-nvim-lsp'                  ]
-let g:my_plugins['cmp lua']             = [ 'hrsh7th',          'cmp-nvim-lua'                  ]
-let g:my_plugins['cmp buffer']          = [ 'hrsh7th',          'cmp-buffer'                    ]
-let g:my_plugins['cmp cmdline']         = [ 'hrsh7th',          'cmp-cmdline'                   ]
-let g:my_plugins['cmp path']            = [ 'hrsh7th',          'cmp-path'                      ]
-let g:my_plugins['cmp auto hint']       = [ 'hrsh7th',          'cmp-nvim-lsp-signature-help'   ]
-let g:my_plugins['cmp omni']            = [ 'hrsh7th',          'cmp-omni'                      ]
-let g:my_plugins['cmp dictionary']      = [ 'uga-rosa',         'cmp-dictionary',               ]
-let g:my_plugins['cmp env']             = [ 'SergioRibera',     'cmp-dotenv'                    ]
-let g:my_plugins['cmp luasnip']         = [ 'saadparwaiz1',     'cmp_luasnip'                   ]
-let g:my_plugins['cmp plain english']   = [ 'uga-rosa',         'cmp-dictionary'                ]
-let g:my_plugins['cmp nvim tags']       = [ 'quangnguyen30192', 'cmp-nvim-tags'                 ]
-let g:my_plugins['cmp ctags']           = [ 'delphinus',        'cmp-ctags'                     ]
-let g:my_plugins['cmp treesitter']      = [ 'ray-x',            'cmp-treesitter',               ]
-let g:my_plugins['latex snips 4 vimtex']= [ 'micangl',          'cmp-vimtex'                    ]
-let g:my_plugins['luasnip']             = [ 'L3MON4D3',         'LuaSnip'                       ]
 "-- Latex
 let g:my_plugins['vim latex']           = [ 'lervag',           'vimtex'                        ]
 "-- Session/View management
@@ -37,8 +19,10 @@ let g:my_plugins['lsp saga']            = [ 'nvimdev',          'lspsaga.nvim'  
 let g:my_plugins['lsp statusline']      = [ 'nvim-lua',         'lsp-status.nvim'               ]
 let g:my_plugins['code-action preview'] = [ 'aznhe21',          'actions-preview.nvim'          ]
 let g:my_plugins['devicons']            = [ 'nvim-tree',        'nvim-web-devicons'             ]
+"-- Scheme
+let g:my_plugins['conjure']             = [ 'Olical',  'conjure' ]
 "-- Lisp
-let g:my_plugins['slimv']              = [ 'kovisoft', 'slimv' ]
+let g:my_plugins['slimv']               = [ 'kovisoft', 'slimv' ]
 "-- Elixir
 let g:my_plugins['elixir']              = [ 'elixir-tools',     'elixir-tools.nvim'             ]
 let g:my_plugins['elixirfiledetect']    = [ 'elixir-editors',   'vim-elixir'                    ]
@@ -74,20 +58,25 @@ let g:my_plugins['Syntax PlantUML']     = [ 'aklt',             'plantuml-syntax
 let g:my_plugins['Syntax markdown']     = [ 'drmingdrmer',      'vim-syntax-markdown'           ]
 "-- Colorscheme
 let g:my_plugins['tokyonight']          = [ 'folke',            'tokyonight.nvim'               ]
-"-- Tried out and not using, keeping here for some reason
-"let g:my_plugins['lisp paredit']                = [ 'vim-scripts',      'paredit.vim'                   ]
-"let g:my_plugins['lisp parinfer']               = [ 'eraserhd',         'parinfer-rust',                {'do': 'cargo build --release'}                 ]
-"let g:my_plugins['lisp vlime']                  = [ 'vlime',            'vlime', { 'rtp': 'vim/'} ]
-"let g:my_plugins['cmp vlime']                   = [ 'HiPhish',          'nvim-cmp-vlime'                ]
-"let g:my_plugins['cl-neovim']                   = [ 'adolenc',          'cl-neovim' ]
-"let g:my_plugins['treesitter-refector']         = [ 'nvim-treesitter',  'nvim-treesitter-refactor'      ]
-"let g:my_plugins['noice, ui system']            = [ 'folke',            'noice.nvim'                    ]
-"let g:my_plugins['rainbow parenthesize']        = [ 'luochen1990',      'rainbow'                       ]
-"let g:my_plugins["live preview html bracey"]    = [ 'turbio',           'bracey.vim', { 'do': 'npm install --prefix server'} ]
-"let g:my_plugins["comceal__conceal_comments"]   = [ 'vim-scripts',      'Comceal'                       ]
-"let g:my_plugins["ufo_req_1"]                   = [ 'kevinhwang91',     'promise-async'                 ]
-"let g:my_plugins["ufo"]                         = [ 'kevinhwang91',     'nvim-ufo'                      ]
-"let g:my_plugins['autoformat']          = [ 'stevearc',         'conform.nvim'                  ]
+"-- Cmp
+let g:my_plugins['nvim cmp']            = [ 'hrsh7th',          'nvim-cmp'                      ]
+let g:my_plugins['cmp lsp']             = [ 'hrsh7th',          'cmp-nvim-lsp'                  ]
+let g:my_plugins['cmp lua']             = [ 'hrsh7th',          'cmp-nvim-lua'                  ]
+let g:my_plugins['cmp buffer']          = [ 'hrsh7th',          'cmp-buffer'                    ]
+let g:my_plugins['cmp cmdline']         = [ 'hrsh7th',          'cmp-cmdline'                   ]
+let g:my_plugins['cmp path']            = [ 'hrsh7th',          'cmp-path'                      ]
+let g:my_plugins['cmp auto hint']       = [ 'hrsh7th',          'cmp-nvim-lsp-signature-help'   ]
+let g:my_plugins['cmp omni']            = [ 'hrsh7th',          'cmp-omni'                      ]
+let g:my_plugins['cmp dictionary']      = [ 'uga-rosa',         'cmp-dictionary'                ]
+let g:my_plugins['cmp env']             = [ 'SergioRibera',     'cmp-dotenv'                    ]
+let g:my_plugins['cmp luasnip']         = [ 'saadparwaiz1',     'cmp_luasnip'                   ]
+let g:my_plugins['cmp plain english']   = [ 'uga-rosa',         'cmp-dictionary'                ]
+let g:my_plugins['cmp nvim tags']       = [ 'quangnguyen30192', 'cmp-nvim-tags'                 ]
+let g:my_plugins['cmp ctags']           = [ 'delphinus',        'cmp-ctags'                     ]
+let g:my_plugins['cmp treesitter']      = [ 'ray-x',            'cmp-treesitter'                ]
+let g:my_plugins['cmp conjure']         = [ 'PaterJason',       'cmp-conjure'                   ]
+let g:my_plugins['latex snips 4 vimtex']= [ 'micangl',          'cmp-vimtex'                    ]
+let g:my_plugins['luasnip']             = [ 'L3MON4D3',         'LuaSnip'                       ]
 " -------------------------------------------------------------------------------------------------------- "
 " -------------------------------------------------------------------------------------------------------- "
 " -------------------------------------------------------------------------------------------------------- "
