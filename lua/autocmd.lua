@@ -10,34 +10,42 @@ LanguageSpecificDir = vfn.stdpath("config") .. "/language_specific"
 TemplateDir = home .. "/.config/nvim/language_specific/templates"
 MaxLinesCMP = 2000
 
-------------------------------Disable_CMP_For_Large_Files
 
 
--- va.nvim_create_augroup("highlight_symbol_treesitter", { clear = true })
+--[[
 
--- function ToggleLspDocumentHighlight()
---   if vfn.exists("highlight_symbol_treesitter")
---     vim.g.enabled_lsp_document_highlight = false
---     vauto({ "CursorMoved" }, {
---       group = "highlight_symbol_treesitter",
---       callback = LspDocumentHighlight
---     })
---     vauto({"CursorMovedI" }, {
---       group = "highlight_symbol_treesitter",
---       callback = function()
---         vim.lsp.buf.clear_references()
---       end
---     })
---   end
--- ToggleLspDocumentHighlight()
+-- Disable_CMP_For_Large_Files
+va.nvim_create_augroup("highlight_symbol_treesitter", { clear = true })
+
+function ToggleLspDocumentHighlight()
+  if vfn.exists("highlight_symbol_treesitter") then
+    vim.g.enabled_lsp_document_highlight = false
+    vauto({ "CursorMoved" }, {
+      group = "highlight_symbol_treesitter",
+      callback = LspDocumentHighlight
+    })
+    vauto({"CursorMovedI" }, {
+      group = "highlight_symbol_treesitter",
+      callback = function()
+        vim.lsp.buf.clear_references()
+      end
+    })
+  end
+end
+ToggleLspDocumentHighlight()
+
+--]]
+
 
 va.nvim_create_augroup("cursorline_hide_inactive_buffer", { clear = true })
+
 vauto({ "BufLeave", "WinLeave" }, {
   group = "cursorline_hide_inactive_buffer",
   callback = function()
     vim.opt_local.cursorline = false
   end
 })
+
 vauto({ "BufEnter", "WinEnter" }, {
   group ="cursorline_hide_inactive_buffer",
   callback = function()
@@ -55,17 +63,18 @@ vauto({ "BufEnter", "BufWinEnter" }, {
 })
 
 ---------------------------------------Check-File-Updates
+
 vauto({ "FocusGained", "CursorHold", "CursorHoldI" }, {
   pattern = { "*" },
   callback = function() vc("silent! checktime") end
 })
 
 ------------------------------------------Buffer-Specific
+
 local function bufnew_bufread(glob, comms)
   vauto({ "BufNewFile", "BufRead" }, {
     pattern = glob,
-    callback = function() for _,com in ipairs(comms) do vc(com)
-    end
+    callback = function() for _,com in ipairs(comms) do vc(com) end
   end
 })
 end
@@ -77,6 +86,7 @@ local function bufnr_add(globcomms)
 end
 
 ------------------------------------------------Templates
+
 local function template_add(glob, template_file, options)
   vauto({ "BufNewFile" }, {
     pattern = glob,
@@ -87,7 +97,8 @@ local function template_add(glob, template_file, options)
       if options.chmod then
         vc("silent !chmod " .. options.chmod .. " %")
       end
-    end})
+    end
+  })
 end
 
 local function template_add_e(exts)
@@ -97,6 +108,7 @@ local function template_add_e(exts)
 end
 
 ------------------------------------------------VimLeave
+
 vauto({ "VimLeave" }, {
   pattern = "*",
   callback = function() ClipBoardExit() end
@@ -118,24 +130,6 @@ vauto({"FileType"}, {
   command = "wincmd L",
 })
 
-----------------------------------------------YankedText
--- -- For use with MapCommandsToReg
--- vim.g.reg_filter_map = {
-  --   [ 'normal' ] = { 'd', 'c', 'D', 'C' },
-  --   [ 'visual' ] = { 'd', 'c', 'D', 'C', 'p', 'P' },
-  -- }
-  -- function MapCommandsToReg(event)
-    --   if event['regname'] ~= "" then
-    --     return
-    --   end
-    --   local reg = vim.g.reg_filter_map['normal'][event['operator']]
-    --   -- if event['visual'] and
-    --   -- else
-    --   -- end
-    --   -- if Contains(vim.g.reg_filter_map, event["operator"]) then
-    --   --   print(vim.inspect(event))
-    --   -- end
-    -- end
 vauto({ "TextYankPost" }, {
   pattern = "*",
   callback = function()
@@ -149,14 +143,17 @@ vauto({ "TextYankPost" }, {
 -- eventually will move this to settings.vim
 vim.filetype.add({
   extension = {
-    page   = 'markdown',
-    sh     = 'bash',
-    ex     = 'elixir',
-    exs    = 'exliir',
-    schema = 'sql',
-    scm    = 'scheme',
-    kalker = 'kalker',
-    lisp   = 'commonlisp',
+    [ 'ex'             ] = 'elixir',
+    [ 'exs'            ] = 'exliir',
+    [ 'hs'             ] = 'haskell',
+    [ 'kalker'         ] = 'kalker',
+    [ 'lisp'           ] = 'lisp',
+    [ 'page'           ] = 'markdown',
+    [ 'schema'         ] = 'sql',
+    [ 'scm'            ] = 'scheme',
+    [ 'sh'             ] = 'bash',
+    [ 'kitty-session'  ] = 'kitty-session',
+    [ 'md'             ] = "markdown",
   },
   pattern = {
     [ '${HOME}/bashrc_files/.*'            ] = 'bash',
@@ -198,3 +195,21 @@ template_add_e(exts)
 bufnr_add(globcomms)
 
 
+----------------------------------------------YankedText
+-- -- For use with MapCommandsToReg
+-- vim.g.reg_filter_map = {
+  --   [ 'normal' ] = { 'd', 'c', 'D', 'C' },
+  --   [ 'visual' ] = { 'd', 'c', 'D', 'C', 'p', 'P' },
+  -- }
+  -- function MapCommandsToReg(event)
+    --   if event['regname'] ~= "" then
+    --     return
+    --   end
+    --   local reg = vim.g.reg_filter_map['normal'][event['operator']]
+    --   -- if event['visual'] and
+    --   -- else
+    --   -- end
+    --   -- if Contains(vim.g.reg_filter_map, event["operator"]) then
+    --   --   print(vim.inspect(event))
+    --   -- end
+    -- end

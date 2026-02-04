@@ -1,9 +1,10 @@
 
--- DisabledLangs = { "txt", "help", "vimdoc", "vim", "doc", "man", "plantuml", "latex" }
--- DisabledLangs = {}
+--[[
+DisabledLangs = { "txt", "help", "vimdoc", "vim", "doc", "man", "plantuml", "latex" }
+DisabledLangs = {}
+--]]
 
 local treesitter = require('nvim-treesitter')
-
 
 --[[
 disable = function(lang, buf)

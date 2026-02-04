@@ -17,6 +17,8 @@
 lua require("autocmd")
 source $XDG_CONFIG_HOME/nvim/vim/settings.vim
 source $XDG_CONFIG_HOME/nvim/vim/slimv_settings.vim
+source $XDG_CONFIG_HOME/nvim/vim/conjure_settings.vim
+source $XDG_CONFIG_HOME/nvim/vim/vimtext_settings.vim
 source $XDG_CONFIG_HOME/nvim/vim/plugins.vim
 source $XDG_CONFIG_HOME/nvim/vim/functions.vim
 

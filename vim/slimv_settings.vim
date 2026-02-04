@@ -1,5 +1,6 @@
 
-
+" note to self: don't set slimv_disable_clojure to 1, messes with lisp
+let g:slimv_disable_scheme = 1 "disable for scheme
 let g:paredit_leader     = '['          "[
 let g:slimv_impl         = 'sbcl'       "sbcl
 let g:slimv_leader       = '\'         "\

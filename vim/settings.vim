@@ -78,23 +78,7 @@ let g:vimwiki_global_ext = 0 "Prevent vimwiki from running on markdown not in ~/
 let g:lf_height=0.9
 let g:lf_map_keys    = 0
 let g:lf_width=0.9
-"-------------------------------------Tex/Latex
-let g:tex_flavor='latex'
-let g:vimtex_compiler_latexmk = { 'out_dir' : '/tmp', }
-let g:vimtex_quickfix_mode=0
-let g:vimtex_view_continuous=1
-let g:vimtex_view_method='zathura'
 
 "-------------------------------------lf
 let g:NERDTreeHijackNetrw = 0 " Add this line if you use NERDTree
 let g:lf_replace_netrw = 1
-
-lua <<EOF
-  vim.filetype.add({
-    extension = {
-      ['kitty-session'] = 'kitty-session',
-      [ "md" ]          = "markdown",
-    }
-  })
-EOF
-
