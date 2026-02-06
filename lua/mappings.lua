@@ -120,7 +120,7 @@ LEADER_MAPPINGS = {
     -- One Key -- 
     [ 'E'       ] = { F, 'CWD Edit',               'feedkeys(":e " . FilePathFull() . "/")',                    expr=true },
     [ 'W'       ] = { F, 'Write',                  ':w<ESC>'                                                              },
-    [ 'b'       ] = { F, 'open buffer',            function() require("telescope.builtin").buffers() end },
+    [ 'b'       ] = { F, 'open buffer',            function() require("telescope.builtin").buffers({ignore_current_buffer=true, disable_coordinates = true}) end },
     [ 'cA'      ] = { F, 'Start LSP',              ':LspStart()<CR>'                                                      },
     [ 'cB'      ] = { F, 'Prev Background',        'CyBack(-1)',                                                expr=true },
     [ 'cC'      ] = { F, '! Folds in gutter',      'TogFoldColumn()',                                           expr=true },
@@ -148,7 +148,7 @@ LEADER_MAPPINGS = {
     [ 'gh'      ] = { F, 'Get Highlight',          'GetHL()',                                                   expr=true },
     [ 'gm'      ] = { F, 'Print Mappings',         ':call GMaps()',                                             cmd=true  },
     [ 'gn'      ] = { F, 'New File',               ':enew<ESC>'                                                           },
-    [ 'grg'     ] = { F, 'Search in All Buffers',  function() require("telescope.builtin").live_grep({grep_open_files = true}) end },
+    [ 'grg'     ] = { F, 'Search in All Buffers',  function() require("telescope.builtin").live_grep({grep_open_files = true, disable_coordinates = true}) end },
     [ 'i'       ] = { F, 'Show diagnostics',       ':lua vim.diagnostic.open_float(nil, {focus=T, scope="cursor"})<ESC>'  },
     [ 'mH'      ] = { F, 'Helpgrep',               ':vert helpgrep '                                                      },
     [ 'mc'      ] = { F, 'Clear Notifications',    function() require("notify").dismiss({silent = true}) end              },

@@ -52,13 +52,12 @@ set cul
 set nocuc
 set cedit=\<C-c>
 set statuscolumn=
-set foldmethod=manual
-set foldcolumn=2
+set foldmethod=marker
+set foldmarker={{{,}}}
+set foldcolumn=1
 set sessionoptions=blank,buffers,curdir,help,tabpages,winsize,winpos,terminal,folds
 set viewoptions=cursor,folds
-"set fillchars=fold:\ ,horiz:█,vert:█
 set fillchars=fold:\ ,horiz:█,vert:░ 
-"set fillchars=fold:\ ,horiz:\ ,vert:\ 
 set background=dark
 autocmd FileType bash setlocal keywordprg=:Man
 
@@ -73,6 +72,11 @@ let g:is_bash        = 1
 let g:markdown_recommended_style=0
 "let g:neoterm_automap_keys=',Tt'
 let g:vimwiki_global_ext = 0 "Prevent vimwiki from running on markdown not in ~/vimwiki dir.
+
+"--------------------------------------------vim-autoformat
+":Autoformat
+let g:formatterpath = [ '/usr/bin/shfmt' ]
+let g:formatters_bash = [ 'shfmt' ]
 
 "--------------------------------------------LF
 let g:lf_height=0.9

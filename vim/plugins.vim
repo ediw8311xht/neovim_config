@@ -18,7 +18,7 @@ let g:my_plugins['lsp lines']           = [ 'maan2003',         'lsp_lines.nvim'
 let g:my_plugins['lsp saga']            = [ 'nvimdev',          'lspsaga.nvim'                  ]
 let g:my_plugins['lsp statusline']      = [ 'nvim-lua',         'lsp-status.nvim'               ]
 let g:my_plugins['code-action preview'] = [ 'aznhe21',          'actions-preview.nvim'          ]
-let g:my_plugins['devicons']            = [ 'nvim-tree',        'nvim-web-devicons'             ]
+"let g:my_plugins['devicons']            = [ 'nvim-tree',        'nvim-web-devicons'             ]
 "-- Scheme
 let g:my_plugins['conjure']             = [ 'Olical',  'conjure' ]
 "-- Lisp
