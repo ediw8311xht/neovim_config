@@ -2,7 +2,7 @@
 -- Useful guide to treesitter querying in nvim
 -- https://jhcha.app/blog/the-power-of-treesitter/
 
-local ts = vim.treesitter
+local ts = vim.treesitter --f
 -- local ts_utils = require("nvim-treesitter.ts_utils")
 local vfn = vim.fn
 local vapi = vim.api
@@ -10,15 +10,6 @@ local vapi = vim.api
 local M = {
 }
 
--- function M.FirstNode(linettt)
---   local s_column = vfn.match(vfn.getline(linettt), '\\S')
---   print("line: ", vfn.getline(linettt))
---   if s_column < 0 then return false else end
---   print("row: ", linettt, s_column)
---   -- return ts.get_node({bufnr = vfn.bufnr(), pos = {line+1, s_column+1} , ignore_injections = false } ):type()
---   return ts.get_node({bufnr = vfn.bufnr(), pos = {linettt-1, s_column} } ):type()
--- end
---
 -- function M.OnSameLine(node1, node2)
 --   local sr1, sc1 = node1:range()
 --   local sr2, sc2 = node2:range()
@@ -76,6 +67,15 @@ function M.Init()
   M.tree = ts.get_parser():parse()[1]
 end
 
+function M.FirstNode(line_number)
+  local s_column = vfn.match(vfn.getline(line_number), '\\S')
+  if s_column < 0 then s_column=0 end
+  return ts.get_node({bufnr = vfn.bufnr(), pos = {line_number-1, s_column}})
+end
+--[[
+
+--]]
+
 function M.Less(p1, p2)      return (p1[1]  < p2[1]) end -- or ( p1[1] == p2[1] and p1[2]   < p2[2] )) end
 function M.LessEqual(p1, p2) return (p1[1] <= p2[1]) end -- or ( p1[1] == p2[1] and p1[2]  <= p2[2] )) end
 function M.Equal(p1, p2)     return (p1[1] == p2[1]) end -- and p1[2] == p2[2]) end
@@ -91,8 +91,8 @@ end
 function M.GoToQuery(query, args)
   ------------- Set options -------------
   local goto_end = args.goto_end or false
-  local reverse = args.reverse or false
-  local inner = args.inner or false
+  local reverse  = args.reverse  or false
+  local inner    = args.inner    or false
   ---------------------------------------
 
   local cpos_row, cpos_col = unpack(vapi.nvim_win_get_cursor(0))
@@ -134,6 +134,18 @@ function M.GoToFunction(args)
   M.GoToQuery(func_query, args)
 end
 
+function M.fold_comments(line_number)
+  local node = M.FirstNode(line_number)
+  if node:type() == "comment" then
+    return 1
+  else
+    return 0
+  end
+end
+
+--[[
+--]]
+
 function M.create_commands()
   vapi.nvim_create_user_command(
     "GotoNextFunctionStart",
@@ -164,10 +176,15 @@ function M.create_commands()
     function() M.GoToFunction({inner=true, goto_end=true}) end,
     { desc="Go to the end of function cursor is currently inside", nargs=0 }
   )
+  vapi.nvim_create_user_command(
+    "FoldComments",
+    function()
+      vim.wo.foldmethod="expr"
+      vim.wo.foldexpr="v:lua.require('my_treesitter_module').fold_comments(v:lnum)"
+    end,
+    { desc="Fold comments automatically with expr." }
+  )
 end
-
--- M.GoToFunction({test = true})
-
 
 return M
 
