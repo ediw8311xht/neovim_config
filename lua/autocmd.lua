@@ -12,7 +12,7 @@ MaxLinesCMP = 2000
 
 
 
---[[
+--[[ {{{
 
 -- Disable_CMP_For_Large_Files
 va.nvim_create_augroup("highlight_symbol_treesitter", { clear = true })
@@ -34,7 +34,7 @@ function ToggleLspDocumentHighlight()
 end
 ToggleLspDocumentHighlight()
 
---]]
+}}} --]]
 
 
 va.nvim_create_augroup("cursorline_hide_inactive_buffer", { clear = true })
@@ -47,6 +47,7 @@ vauto({ "BufLeave", "WinLeave" }, {
 })
 
 vauto({ "BufEnter", "WinEnter" }, {
+  pattern = { "*" },
   group ="cursorline_hide_inactive_buffer",
   callback = function()
     vim.opt_local.cursorline = true
@@ -54,9 +55,9 @@ vauto({ "BufEnter", "WinEnter" }, {
 })
 
 vauto({ "BufEnter", "BufWinEnter" }, {
-  pattern = { "*" },
   callback = function(args)
     if va.nvim_buf_line_count(args.buf) > MaxLinesCMP then
+      require("treesitter").stop()
       require('cmp').setup.buffer( { enabled = false } )
     end
   end
@@ -194,8 +195,7 @@ local exts = {
 template_add_e(exts)
 bufnr_add(globcomms)
 
-
-----------------------------------------------YankedText
+----------------------------------------------YankedText {{{
 -- -- For use with MapCommandsToReg
 -- vim.g.reg_filter_map = {
   --   [ 'normal' ] = { 'd', 'c', 'D', 'C' },
@@ -212,4 +212,4 @@ bufnr_add(globcomms)
     --   -- if Contains(vim.g.reg_filter_map, event["operator"]) then
     --   --   print(vim.inspect(event))
     --   -- end
-    -- end
+    -- end }}}
