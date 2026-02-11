@@ -11,6 +11,9 @@ function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
 	local n_opts = TableDifference(vim.g.my_floating_preview_options, opts)
 	return original_floating_preview(contents, syntax, n_opts, ...)
 end
+function MyTreesitterStatus()
+  return vim.treesitter.highlighter.active[vfn.bufnr()] ~= nil
+end
 function ClipBoardExit()
 	if EnvVarCheck("DISPLAY") and vfn.executable("xclip") then
 		vfn.system("xclip -selection clipboard -i -r <<< ", vfn.shellescape(vfn.getreg("")))

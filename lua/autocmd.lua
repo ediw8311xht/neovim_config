@@ -57,7 +57,7 @@ vauto({ "BufEnter", "WinEnter" }, {
 vauto({ "BufEnter", "BufWinEnter" }, {
   callback = function(args)
     if va.nvim_buf_line_count(args.buf) > MaxLinesCMP then
-      require("treesitter").stop()
+      vim.treesitter.stop()
       require('cmp').setup.buffer( { enabled = false } )
     end
   end
