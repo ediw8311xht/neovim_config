@@ -28,3 +28,12 @@ local fullscreen_window_toggle = {
 CreateToggle(fullscreen_window_toggle)
 
 
+vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
+  vim.lsp.handlers.hover, {
+    border = "rounded",
+    width = 50,
+    height = 25,
+  }
+)
+
+

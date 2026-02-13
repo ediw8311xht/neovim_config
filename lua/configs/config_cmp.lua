@@ -17,8 +17,19 @@ cmp.setup({
     end,
   },
   window = {
-    completion   =  cmp.config.window.bordered(),
-    documentation  =  cmp.config.window.bordered(),
+    completion     =  {
+      winhighlight = "FloatBorder:CmpBorder,Normal:NormalFloat",
+      border = {'┌', '─', '┐', '│', '┘', '─', '└', '│'},
+    },
+    documentation  =  {
+      winhighlight = "FloatBorder:CmpBorder,Normal:NormalFloat",
+      border = {'┌', '─', '┐', '│', '┘', '─', '└', '│'},
+      min_width = 20,
+      min_height = 20,
+      max_width = nil,
+      max_height = nil,
+    },
+    MaxLinesCMP
   },
   mapping = {
     ['<C-p>'] = cmp.mapping.select_prev_item(),
@@ -83,7 +94,7 @@ cmp_dict.setup({
   document = {
 	  enable = true,
 	  command = {
-      "definition_search.sh", "${label}",
+      vim.fs.joinpath(vim.g.my_scripts_dir, "definition_search.sh"), "${label}",
     },
 	}
 })

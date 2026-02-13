@@ -67,6 +67,14 @@ function M.Init()
   M.tree = ts.get_parser():parse()[1]
 end
 
+function M.check_node_type(node, types)
+  local type = node:type()
+  for _,c_type in types do
+    if c_type == type then return true end
+  end
+  return false
+end
+
 function M.FirstNode(line_number)
   local s_column = vfn.match(vfn.getline(line_number), '\\S')
   if s_column < 0 then s_column=0 end
@@ -134,9 +142,30 @@ function M.GoToFunction(args)
   M.GoToQuery(func_query, args)
 end
 
+function M.more_than_one_line(node)
+  local range = node:range()
+  print(range[4], range[2])
+  return range[4] > range[2]
+end
+
+--[[ 
+block to only comment out comments that are multiple lines. 
+--]]
+
+-- TO DO --
+function M.fold_comments_multi(line_number)
+  local max_line = vim.fn.line('$')
+  local node = M.FirstNode(line_number)
+end
+
+-- TO DO --
+function M.fold_comments_block(line_number)
+  local node = M.FirstNode(line_number)
+end
+
 function M.fold_comments(line_number)
   local node = M.FirstNode(line_number)
-  if node:type() == "comment" then
+  if M.check_node_type(node, { "comment", "comment_content" }) then
     return 1
   else
     return 0
@@ -178,11 +207,22 @@ function M.create_commands()
   )
   vapi.nvim_create_user_command(
     "FoldComments",
-    function()
+    function(opts)
       vim.wo.foldmethod="expr"
-      vim.wo.foldexpr="v:lua.require('my_treesitter_module').fold_comments(v:lnum)"
-    end,
-    { desc="Fold comments automatically with expr." }
+      if opts.fargs[1] == "block" then
+        vim.wo.foldexpr="v:lua.require('my_treesitter_module').fold_comments_block(v:lnum)"
+      elseif opts.fargs[1] == "multi" then
+        vim.wo.foldexpr="v:lua.require('my_treesitter_module').fold_comments_multi(v:lnum)"
+      else
+        vim.wo.foldexpr="v:lua.require('my_treesitter_module').fold_comments(v:lnum)"
+      end
+    end, {
+      desc="Fold comments automatically with expr.",
+      nargs = '?',
+      complete = function(_, _, _)
+        return { "block", "multi" }
+      end
+    }
   )
 end
 

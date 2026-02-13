@@ -3,6 +3,7 @@
 -- vim.highlight.create
 
 require("my_highlight")
+vim.g.my_scripts_dir = vim.fs.joinpath(vim.fn.stdpath('config'), "scripts")
 vim.g.python3_host_prog="/usr/bin/python"
 
 vim.g.MyDefaultScheme = { 'pop-punk', 'lua CorrectColors()' }

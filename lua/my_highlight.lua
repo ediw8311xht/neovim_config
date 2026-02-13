@@ -24,8 +24,9 @@ vim.g.my_highlight = {
     ["TermCursor"]      = { "gui=", "NONE",        "guibg=NONE",    "guifg=#00AA00",   },
     ["WinSeparator"]    = { "gui=", "NONE",        "guibg=NONE",    "guifg=#FFFF00",   },
     ["lCursor"]         = { "gui=", "NONE",        "guibg=NONE",    "guifg=NONE",      },
-    ["Function"]        = { "gui=NONE" },
-    ["Keyword"]         = { "gui=NONE" },
+    ["Function"]        = { "gui=", "NONE", },
+    ["Keyword"]         = { "gui=", "NONE", },
+    ["CmpBorder"]     = { "gui=", "NONE", "guifg=", "#009999", "guibg=", "NONE" },
     -- Tree Sitter --
     ["TSCurrentScope"]  = { "gui=NONE", "guibg=#090909" },
     ["clear"]    = { "@lsp.mod",},
