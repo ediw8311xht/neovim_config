@@ -11,6 +11,16 @@ require('telescope').setup({
     disable_coordinates = true,
     path_display = { "smart", "truncate" },
     multi_icon = "",
+    vimgrep_arguments = {
+      "rg",
+      "--color=never",
+      "--no-heading",
+      "--with-filename",
+      "--line-number",
+      "--column",
+      "--smart-case",
+      "--no-config",
+    },
     mappings = {
       i = {
         ['<C-t>']   = require("telescope.actions.layout").toggle_preview,

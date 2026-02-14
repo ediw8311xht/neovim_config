@@ -111,6 +111,7 @@ LEADER_MAPPINGS = {
     [ 'T' ]={group="treesitter"},
     [ 'Tl'      ] = { F, 'Get Treesitter Parser',       'lua= vim.treesitter.get_parser(0):lang()', cmd=true },
     [ 'Tt'      ] = { F, 'Open Treesitter Tree',        'lua vim.treesitter.inspect_tree()',        cmd=true },
+    [ 'Ts'      ] = { F, 'Treesitter Status',           'lua= MyTreesitterStatus()',                cmd=true },
     [ 'M' ]={group="misc"},
     [ 'Mc'      ] = { F, 'Set Dir to CWD of Open File', 'cd %:p:h',  cmd=true },
     [ 'Me'      ] = { F, 'Telescope',                   'Telescope', cmd=true },

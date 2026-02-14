@@ -34,6 +34,18 @@ treesitter.setup {
   -- List of parsers to ignore installing (or "all")
   ignore_install = { "latex", } ,
 
+  indent = {
+    enable = true,
+    disable = {},
+  },
+  highlight = {
+    enable = true,
+    disable = { "zathurarc" },
+    -- additional_vim_regex_highlighting = false,
+  },
+  incremental_selection = {
+    enable = true
+  },
   --[[
   If you need to change the installation directory of the parsers
   (see -> Advanced Setup) parser_install_dir = "/some/path/to/store/parsers",
@@ -52,14 +64,6 @@ treesitter.setup {
     swap = {
       enable = true
     },
-  },
-  incremental_selection = {
-    enable = true
-  },
-  highlight = {
-    enable = true,
-    disable = { "zathurarc" },
-    -- additional_vim_regex_highlighting = false,
   },
 }
 vim.api.nvim_create_autocmd('FileType', {
