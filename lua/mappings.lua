@@ -183,11 +183,11 @@ LEADER_MAPPINGS = {
     [ '<S-Tab>' ] = { F, 'Later',                  'later',                                                     cmd=true  },
     [ '<Tab>'   ] = { F, 'Earlier',                'earlier',                                                   cmd=true  },
   }, [v] = {
+    [ 'vc'      ] = { F, 'column',                 ':%!column -o " " -t<ESC>',                                            },
     [ 'vmf'     ] = { F, 'bc [math] float',        ':!bc -l<ESC>'                                                         },
     [ 'vmi'     ] = { F, 'bc [math] int',          ':!bc -l<ESC>'                                                         },
     [ 'vmq'     ] = { F, 'qalc [math]',            ':!xargs qalc --color=never --terse<ESC>'                              },
-    [ 'vc'      ] = { F, 'column',                 '!column -o " " -t',                                         cmd=true  },
-    [ 'vs'      ] = { F, 'sort',                   'sort',                                                      cmd=true  },
+    [ 'vs'      ] = { F, 'sort',                   ':sort<ESC>',                                                          },
     [ 'vt'      ] = { F, 'title case',             ':s/\\%V\\v\\c\\w(\\a*(\'\\a{0,1})?\\w)?/\\u\\0/g<CR>'                 },
   }
 } -- }}}
