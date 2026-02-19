@@ -1,6 +1,6 @@
 local va = vim.api
 local vfn = vim.fn
-require("variables")
+-- require("variables")
 require("helper_functions")
 -- local ts    = vim.treesitter
 -- local vauto = va.nvim_create_autocmd
@@ -33,9 +33,7 @@ function Cycle(check_var, list, func)
 			return l[1]
 		end
 	end
-	if #list <= 0 then
-		return
-	end
+	if #list <= 0 then return end
 	for i, v in ipairs(list) do
 		if v[2] == o then
 			return func(list[i % #list + 1])
@@ -167,3 +165,4 @@ function RunKeepCursorPosition(command)
 	command()
 	vim.api.nvim_win_set_cursor(0, last_cursor_position)
 end
+

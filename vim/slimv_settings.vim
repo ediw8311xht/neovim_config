@@ -1,6 +1,7 @@
 
 " note to self: don't set slimv_disable_clojure to 1, messes with lisp
-let g:slimv_disable_scheme = 1 "disable for scheme
+"let g:slimv_disable_clojure = 1 "disable for clojure
+"let g:slimv_disable_scheme = 1 "disable for scheme
 let g:paredit_leader     = '['          "[
 let g:slimv_impl         = 'sbcl'       "sbcl
 let g:slimv_leader       = '\'         "\
@@ -12,12 +13,6 @@ let g:slimv_swank_path   = expand('~/quicklisp/slime-helper.el')
 let g:slimv_balloon      = 1
 let g:slimv_strip_ansi   = 1
 let g:slimv_swank_cmd = '! kitty @ launch --type=tab --location=first --keep-focus --tab-title="slimv" sbcl --load "${XDG_DATA_HOME}/nvim/plugged/slimv/slime/start-swank.lisp" &'
-
-"fu! SetReplMappings() 
-"    echo "HI"
-"endfu
-"
-"autocmd Filetype commonlisp call SetReplMappings()
 
 " ------------------------------------------- INFO -------------------------------- "
 "                                                             *g:slimv_repl_split*  "

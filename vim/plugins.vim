@@ -1,7 +1,5 @@
 
-" -------------------------------------------------------------------------------------------------------- "
-" -------------------------------------------------------------------------------------------------------- "
-" -------------------------------------------------------------------------------------------------------- "
+" -------------------------------------------------------------------------------------------------------- " {{{
 "Yeah, I use way too many plugins....
 let g:my_plugins = {}
 "-- Latex
@@ -10,7 +8,6 @@ let g:my_plugins['vim latex']           = [ 'lervag',           'vimtex'        
 let g:my_plugins['auto session']        = [ 'rmagatti',         'auto-session'                  ]
 let g:my_plugins['restore view']        = [ 'vim-scripts',      'restore_view.vim'              ]
 "-- Documentation
-"let g:my_plugins['dasht (docs)'] = [ 'sunaku',  'vim-dasht' ]
 let g:my_plugins['dasht (docs)'] = [ 'sunaku',  'vim-dasht' ]
 "-- Language Server
 let g:my_plugins['lspconfig']           = [ 'neovim',           'nvim-lspconfig'                ]
@@ -18,11 +15,12 @@ let g:my_plugins['lsp lines']           = [ 'maan2003',         'lsp_lines.nvim'
 let g:my_plugins['lsp saga']            = [ 'nvimdev',          'lspsaga.nvim'                  ]
 let g:my_plugins['lsp statusline']      = [ 'nvim-lua',         'lsp-status.nvim'               ]
 let g:my_plugins['code-action preview'] = [ 'aznhe21',          'actions-preview.nvim'          ]
-"let g:my_plugins['devicons']            = [ 'nvim-tree',        'nvim-web-devicons'             ]
+" Fennel for neovim
+let g:my_plugins['nfnl (fennel)'] = [ 'Olical', 'nfnl']
 "-- Scheme
 let g:my_plugins['conjure']             = [ 'Olical',  'conjure' ]
 "-- Lisp
-let g:my_plugins['slimv']               = [ 'kovisoft', 'slimv' ]
+let g:my_plugins['slimv']               = [ 'kovisoft', 'slimv', {'for': 'lisp'} ]
 "-- Elixir
 let g:my_plugins['elixir']              = [ 'elixir-tools',     'elixir-tools.nvim'             ]
 let g:my_plugins['elixirfiledetect']    = [ 'elixir-editors',   'vim-elixir'                    ]
@@ -77,10 +75,9 @@ let g:my_plugins['cmp treesitter']      = [ 'ray-x',            'cmp-treesitter'
 let g:my_plugins['cmp conjure']         = [ 'PaterJason',       'cmp-conjure'                   ]
 let g:my_plugins['latex snips 4 vimtex']= [ 'micangl',          'cmp-vimtex'                    ]
 let g:my_plugins['luasnip']             = [ 'L3MON4D3',         'LuaSnip'                       ]
-" -------------------------------------------------------------------------------------------------------- "
-" -------------------------------------------------------------------------------------------------------- "
-" -------------------------------------------------------------------------------------------------------- "
+" -------------------------------------------------------------------------------------------------------- " }}}
 
+" {{{
 fu! MyInstallPlugin(plg) 
     let l:len = len(a:plg)
 
@@ -95,8 +92,14 @@ call plug#begin()
     for plugin in values(g:my_plugins)
         call MyInstallPlugin(plugin)
     endfor
-    " Breaks everything
-    "Plug 'soemre/commentless.nvim'
     Plug 'AndrewRadev/tagalong.vim'
     Plug 'alvan/vim-closetag'
 call plug#end()
+" }}}
+
+"" {{{
+"let g:my_plugins['devicons'] = [ 'nvim-tree', 'nvim-web-devicons' ]
+"let g:my_plugins['nvim-thyme (fennel)'] = [ 'aileot', 'nvim-thyme' ]
+""Breaks everything
+"Plug 'soemre/commentless.nvim'
+"" }}}

@@ -15,6 +15,7 @@
 
 "call before so plugins/settings don't mess up things
 lua require("autocmd")
+lua require("variables")
 source $XDG_CONFIG_HOME/nvim/vim/settings.vim
 source $XDG_CONFIG_HOME/nvim/vim/slimv_settings.vim
 source $XDG_CONFIG_HOME/nvim/vim/conjure_settings.vim
@@ -24,7 +25,6 @@ source $XDG_CONFIG_HOME/nvim/vim/functions.vim
 
 lua require('base')
 
-call nvim_set_option_value("statusline", g:my_statuslines[0][1], {})
 colorscheme pop-punk
 lua CorrectColors()
 

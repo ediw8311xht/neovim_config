@@ -40,6 +40,7 @@ set undodir=~/.mynvim/undo_dir
 set timeoutlen=500
 set ttimeoutlen=0
 set wildmode=longest,list,full
+set wildignore=*.o,*.a,__pycache__
 set showmode
 set virtualedit=none
 set shiftwidth=2
@@ -59,19 +60,20 @@ set sessionoptions=blank,buffers,curdir,help,tabpages,winsize,winpos,terminal,fo
 set viewoptions=cursor,folds
 set fillchars=fold:\ ,horiz:█,vert:░ 
 set background=dark
+"for fennel nfnl
 autocmd FileType bash setlocal keywordprg=:Man
 
 let g:mapleader = " "
 let g:maplocalleader = ","
 
 "------------------- Plugin options -------------------"
-let g:NERDTreeIgnore = ['\.o$','.cache$','.git$']
-let g:floaterm_opener='edit'
-let g:html_mode      = 1
-let g:is_bash        = 1
-let g:markdown_recommended_style=0
+let g:NERDTreeIgnore             = ['\.o$','.cache$','.git$']
+let g:floaterm_opener            = 'edit'
+let g:html_mode                  = 1
+let g:is_bash                    = 1
+let g:markdown_recommended_style = 0
+let g:vimwiki_global_ext         = 0 "Prevent vimwiki from running on markdown not in ~/vimwiki dir.
 "let g:neoterm_automap_keys=',Tt'
-let g:vimwiki_global_ext = 0 "Prevent vimwiki from running on markdown not in ~/vimwiki dir.
 
 "--------------------------------------------vim-autoformat
 ":Autoformat
@@ -79,10 +81,10 @@ let g:formatterpath = [ '/usr/bin/shfmt' ]
 let g:formatters_bash = [ 'shfmt' ]
 
 "--------------------------------------------LF
-let g:lf_height=0.9
-let g:lf_map_keys    = 0
-let g:lf_width=0.9
+let g:lf_height   = 0.9
+let g:lf_map_keys = 0
+let g:lf_width    = 0.9
 
 "-------------------------------------lf
 let g:NERDTreeHijackNetrw = 0 " Add this line if you use NERDTree
-let g:lf_replace_netrw = 1
+let g:lf_replace_netrw    = 1

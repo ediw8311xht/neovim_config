@@ -8,15 +8,26 @@ local lang_servers      = { 'cssls', 'html', 'jsonls', 'ts_ls', 'vimls', 'eslint
 
 actions_preview.setup({})
 
--- vim.lsp.config('*', {
---   capabilities = {
---     textDocument = {
---       semanticTokens = {
---         multilineTokenSupport = true,
---       }
---     }
---   }
--- })
+-- {{{
+--[[
+vim.lsp.config('*', {
+  capabilities = {
+    textDocument = {
+      semanticTokens = {
+        multilineTokenSupport = true,
+      }
+    }
+  }
+})
+--]]
+-- }}}
+vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
+  vim.lsp.handlers.hover, {
+    border = "rounded",
+    width = 50,
+    height = 25,
+  }
+)
 lspconfig('cssls',   { capabilities = cmp_capabilities })
 lspconfig('html',    { capabilities = cmp_capabilities })
 lspconfig('jsonls',  { capabilities = cmp_capabilities })

@@ -8,8 +8,10 @@ local i = 'i';
 local n = 'n';
 local t = 't';
 local v = 'v';
+local current_file = vim.fn.expand('%:p')
 
--- note to self: look into using `<cmd>` and `<expr>` more IGNORE {{{
+-- Regular Mappings {{{
+-- note to self: look into using `<cmd>` and `<expr>` more IGNORE
 REGULAR_MAPPINGS={
   [e] = {
     [ '+'        ] = {T, 'End of line',            'g_'                                         },
@@ -24,6 +26,7 @@ REGULAR_MAPPINGS={
     [ '<C-S-K>'  ] = {F, 'Up Pane',                '<C-w>k'                                     },
     [ '<C-S-L>'  ] = {F, 'Right pane',             '<C-w>l'                                     },
     [ '<C-S-Tab>'] = {F, 'Previous tab',           'tabprevious',                      cmd=true },
+    [ '<C-S-g>'  ] = {F, '! Floating Term',        ':FloatermToggle!<ESC>'                      },
     [ '<C-S-s>'  ] = {F, 'Substitute +char +vmagic', ':%s/\\v'                                  },
     [ '<C-Tab>'  ] = {F, 'Next tab',               'tabnext',                          cmd=true },
     [ '<C-n>'    ] = {F, '+Nerd Tree',             'NERDTreeToggle',                   cmd=true },
@@ -31,14 +34,13 @@ REGULAR_MAPPINGS={
     [ '<C-w>n'   ] = {F, 'New Buffer Right',       ':new<ESC><C-w>L'                            },
     [ '<ESC>'    ] = {F, 'Clear',                  ':noh<ESC>:echon ""<enter>'                  },
     [ '?'        ] = {F, 'Search +back +vmagic',   '?\\v\\c'                                    },
+    [ 'ZC'       ] = {F, 'Delete Buffer',          ':bd<ESC>'                                   },
     [ 'ZG'       ] = {F, 'Write quit all',         'wqall',                            cmd=true },
     [ '`'        ] = {F, 'Fold',                   '@=(foldlevel(\'.\')?\'za\':"<Space>")<CR>'  },
-    [ '|'        ] = {F, 'Search nomagic',         '/\\V\\c'                                    },
-    [ '{'        ] = {F, 'Prev Function Start',    'GotoPrevFunctionStart',            cmd=true },
-    [ '}'        ] = {F, 'Next Function Start',    'GotoNextFunctionStart',            cmd=true },
     [ 'gne'      ] = {F, 'Next Function End',      'GotoNextFunctionEnd',              cmd=true },
-    [ '<C-S-g>'  ] = {F, '! Floating Term',        ':FloatermToggle!<ESC>'                      },
-    [ 'ZC'       ] = {F, 'Delete Buffer',          ':bd<ESC>'                                   },
+    [ '{'        ] = {F, 'Prev Function Start',    'GotoPrevFunctionStart',            cmd=true },
+    [ '|'        ] = {F, 'Search nomagic',         '/\\V\\c'                                    },
+    [ '}'        ] = {F, 'Next Function Start',    'GotoNextFunctionStart',            cmd=true },
   }, [t] = {
     [ '<C-w>'    ] = {T, 'Normal Mode',     '<C-\\><C-n>'                },
     [ '<C-S-g>'  ] = {T, '! Floating Term', '<C-w>:FloatermToggle!<ESC>' },
@@ -81,10 +83,10 @@ REGULAR_MAPPINGS={
   },
 } -- }}}
 
----------- Remember ----------- {{{
+--[[ Leader Mappings {{{
+---------- Remember -----------
 -- inoremap <expr> key command
--------------------------------
--- beginning
+---------------------------------]]
 LEADER_MAPPINGS = {
   [n] = {
     [ 'B' ]={group="buffer"},
@@ -96,27 +98,33 @@ LEADER_MAPPINGS = {
     [ 'Fa'      ] = { F, '! Session Auto Save',    'AutoSession toggle',  cmd=true },
     [ 'Fc'      ] = { F, 'Session Search',         'AutoSession search',  cmd=true },
     [ 'Fsa'     ] = { F, '[Args] Session Save',    ':AutoSession save '            },
+    [ 'H' ]={group="Help/Docs"},
+    [ 'Hm'      ] = { F, 'Print Mappings File',    'edit ' .. current_file,   cmd=true  },
+    [ 'HM'      ] = { F, 'Print All Mappings',     'GMaps()',                 expr=true },
+    [ 'Hu'      ] = { F, 'Get undo list',          'undolist',                cmd=true  },
+    [ 'Hh'      ] = { F, 'Get Highlight',          'GetHL()',                 expr=true },
     [ 'I' ]={group="lsp"},
-    [ 'Ia'      ] = { F, 'Start LSP',                 'LspStart',                                                      cmd=true },
-    [ 'IA'      ] = { F, 'Stop LSP',                  'LspStop',                                                       cmd=true },
-    [ 'Ic'      ] = { F, 'Show code-action',          'lua require("actions-preview").code_actions()',                 cmd=true },
-    [ 'Id'      ] = { F, 'Go to definition',          'lua vim.lsp.buf.definition()',                                  cmd=true },
-    [ 'Ihs'     ] = { F, 'Highlight Symbol',          'lua LspDocumentHighlight()',                                    cmd=true },
-    [ 'Ii'      ] = { F, 'Show diagnostics',          'lua vim.diagnostic.open_float(nil, {focus=T, scope="cursor"})', cmd=true },
-    [ 'Il'      ] = { F, 'hover lsp info',            'lua vim.lsp.buf.hover()',                                       cmd=true },
-    [ 'In'      ] = { F, 'Goto next error',           'lua vim.diagnostic.goto_next()',                                cmd=true },
-    [ 'Ip'      ] = { F, 'Goto prev error',           'lua vim.diagnostic.goto_prev()',                                cmd=true },
-    [ 'Ihc'     ] = { F, 'Clear Highlight Symbol',    'lua vim.lsp.buf.clear_references()',                            cmd=true },
-    [ 'Iy'      ] = { F, '! lsp_lines',               'lua require("lsp_lines").toggle()',                             cmd=true },
+    [ 'Ia'      ] = { F, 'Start LSP',                 'LspStart',                                                      cmd=true  },
+    [ 'IA'      ] = { F, 'Stop LSP',                  'LspStop',                                                       cmd=true  },
+    [ 'Ic'      ] = { F, 'Show code-action',          'lua require("actions-preview").code_actions()',                 cmd=true  },
+    [ 'Id'      ] = { F, 'Go to definition',          'lua vim.lsp.buf.definition()',                                  cmd=true  },
+    [ 'Ihs'     ] = { F, 'Highlight Symbol',          'lua LspDocumentHighlight()',                                    cmd=true  },
+    [ 'Ii'      ] = { F, 'Show diagnostics',          'lua vim.diagnostic.open_float(nil, {focus=T, scope="cursor"})', cmd=true  },
+    [ 'Il'      ] = { F, 'hover lsp info',            'lua vim.lsp.buf.hover()',                                       cmd=true  },
+    [ 'In'      ] = { F, 'Goto next error',           'lua vim.diagnostic.goto_next()',                                cmd=true  },
+    [ 'Ip'      ] = { F, 'Goto prev error',           'lua vim.diagnostic.goto_prev()',                                cmd=true  },
+    [ 'Ihc'     ] = { F, 'Clear Highlight Symbol',    'lua vim.lsp.buf.clear_references()',                            cmd=true  },
+    [ 'Iy'      ] = { F, '! lsp_lines',               'lua require("lsp_lines").toggle()',                             cmd=true  },
     [ 'T' ]={group="treesitter"},
-    [ 'Tl'      ] = { F, 'Get Treesitter Parser',       'lua= vim.treesitter.get_parser(0):lang()', cmd=true },
-    [ 'Tt'      ] = { F, 'Open Treesitter Tree',        'lua vim.treesitter.inspect_tree()',        cmd=true },
-    [ 'Ts'      ] = { F, 'Treesitter Status',           'lua= MyTreesitterStatus()',                cmd=true },
+    [ 'Tl'      ] = { F, 'Get Treesitter Parser',       'lua= vim.treesitter.get_parser(0):lang()', cmd=true  },
+    [ 'Tt'      ] = { F, 'Open Treesitter Tree',        'lua vim.treesitter.inspect_tree()',        cmd=true  },
+    [ 'Ts'      ] = { F, 'Treesitter Status',           'lua= MyTreesitterStatus()',                cmd=true  },
     [ 'M' ]={group="misc"},
-    [ 'Mc'      ] = { F, 'Set Dir to CWD of Open File', 'cd %:p:h',  cmd=true },
-    [ 'Me'      ] = { F, 'Telescope',                   'Telescope', cmd=true },
-    [ 'Mn'      ] = { F, 'New Tab',                     'tabnew',    cmd=true },
-    [ 'Mt'      ] = { F, 'New Terminal',                'term',      cmd=true },
+    [ 'MT'      ] = { F, 'New Terminal',                'term',      cmd=true  },
+    [ 'Mc'      ] = { F, 'Set Dir to CWD of Open File', 'cd %:p:h',  cmd=true  },
+    [ 'Me'      ] = { F, 'Telescope',                   'Telescope', cmd=true  },
+    [ 'Mn'      ] = { F, 'New File',                    'enew',      cmd=true  },
+    [ 'Mt'      ] = { F, 'New Tab',                     'tabnew',    cmd=true  },
     [ 'S' ]={group="execution"},
     [ 'SX'      ] = { F, 'Execute with args',      ':!%'                 },
     [ 'Sl'      ] = { F, 'Luafile',                'luafile %', cmd=true },
@@ -146,10 +154,6 @@ LEADER_MAPPINGS = {
     [ 'cv'      ] = { F, '! Virtualedit',          'TogVirtualEdit()',                                          expr=true },
     [ 'cw'      ] = { F, '! Wrap',                 'set wrap!',                                                 cmd=true  },
     [ 'df'      ] = { F, 'Find Space EOL',         '%s/\\s\\+\\ze$//gc',                                        cmd=true  },
-    [ 'gu'      ] = { F, 'Get undo list',          'undolist',                                                  cmd=true  },
-    [ 'gh'      ] = { F, 'Get Highlight',          'GetHL()',                                                   expr=true },
-    [ 'gm'      ] = { F, 'Print Mappings',         'GMaps()',                                                   expr=true },
-    [ 'gn'      ] = { F, 'New File',               'enew',                                                      cmd=true  },
     [ 'grg'     ] = { F, 'Search in All Buffers',  function() require("telescope.builtin").live_grep({grep_open_files = true, disable_coordinates = true}) end },
     [ 'i'       ] = { F, 'Show diagnostics',       ':lua vim.diagnostic.open_float(nil, {focus=T, scope="cursor"})<ESC>'  },
     [ 'mH'      ] = { F, 'Helpgrep',               ':vert helpgrep '                                                      },
