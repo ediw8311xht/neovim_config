@@ -8,15 +8,17 @@ let g:my_plugins['vim latex']           = [ 'lervag',           'vimtex'        
 let g:my_plugins['auto session']        = [ 'rmagatti',         'auto-session'                  ]
 let g:my_plugins['restore view']        = [ 'vim-scripts',      'restore_view.vim'              ]
 "-- Documentation
-let g:my_plugins['dasht (docs)'] = [ 'sunaku',  'vim-dasht' ]
+let g:my_plugins['dasht (docs)']        = [ 'sunaku',  'vim-dasht' ]
 "-- Language Server
 let g:my_plugins['lspconfig']           = [ 'neovim',           'nvim-lspconfig'                ]
 let g:my_plugins['lsp lines']           = [ 'maan2003',         'lsp_lines.nvim'                ]
 let g:my_plugins['lsp saga']            = [ 'nvimdev',          'lspsaga.nvim'                  ]
 let g:my_plugins['lsp statusline']      = [ 'nvim-lua',         'lsp-status.nvim'               ]
 let g:my_plugins['code-action preview'] = [ 'aznhe21',          'actions-preview.nvim'          ]
+"-- Paredit
+let g:my_plugins['paredit']             = [ 'julienvincent', 'nvim-paredit', { 'for': ['clojure', 'fennel', 'scheme'] } ]
 " Fennel for neovim
-let g:my_plugins['nfnl (fennel)'] = [ 'Olical', 'nfnl']
+let g:my_plugins['nfnl (fennel)']       = [ 'Olical', 'nfnl']
 "-- Scheme
 let g:my_plugins['conjure']             = [ 'Olical',  'conjure' ]
 "-- Lisp

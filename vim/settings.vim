@@ -60,6 +60,7 @@ set sessionoptions=blank,buffers,curdir,help,tabpages,winsize,winpos,terminal,fo
 set viewoptions=cursor,folds
 set fillchars=fold:\ ,horiz:█,vert:░ 
 set background=dark
+set scrolloff=8
 "for fennel nfnl
 autocmd FileType bash setlocal keywordprg=:Man
 
@@ -77,8 +78,10 @@ let g:vimwiki_global_ext         = 0 "Prevent vimwiki from running on markdown n
 
 "--------------------------------------------vim-autoformat
 ":Autoformat
-let g:formatterpath = [ '/usr/bin/shfmt' ]
+let g:formatterpath = [ '/usr/bin/' ]
 let g:formatters_bash = [ 'shfmt' ]
+let g:formatdef_fnlfmt = '"fnlfmt -"'
+let g:formatters_fennel = [ 'fnlfmt' ]
 
 "--------------------------------------------LF
 let g:lf_height   = 0.9

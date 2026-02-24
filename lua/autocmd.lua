@@ -10,50 +10,49 @@ LanguageSpecificDir = vfn.stdpath("config") .. "/language_specific"
 TemplateDir = home .. "/.config/nvim/language_specific/templates"
 MaxLinesCMP = 2000
 
+------------------------------------------Buffer-Specific
 
-
---[[ {{{
-
--- Disable_CMP_For_Large_Files
-va.nvim_create_augroup("highlight_symbol_treesitter", { clear = true })
-
-function ToggleLspDocumentHighlight()
-  if vfn.exists("highlight_symbol_treesitter") then
-    vim.g.enabled_lsp_document_highlight = false
-    vauto({ "CursorMoved" }, {
-      group = "highlight_symbol_treesitter",
-      callback = LspDocumentHighlight
+local function set_buffer_autocommands(globcomms)
+  for glob, cback in pairs(globcomms) do
+    vauto({ "BufNewFile", "BufRead" }, {
+      pattern = vfn.expand(glob),
+      callback = cback
     })
-    vauto({"CursorMovedI" }, {
-      group = "highlight_symbol_treesitter",
+  end
+end
+
+------------------------------------------------Templates
+
+local function set_templates(exts)
+  for ext, options in pairs(exts) do
+    vauto({ "BufNewFile" }, {
+      pattern = "*." .. ext,
       callback = function()
-        vim.lsp.buf.clear_references()
+        local full_path = TemplateDir .. "template." .. ext
+        vc("keepalt 0read " .. full_path)
+        vc("silent w")
+        if options.chmod then
+          vc("silent !chmod " .. options.chmod .. " %")
+        end
       end
     })
   end
 end
-ToggleLspDocumentHighlight()
 
-}}} --]]
-
-
+---------------------------------------Changing buffer hide cursor on inactive
 va.nvim_create_augroup("cursorline_hide_inactive_buffer", { clear = true })
-
 vauto({ "BufLeave", "WinLeave" }, {
   group = "cursorline_hide_inactive_buffer",
-  callback = function()
-    vim.opt_local.cursorline = false
-  end
+  callback = function() vim.opt_local.cursorline = false end
 })
 
 vauto({ "BufEnter", "WinEnter" }, {
   pattern = { "*" },
   group ="cursorline_hide_inactive_buffer",
-  callback = function()
-    vim.opt_local.cursorline = true
-  end
+  callback = function() vim.opt_local.cursorline = true end
 })
 
+---------------------------------------Large files disable cmp
 vauto({ "BufEnter", "BufWinEnter" }, {
   callback = function(args)
     if va.nvim_buf_line_count(args.buf) > MaxLinesCMP then
@@ -69,44 +68,6 @@ vauto({ "FocusGained", "CursorHold", "CursorHoldI" }, {
   pattern = { "*" },
   callback = function() vc("silent! checktime") end
 })
-
-------------------------------------------Buffer-Specific
-
-local function bufnew_bufread(glob, comms)
-  vauto({ "BufNewFile", "BufRead" }, {
-    pattern = glob,
-    callback = function() for _,com in ipairs(comms) do vc(com) end
-  end
-})
-end
-
-local function bufnr_add(globcomms)
-  for glob,comms in pairs(globcomms) do
-    bufnew_bufread(vfn.expand(glob), comms)
-  end
-end
-
-------------------------------------------------Templates
-
-local function template_add(glob, template_file, options)
-  vauto({ "BufNewFile" }, {
-    pattern = glob,
-    callback = function()
-      local full_path = TemplateDir .. template_file
-      vc("keepalt 0read " .. full_path)
-      vc("silent w")
-      if options.chmod then
-        vc("silent !chmod " .. options.chmod .. " %")
-      end
-    end
-  })
-end
-
-local function template_add_e(exts)
-  for ext, options in pairs(exts) do
-    template_add("*." .. ext, "/template." .. ext, options)
-  end
-end
 
 ------------------------------------------------VimLeave
 
@@ -161,22 +122,16 @@ vim.filetype.add({
     [ '${XDG_CONFIG_HOME}/polybar/.*%.ini' ] = 'dosini',
     [ '${XDG_CONFIG_HOME}/i3/.*'           ] = 'i3',
     [ '${XDG_CONFIG_HOME}/zathura/.*'      ] = 'zathurarc',
-    -- [ "~/.config/zathura/*"        ] = { "set syntax=zathurarc"  } ,
-    -- [ .config/polybar/*/*.ini"  ] = { "setfiletype dosini"    } ,
   }
 })
 
 
 local globcomms = {
-  ---- Syntax ----
-  [ "~/.config/i3/*" ] = { "setfiletype i3"        } ,
-  ---- Special ----
-  [ "*.page"                                 ] = { "source " .. LanguageSpecificDir .. "/gitit.vim"            },
-  [ "~/.bashrc"                              ] = { "source " .. LanguageSpecificDir .. "/bashrc.vim"           },
-  [ "~/.config/joplin-desktop/userstyle.css" ] = { "source " .. LanguageSpecificDir .. "/joplin_userstyle.vim" },
-  [ "~/TEST/QUICK/*.cpp"                     ] = { "source " .. LanguageSpecificDir .. "/quick_cpp.vim"        },
+  [ "*.page"                                 ] = function() vc( "source" .. LanguageSpecificDir .. "/gitit.vim"            ) end,
+  [ "~/.bashrc"                              ] = function() vc( "source" .. LanguageSpecificDir .. "/bashrc.vim"           ) end,
+  [ "~/.config/joplin-desktop/userstyle.css" ] = function() vc( "source" .. LanguageSpecificDir .. "/joplin_userstyle.vim" ) end,
+  [ "~/TEST/QUICK/*.cpp"                     ] = function() vc( "source" .. LanguageSpecificDir .. "/quick_cpp.vim"        ) end,
 }
-
 local exts = {
   ["sh"]     = { chmod = "700" },
   ["py"]     = { chmod = "700" },
@@ -192,24 +147,47 @@ local exts = {
   ["md"]     = { },
 }
 
-template_add_e(exts)
-bufnr_add(globcomms)
+set_templates(exts)
+set_buffer_autocommands(globcomms)
 
-----------------------------------------------YankedText {{{
+-- {{{
+----------------------------------------------YankedText
 -- -- For use with MapCommandsToReg
 -- vim.g.reg_filter_map = {
-  --   [ 'normal' ] = { 'd', 'c', 'D', 'C' },
-  --   [ 'visual' ] = { 'd', 'c', 'D', 'C', 'p', 'P' },
-  -- }
-  -- function MapCommandsToReg(event)
-    --   if event['regname'] ~= "" then
-    --     return
-    --   end
-    --   local reg = vim.g.reg_filter_map['normal'][event['operator']]
-    --   -- if event['visual'] and
-    --   -- else
-    --   -- end
-    --   -- if Contains(vim.g.reg_filter_map, event["operator"]) then
-    --   --   print(vim.inspect(event))
-    --   -- end
-    -- end }}}
+--   [ 'normal' ] = { 'd', 'c', 'D', 'C' },
+--   [ 'visual' ] = { 'd', 'c', 'D', 'C', 'p', 'P' },
+-- }
+-- function MapCommandsToReg(event)
+--   if event['regname'] ~= "" then
+--     return
+--   end
+--   local reg = vim.g.reg_filter_map['normal'][event['operator']]
+--   -- if event['visual'] and
+--   -- else
+--   -- end
+--   -- if Contains(vim.g.reg_filter_map, event["operator"]) then
+--   --   print(vim.inspect(event))
+--   -- end
+-- end
+-- -- Disable_CMP_For_Large_Files
+-- 
+-- va.nvim_create_augroup("highlight_symbol_treesitter", { clear = true })
+--
+-- function ToggleLspDocumentHighlight()
+--   if vfn.exists("highlight_symbol_treesitter") then
+--     vim.g.enabled_lsp_document_highlight = false
+--     vauto({ "CursorMoved" }, {
+--       group = "highlight_symbol_treesitter",
+--       callback = LspDocumentHighlight
+--     })
+--     vauto({"CursorMovedI" }, {
+--       group = "highlight_symbol_treesitter",
+--       callback = function()
+--         vim.lsp.buf.clear_references()
+--       end
+--     })
+--   end
+-- end
+-- ToggleLspDocumentHighlight()
+-- }}}
+

@@ -12,7 +12,7 @@ function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
 	return original_floating_preview(contents, syntax, n_opts, ...)
 end
 function MyTreesitterStatus()
-  return vim.treesitter.highlighter.active[vfn.bufnr()] ~= nil
+	return vim.treesitter.highlighter.active[vfn.bufnr()] ~= nil
 end
 function ClipBoardExit()
 	if EnvVarCheck("DISPLAY") and vfn.executable("xclip") then
@@ -33,7 +33,9 @@ function Cycle(check_var, list, func)
 			return l[1]
 		end
 	end
-	if #list <= 0 then return end
+	if #list <= 0 then
+		return
+	end
 	for i, v in ipairs(list) do
 		if v[2] == o then
 			return func(list[i % #list + 1])
@@ -74,6 +76,7 @@ function ToggleHighlight(highlights)
 	end
 end
 
+-- {{{
 -- function KeyMapSetter2(map, pre, buffer_only, with_which_key)
 --   local which_key = require("which-key")
 --   for mode, mode_map in pairs(map) do
@@ -101,6 +104,8 @@ end
 --     end
 --   end
 -- end
+-- }}}
+
 function KeyMapSetter(map, pre, buffer_only, with_which_key)
 	local which_key = require("which-key")
 	for mode, mode_map in pairs(map) do
@@ -109,7 +114,9 @@ function KeyMapSetter(map, pre, buffer_only, with_which_key)
 				which_key.add({ pre .. key, group = tbl.group, mode = mode })
 				goto continue
 			end
-			if with_which_key then which_key.add({ pre .. key, desc = tbl[2], mode = mode }) end
+			if with_which_key then
+				which_key.add({ pre .. key, desc = tbl[2], mode = mode })
+			end
 			local keymap_cmd = (tbl.cmd and "<CMD>" .. tbl[3] .. "<CR>") or tbl[3]
 			vim.keymap.set(mode, pre .. key, keymap_cmd, {
 				remap = tbl[1],
@@ -117,7 +124,7 @@ function KeyMapSetter(map, pre, buffer_only, with_which_key)
 				buffer = buffer_only,
 				expr = tbl.expr,
 			})
-      ::continue::
+			::continue::
 		end
 	end
 end
