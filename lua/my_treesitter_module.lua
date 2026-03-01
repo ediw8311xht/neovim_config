@@ -10,6 +10,7 @@ local vapi = vim.api
 local M = {
 }
 
+-- {{{
 -- function M.OnSameLine(node1, node2)
 --   local sr1, sc1 = node1:range()
 --   local sr2, sc2 = node2:range()
@@ -58,6 +59,7 @@ local M = {
 --
 -- -- M.Gtest()
 -- -- print(ts.highlighter.active(vapi.nvim_get_current_buf()))
+-- }}}
 
 function M.Init()
   M.br = vapi.nvim_get_current_buf()
@@ -69,8 +71,10 @@ end
 
 function M.check_node_type(node, types)
   local type = node:type()
-  for _,c_type in types do
-    if c_type == type then return true end
+  for _,c_type in ipairs(types) do
+    if c_type == type then
+      return true
+    end
   end
   return false
 end
@@ -163,9 +167,14 @@ function M.fold_comments_block(line_number)
   local node = M.FirstNode(line_number)
 end
 
-function M.fold_comments(line_number)
-  local node = M.FirstNode(line_number)
+function M.fold_comments()
+  print("HERE")
+  local node = M.FirstNode(vim.v.lnum)
+  print(vim.v.lnum)
+  print(node)
+  print(node:type())
   if M.check_node_type(node, { "comment", "comment_content" }) then
+    print("BYE")
     return 1
   else
     return 0
@@ -208,19 +217,30 @@ function M.create_commands()
   vapi.nvim_create_user_command(
     "FoldComments",
     function(opts)
-      vim.wo.foldmethod="expr"
+      if opts.fargs[1] == "off" then
+        vim.o.foldmethod = opts.fargs[2] or "marker"
+      end
+      vim.o.foldmethod = "expr"
       if opts.fargs[1] == "block" then
-        vim.wo.foldexpr="v:lua.require('my_treesitter_module').fold_comments_block(v:lnum)"
+        vim.o.foldexpr = "v:lua.require'my_treesitter_module'.fold_comments_block()"
       elseif opts.fargs[1] == "multi" then
-        vim.wo.foldexpr="v:lua.require('my_treesitter_module').fold_comments_multi(v:lnum)"
+        vim.o.foldexpr = "v:lua.require'my_treesitter_module'.fold_comments_multi()"
+      elseif not opts.fargs[1] or opts.fargs[1] == "single" then
+        vim.o.foldexpr = "v:lua.require'my_treesitter_module'.fold_comments()"
       else
-        vim.wo.foldexpr="v:lua.require('my_treesitter_module').fold_comments(v:lnum)"
+        error("invalid argument")
       end
     end, {
       desc="Fold comments automatically with expr.",
       nargs = '?',
-      complete = function(_, _, _)
-        return { "block", "multi" }
+      -- function (ArgLead, CmdLine, CursorPos)
+      complete = function(_, cmdline, _)
+        local tbl = Split(cmdline, "[ ]+")
+        if string.sub(cmdline, -4) == "off" then
+          return { "marker", "marker", "manual",  "expr",    "indent",  "syntax",  "diff", }
+        else
+          return { "single", "block", "multi", "off", }
+        end
       end
     }
   )

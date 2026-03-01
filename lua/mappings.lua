@@ -82,11 +82,10 @@ REGULAR_MAPPINGS={
     [ "<C-9>" ] = { F, 'Go to last tab', ":tablast<CR>"  },
   },
 } -- }}}
-
---[[ Leader Mappings {{{
+-- Leader Mappings {{{
 ---------- Remember -----------
 -- inoremap <expr> key command
----------------------------------]]
+-------------------------------
 LEADER_MAPPINGS = {
   [n] = {
     [ 'B' ]={group="buffer"},
@@ -199,13 +198,13 @@ LEADER_MAPPINGS = {
     [ 'vs'      ] = { F, 'sort',                   ':sort<ESC>',                                                          },
     [ 'vt'      ] = { F, 'title case',             ':s/\\%V\\v\\c\\w(\\a*(\'\\a{0,1})?\\w)?/\\u\\0/g<CR>'                 },
   }
-} -- }}}
+} --}}}
 
 PERSONAL_MAPPINGS = { ["regular"] = REGULAR_MAPPINGS, ["leader"] = LEADER_MAPPINGS }
 KeyMapSetter(LEADER_MAPPINGS, "<leader>", false, true)
 KeyMapSetter(REGULAR_MAPPINGS, "", false, true)
 
--- {{{
+-- commented out {{{
 -- vim.keymap.set('n', 'gd', function() vim.lsp.buf.definition() end)
 -- vim.keymap.set('n', 'grr', function() vim.lsp.buf.references() end)
 -- vim.keymap.set('n', '<C-m>', function() vim.diagnostic.open_float() end)
@@ -237,8 +236,7 @@ KeyMapSetter(REGULAR_MAPPINGS, "", false, true)
 -- [ '<C-k>'    ] = {F, 'Up Pane',                '<C-w>k'                                     },
 -- [ '<C-l>'    ] = {F, 'Right Pane',             '<C-w>l'                                     },
 -- }}}
-
---[[ {{{
+--[[ info {{{
  _____________________________________________________________________________
  ||                                                                         ||
  ||                                                         [*map-table*]   ||
@@ -314,4 +312,4 @@ KeyMapSetter(REGULAR_MAPPINGS, "", false, true)
  ||    !         | Shell or external command is executing                           ||
  ||    t         | Terminal mode: keys go to the job                                ||
  ||_________________________________________________________________________________||
-{{{ --]]
+}}} --]]

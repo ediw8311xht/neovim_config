@@ -3,14 +3,6 @@ function IsEmpty(table)
   return next(table) == nil
 end
 
-function Split(str, v, callback)
-  local l = {}
-  for catch,_ in string.gmatch(str .. v, "(..-)(".. v .. ")") do
-    callback(catch)
-  end
-  return l
-end
-
 function DeepCopy(value)
   local deep_copy = {}
   if type(value) ~= table then
@@ -48,5 +40,19 @@ function Contains(t, check_value, callback)
     end
   end
   return false
+end
+
+function Split(str, v, options)
+  local l = {}
+  local default_opts = {
+    callback   = function(c, t) table.insert(t, c) end,
+    str_append = v,
+  }
+  options = TableDifference(default_opts, options or {}, false)
+  for catch in string.gmatch(str .. options.str_append, '(.-)('.. v .. ')') do
+    print(catch)
+    options.callback(catch, l)
+  end
+  return l
 end
 
