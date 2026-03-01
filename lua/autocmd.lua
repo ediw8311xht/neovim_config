@@ -28,7 +28,7 @@ local function set_templates(exts)
     vauto({ "BufNewFile" }, {
       pattern = "*." .. ext,
       callback = function()
-        local full_path = TemplateDir .. "template." .. ext
+        local full_path = TemplateDir .. "/template." .. ext
         vc("keepalt 0read " .. full_path)
         vc("silent w")
         if options.chmod then
@@ -127,10 +127,10 @@ vim.filetype.add({
 
 
 local globcomms = {
-  [ "*.page"                                 ] = function() vc( "source" .. LanguageSpecificDir .. "/gitit.vim"            ) end,
-  [ "~/.bashrc"                              ] = function() vc( "source" .. LanguageSpecificDir .. "/bashrc.vim"           ) end,
-  [ "~/.config/joplin-desktop/userstyle.css" ] = function() vc( "source" .. LanguageSpecificDir .. "/joplin_userstyle.vim" ) end,
-  [ "~/TEST/QUICK/*.cpp"                     ] = function() vc( "source" .. LanguageSpecificDir .. "/quick_cpp.vim"        ) end,
+  [ "*.page"                                 ] = function() vc( "source " .. LanguageSpecificDir .. "/gitit.vim"            ) end,
+  [ "~/.bashrc"                              ] = function() vc( "source " .. LanguageSpecificDir .. "/bashrc.vim"           ) end,
+  [ "~/.config/joplin-desktop/userstyle.css" ] = function() vc( "source " .. LanguageSpecificDir .. "/joplin_userstyle.vim" ) end,
+  [ "~/TEST/QUICK/*.cpp"                     ] = function() vc( "source " .. LanguageSpecificDir .. "/quick_cpp.vim"        ) end,
 }
 local exts = {
   ["sh"]     = { chmod = "700" },

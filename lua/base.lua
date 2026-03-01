@@ -16,6 +16,7 @@ local import_files = {
 	config_files,
   compiled_files,
 }
+local imported_modules = {}
 
 require("nfnl").setup()
 for _, i in ipairs(import_files) do
@@ -26,12 +27,13 @@ for _, i in ipairs(import_files) do
 		if not f or f == "" then
 			error("Something wrong with requiring file: " .. j)
 		else
-			require(f)
+			imported_modules[f] = require(f)
 		end
 		-- require(string.match(j, "([^/.]+)"))
 	end
 end
 
+imported_modules["my_treesitter_module"].create_commands()
 local fullscreen_window_toggle = {
 	command_name = "ToggleFullscreen",
 	namespace = "fullscreen",
