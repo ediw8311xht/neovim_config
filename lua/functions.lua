@@ -173,3 +173,7 @@ function RunKeepCursorPosition(command)
 	vim.api.nvim_win_set_cursor(0, last_cursor_position)
 end
 
+function TableSetDefault(tbl, default)
+  return setmetatable(tbl, { __index = function() return default end })
+end
+
