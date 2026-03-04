@@ -33,7 +33,7 @@ function EnvVarCheck(var)
 end
 
 function Contains(t, check_value, callback)
-  if callback == nil then callback = (function(a,b) return a == b end) end
+  callback = callback or (function(a,b) return a == b end)
   for _,v in ipairs(t) do
     if callback(v, check_value) then
       return true
@@ -42,17 +42,42 @@ function Contains(t, check_value, callback)
   return false
 end
 
-function Split(str, v, options)
-  local l = {}
-  local default_opts = {
-    callback   = function(c, t) table.insert(t, c) end,
-    str_append = v,
-  }
-  options = TableDifference(default_opts, options or {}, false)
-  for catch in string.gmatch(str .. options.str_append, '(.-)('.. v .. ')') do
-    print(catch)
-    options.callback(catch, l)
-  end
-  return l
+---Iterate over string on split of string/regex
+---@param s     string The string to split
+---@param f     string The string/regex to split on
+---@param opts? {callback : function, output_data : table, remove_empty : boolean} Options
+---   `callback (match, output_data)` - Function called on matches
+---       default: `function(c, t) table.insert(t, c) end`
+---   `output_data` - Data returned
+---       default: `{}`
+---   `remove_empty` - Don't process empty matches
+---       default: `false`
+function MapSplit(s, f, opts)
+  opts = opts or {}
+  if     s == nil then return {}
+  elseif s == ""  then return opts.remove_empty and {} or { "" } end
+  local output_data  = opts.output_data   or {}
+  local callback     = opts.callback      or function(m, t) table.insert(t, m) end
+  local remove_empty = opts.remove_empty  or false
+
+  repeat
+    local match, _, rest = string.match(s, '^(.-)(' .. f .. ')(.*)$')
+    if not remove_empty or match ~= "" then
+      callback(match or s, output_data)
+    end
+    s = rest
+  until (not s or s == "")
+  return output_data
+end
+
+--- Split string into list based on string/regex
+---@param s string  The string to split
+---@param f string  The string/regex to split on
+function Split(s, f)
+  return MapSplit(s, f)
+end
+
+function TableSetDefault(tbl, default)
+  return setmetatable(tbl, { __index = function() return default end })
 end
 

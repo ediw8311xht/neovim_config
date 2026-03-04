@@ -27,7 +27,10 @@ local function set_templates(exts)
   for ext, options in pairs(exts) do
     vauto({ "BufNewFile" }, {
       pattern = "*." .. ext,
-      callback = function()
+      callback = function(args)
+        if not PathValid(args.match) then
+          error("path: '" .. args.match .. "' is invalid.")
+        end
         local full_path = TemplateDir .. "/template." .. ext
         vc("keepalt 0read " .. full_path)
         vc("silent w")

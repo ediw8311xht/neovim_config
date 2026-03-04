@@ -90,18 +90,13 @@ end
 
 function M.GoToFunction(args)
   M.Init()
-  args = args or {}
-  M.GoToQuery(M.function_nodes[M.ft], args)
+  M.GoToQuery(M.function_nodes[M.ft], args or {})
 end
 
 function M.more_than_one_line(node)
   local range = node:range()
   return range[4] > range[2]
 end
-
---[[ 
-block to only comment out comments that are multiple lines. 
---]]
 
 function M.update_comments(buffer_number)
   for line_nr = 1, vim.fn.line('$')+1 do
@@ -121,9 +116,29 @@ function M.fold_comments_block(line_number)
   local node = M.FirstNode(line_number)
 end
 
-function M.fold_comments()
-  -- local node = M.FirstNode(vim.v.lnum)
+function M.fold_comments_single()
   return M.comments[vim.fn.bufnr()][vim.v.lnum]
+end
+
+function M.fold_comments(args)
+  if args[1] == "off" then
+    vim.o.foldmethod = args[2] or "marker"
+    return
+  end
+  M.Init()
+  M.update_comments(vim.fn.bufnr())
+  vim.o.foldmethod = "expr"
+  if not args[1] or args[1] == "single" then
+    vim.o.foldexpr = "v:lua.require'my_treesitter_module'.fold_comments_single()"
+  elseif args[1] == "update" then
+    return
+  elseif args[1] == "block" then
+    vim.o.foldexpr = "v:lua.require'my_treesitter_module'.fold_comments_block()"
+  elseif args[1] == "multi" then
+    vim.o.foldexpr = "v:lua.require'my_treesitter_module'.fold_comments_multi()"
+  else
+    error("invalid argument")
+  end
 end
 
 function M.create_commands()
@@ -132,25 +147,21 @@ function M.create_commands()
     M.GoToFunction,
     { desc="Go to start of next function", nargs=0 }
   )
-
   vapi.nvim_create_user_command(
     "GotoPrevFunctionStart",
     function() M.GoToFunction({reverse=true}) end,
     { desc="Go to previous function start", nargs=0 }
   )
-
   vapi.nvim_create_user_command(
     "GotoNextFunctionEnd",
     function() M.GoToFunction({goto_end=true}) end,
     { desc="Go to end of next function", nargs=0 }
   )
-
   vapi.nvim_create_user_command(
     "GotoInnerFunctionStart",
     function() M.GoToFunction({inner=true}) end,
     { desc="Go to the start of function cursor is currently inside", nargs=0 }
   )
-
   vapi.nvim_create_user_command(
     "GotoInnerFunctionEnd",
     function() M.GoToFunction({inner=true, goto_end=true}) end,
@@ -158,36 +169,15 @@ function M.create_commands()
   )
   vapi.nvim_create_user_command(
     "FoldComments",
-    function(opts)
-      if opts.fargs[1] == "off" then
-        vim.o.foldmethod = opts.fargs[2] or "marker"
-        return
-      end
-      M.Init()
-      M.update_comments(vim.fn.bufnr())
-      vim.o.foldmethod = "expr"
-      if not opts.fargs[1] or opts.fargs[1] == "single" then
-        vim.o.foldexpr = "v:lua.require'my_treesitter_module'.fold_comments()"
-      elseif opts.fargs[1] == "update" then
-        return
-      elseif opts.fargs[1] == "block" then
-        vim.o.foldexpr = "v:lua.require'my_treesitter_module'.fold_comments_block()"
-      elseif opts.fargs[1] == "multi" then
-        vim.o.foldexpr = "v:lua.require'my_treesitter_module'.fold_comments_multi()"
-      else
-        error("invalid argument")
-      end
-    end, {
-      desc="Fold comments automatically with expr.",
+    function(opts) M.fold_comments(MapSplit(opts.fargs[1], " ", {remove_empty = true})) end,
+    { desc="Fold comments automatically with expr.",
       nargs = '?',
       -- function (ArgLead, CmdLine, CursorPos)
       complete = function(_, cmdline, _)
-        local tbl = Split(cmdline, "[ ]+")
-        if string.sub(cmdline, -4) == "off" then
-          return { "marker", "marker", "manual",  "expr",    "indent",  "syntax",  "diff", }
-        else
-          return { "single", "block", "multi", "off", }
-        end
+        -- local tbl = MapSplit(cmdline, " ")
+        return string.sub(cmdline, -4) == "off"
+          and { "marker", "marker", "manual",  "expr", "indent",  "syntax",  "diff", }
+          or  { "single", "block", "multi", "off", }
       end
     }
   )
