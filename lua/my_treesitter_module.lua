@@ -1,9 +1,8 @@
 
 -- Useful guide to treesitter querying in nvim
 -- https://jhcha.app/blog/the-power-of-treesitter/
-
-local ts = vim.treesitter --f
 -- local ts_utils = require("nvim-treesitter.ts_utils")
+local ts = vim.treesitter
 local vfn = vim.fn
 local vapi = vim.api
 
@@ -24,9 +23,12 @@ function M.Init()
   M.hle = require("vim.treesitter.highlighter")
   M.tree = ts.get_parser():parse()[1]
   M.comments = M.comments or {}
-  M.comments[vim.fn.bufnr()] = M.comments[vim.fn.bufnr()] or {}
+  M.comments[vim.fn.bufnr()] = M.comments[vim.fn.bufnr()] or TableSetDefault({}, 0)
 end
 
+--[[
+---------------- Helpers -----------------------
+--]]
 function M.check_node_type(node, types)
   local type = node:type()
   for _,c_type in ipairs(types) do
@@ -43,18 +45,26 @@ function M.FirstNode(line_number)
   return ts.get_node({bufnr = vfn.bufnr(), pos = {line_number-1, s_column}})
 end
 
-function M.Less(p1, p2)      return (p1[1]  < p2[1]) end -- or ( p1[1] == p2[1] and p1[2]   < p2[2] )) end
-function M.LessEqual(p1, p2) return (p1[1] <= p2[1]) end -- or ( p1[1] == p2[1] and p1[2]  <= p2[2] )) end
-function M.Equal(p1, p2)     return (p1[1] == p2[1]) end -- and p1[2] == p2[2]) end
+function M.Less(p1, p2)      return (p1[1]  < p2[1]) end
+function M.LessEqual(p1, p2) return (p1[1] <= p2[1]) end
+function M.Equal(p1, p2)     return (p1[1] == p2[1]) end
 
 function M.IsInner(cpos, spos, epos)
   return M.LessEqual(spos, cpos) and M.LessEqual(cpos, epos)
+end
+
+function M.more_than_one_line(node)
+  local range = node:range()
+  return range[4] > range[2]
 end
 
 function M.SetCursorPos(pos)
   return vapi.nvim_win_set_cursor(0, pos)
 end
 
+--[[
+---------------- Go to Query -------------------
+--]]
 function M.GoToQuery(query, args)
   ------------- Set options -------------
   local goto_end = args.goto_end or false
@@ -93,11 +103,9 @@ function M.GoToFunction(args)
   M.GoToQuery(M.function_nodes[M.ft], args or {})
 end
 
-function M.more_than_one_line(node)
-  local range = node:range()
-  return range[4] > range[2]
-end
-
+--[[
+---------------- Fold Comments  ----------------
+--]]
 function M.update_comments(buffer_number)
   for line_nr = 1, vim.fn.line('$')+1 do
     local node = M.FirstNode(line_nr)
@@ -105,15 +113,22 @@ function M.update_comments(buffer_number)
   end
 end
 
--- TO DO --
-function M.fold_comments_multi(line_number)
-  local max_line = vim.fn.line('$')
-  local node = M.FirstNode(line_number)
+--[[ TO DO --]]
+function M.fold_comments_multi()
+  local line = vim.v.lnum
+  local buf = vim.fn.bufnr()
+  if  M.comments[buf][ line   ] == 1 and
+     (M.comments[buf][ line-1 ] == 1 or M.comments[buf][ line+1 ] == 1)
+  then
+    return 1
+  else
+    return 0
+  end
 end
 
--- TO DO --
-function M.fold_comments_block(line_number)
-  local node = M.FirstNode(line_number)
+--[[ TO DO --]]
+function M.fold_comments_block()
+  -- local node = M.FirstNode()
 end
 
 function M.fold_comments_single()
@@ -141,6 +156,9 @@ function M.fold_comments(args)
   end
 end
 
+--[[
+---------------- Commands ----------------------
+--]]
 function M.create_commands()
   vapi.nvim_create_user_command(
     "GotoNextFunctionStart",
@@ -172,8 +190,7 @@ function M.create_commands()
     function(opts) M.fold_comments(MapSplit(opts.fargs[1], " ", {remove_empty = true})) end,
     { desc="Fold comments automatically with expr.",
       nargs = '?',
-      -- function (ArgLead, CmdLine, CursorPos)
-      complete = function(_, cmdline, _)
+      complete = function(_, cmdline, _) -- (ArgLead, CmdLine, CursorPos)
         -- local tbl = MapSplit(cmdline, " ")
         return string.sub(cmdline, -4) == "off"
           and { "marker", "marker", "manual",  "expr", "indent",  "syntax",  "diff", }
@@ -182,7 +199,6 @@ function M.create_commands()
     }
   )
 end
-
 
 return M
 
