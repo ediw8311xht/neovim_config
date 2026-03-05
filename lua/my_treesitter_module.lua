@@ -113,7 +113,6 @@ function M.update_comments(buffer_number)
   end
 end
 
---[[ TO DO --]]
 function M.fold_comments_multi()
   local line = vim.v.lnum
   local buf = vim.fn.bufnr()
@@ -191,7 +190,6 @@ function M.create_commands()
     { desc="Fold comments automatically with expr.",
       nargs = '?',
       complete = function(_, cmdline, _) -- (ArgLead, CmdLine, CursorPos)
-        -- local tbl = MapSplit(cmdline, " ")
         return string.sub(cmdline, -4) == "off"
           and { "marker", "marker", "manual",  "expr", "indent",  "syntax",  "diff", }
           or  { "single", "block", "multi", "off", }
