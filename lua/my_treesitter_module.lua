@@ -162,28 +162,23 @@ function M.create_commands()
   vapi.nvim_create_user_command(
     "GotoNextFunctionStart",
     M.GoToFunction,
-    { desc="Go to start of next function", nargs=0 }
-  )
+    { desc="Go to start of next function", nargs=0 })
   vapi.nvim_create_user_command(
     "GotoPrevFunctionStart",
     function() M.GoToFunction({reverse=true}) end,
-    { desc="Go to previous function start", nargs=0 }
-  )
+    { desc="Go to previous function start", nargs=0 })
   vapi.nvim_create_user_command(
     "GotoNextFunctionEnd",
     function() M.GoToFunction({goto_end=true}) end,
-    { desc="Go to end of next function", nargs=0 }
-  )
+    { desc="Go to end of next function", nargs=0 })
   vapi.nvim_create_user_command(
     "GotoInnerFunctionStart",
     function() M.GoToFunction({inner=true}) end,
-    { desc="Go to the start of function cursor is currently inside", nargs=0 }
-  )
+    { desc="Go to the start of function cursor is currently inside", nargs=0 })
   vapi.nvim_create_user_command(
     "GotoInnerFunctionEnd",
     function() M.GoToFunction({inner=true, goto_end=true}) end,
-    { desc="Go to the end of function cursor is currently inside", nargs=0 }
-  )
+    { desc="Go to the end of function cursor is currently inside", nargs=0 })
   vapi.nvim_create_user_command(
     "FoldComments",
     function(opts) M.fold_comments(MapSplit(opts.fargs[1], " ", {remove_empty = true})) end,
@@ -193,9 +188,7 @@ function M.create_commands()
         return string.sub(cmdline, -4) == "off"
           and { "marker", "marker", "manual",  "expr", "indent",  "syntax",  "diff", }
           or  { "single", "block", "multi", "off", }
-      end
-    }
-  )
+      end })
 end
 
 return M

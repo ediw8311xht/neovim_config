@@ -163,8 +163,9 @@ end
 ---@param path string Path to check
 ---@return boolean
 function PathValid(path)
-  local match = string.match(path, '^(.*/)[^/]*$')
-  return fn.filewritable(match) == 1
+  local match = string.match(path, '^(.*[/])[^/]*$')
+  print(match)
+  return fn.filewritable(match) == 2
 end
 
 -- {{{

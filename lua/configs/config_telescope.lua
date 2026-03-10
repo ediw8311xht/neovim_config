@@ -17,13 +17,13 @@ require('telescope').setup({
     },
     vimgrep_arguments = {
       "rg",
+      "--no-config",
       "--color=never",
       "--no-heading",
       "--with-filename",
       "--line-number",
       "--column",
       "--smart-case",
-      "--no-config",
     },
     mappings = {
       i = {
@@ -33,6 +33,8 @@ require('telescope').setup({
         [ '<C-h>'   ] = require('telescope.actions').preview_scrolling_up,
         [ '<C-u>'   ] = require('telescope.actions').results_scrolling_down,
         [ '<C-d>'   ] = require('telescope.actions').results_scrolling_up,
+        [ '<C-s>'   ] = require('telescope.actions').select_horizontal,
+        [ '<C-v>'   ] = require('telescope.actions').select_vertical,
       }
     }
   }
