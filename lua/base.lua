@@ -5,8 +5,6 @@ local config_files   = vim.fn.globpath(vim.fn.stdpath("config") .. "/lua/configs
 -- fennel
 local compiled_files = vim.fn.globpath(vim.fn.stdpath("config") .. "/lua/compiled/", "*.lua", 0, 1)
 
-local paredit = require("nvim-paredit")
-paredit.setup()
 vim.opt.rtp:append({
 	config_dir .. "/lua/configs",
 	config_dir .. "/lua/compiled",

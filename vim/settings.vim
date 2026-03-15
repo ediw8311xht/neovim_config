@@ -91,3 +91,29 @@ let g:lf_width    = 0.9
 "-------------------------------------lf
 let g:NERDTreeHijackNetrw = 0 " Add this line if you use NERDTree
 let g:lf_replace_netrw    = 1
+
+lua <<EOF
+-- eventually will move this to settings.vim
+vim.filetype.add({
+  extension = {
+    [ 'ex'             ] = 'elixir',
+    [ 'exs'            ] = 'exliir',
+    [ 'hs'             ] = 'haskell',
+    [ 'kalker'         ] = 'kalker',
+    [ 'lisp'           ] = 'lisp',
+    [ 'page'           ] = 'markdown',
+    [ 'schema'         ] = 'sql',
+    [ 'scm'            ] = 'scheme',
+    [ 'sh'             ] = 'bash',
+    [ 'kitty-session'  ] = 'kitty-session',
+    [ 'md'             ] = "markdown",
+  },
+  pattern = {
+    [ '${HOME}/bashrc_files/.*'            ] = 'bash',
+    [ '${XDG_CONFIG_HOME}/polybar/.*%.ini' ] = 'dosini',
+    [ '${XDG_CONFIG_HOME}/i3/.*'           ] = 'i3',
+    [ '${XDG_CONFIG_HOME}/zathura/.*'      ] = 'zathurarc',
+  }
+})
+EOF
+

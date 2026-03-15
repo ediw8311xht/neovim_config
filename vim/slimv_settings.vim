@@ -14,6 +14,15 @@ let g:slimv_balloon      = 1
 let g:slimv_strip_ansi   = 1
 let g:slimv_swank_cmd = '! kitty @ launch --type=tab --location=first --keep-focus --tab-title="slimv" sbcl --load "${XDG_DATA_HOME}/nvim/plugged/slimv/slime/start-swank.lisp" &'
 
+
+fu! SetupForLisp()
+  if exists("*PareditInitBuffer")
+    call PareditInitBuffer()
+  endif
+endfu
+
+autocmd BufWinEnter *.lisp call SetupForLisp()
+"autocmd BufWinEnter *.lisp set syntax=lisp "makes :Autoformat run a lot slower for some reason...
 " ------------------------------------------- INFO -------------------------------- "
 "                                                             *g:slimv_repl_split*  "
 "  Open the Lisp REPL buffer in a split window or in a separate buffer in Vim.      "

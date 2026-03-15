@@ -102,10 +102,10 @@ LEADER_MAPPINGS = {
     [ 'Gh'      ] = { F, 'Checkhealth',            'checkhealth',   cmd=true  },
     [ 'Gn'      ] = { F, 'Notifications',          'Notifications', cmd=true  },
     [ 'Gm'      ] = { F, 'Messages',               'messages',      cmd=true  },
+    [ 'Gu'      ] = { F, 'Get undo list',          'undolist',                cmd=true  },
     [ 'H' ]={group="Help/Docs"},
     [ 'Hm'      ] = { F, 'Print Mappings File',    'edit ' .. current_file,   cmd=true  },
     [ 'HM'      ] = { F, 'Print All Mappings',     'GMaps()',                 expr=true },
-    [ 'Hu'      ] = { F, 'Get undo list',          'undolist',                cmd=true  },
     [ 'Hh'      ] = { F, 'Get Highlight',          'GetHL()',                 expr=true },
     [ 'Hg'      ] = { F, 'Helpgrep',               ':vert helpgrep '                    },
     [ 'I' ]={group="lsp"},
@@ -205,38 +205,6 @@ PERSONAL_MAPPINGS = { ["regular"] = REGULAR_MAPPINGS, ["leader"] = LEADER_MAPPIN
 KeyMapSetter(LEADER_MAPPINGS, "<leader>", false, true)
 KeyMapSetter(REGULAR_MAPPINGS, "", false, true)
 
--- commented out {{{
--- vim.keymap.set('n', 'gd', function() vim.lsp.buf.definition() end)
--- vim.keymap.set('n', 'grr', function() vim.lsp.buf.references() end)
--- vim.keymap.set('n', '<C-m>', function() vim.diagnostic.open_float() end)
--- local status1 = '%t %r%m%=[%v] (%L lines) (%{wordcount().words} words)%=%#HLspStatus#%{LspStatus()}%*[%{LspStatus()}] [%F]'
-
--- { n,    '<C-|>',    F, 'Search icase exact',     '/\\V'                                       },
--- { n,    '<C-_>',    F, '',                       '/\\v'                                       },
--- { n,    '<Tab>',    F, '',                       ':earlier<CR>'                               },
--- { n,    '<S-Tab>',  F, '',                       ':later<CR>'                                 },
--- { n,    '\\|',      F, '',                       '?\\V\\c'                                    },
--- local _l = '<leader>'
--- { n, 'I'   ,  F, '+ lsp_lines',            ':lua require("lsp_lines").toggle()<CR>'                            },
--- [ '<C-p>'    ] = {F, 'Substitute',             '<C-i>'                                      },
--- local l = 'l';
--- [ '<C-p>'    ] = {F, 'Substitute [All Buffs]', ':%s/\\v\\c'                              },
--- [ '<C-k>'    ] = {F, 'Delete to end of line',  '<C-g>u<C-o>D'                               },
--- CTRL-U   Delete all entered characters before the cursor in the current line.
--- [ '{'        ] = {F, 'Prev Function Start',    ':GotoPrevFunctionStart<CR>'              },
--- [ '}'        ] = {F, 'Next Function Start',    ':GotoNextFunctionStart<CR>'              },
--- [ 'S'       ] = { F, 'Source vim config',      ':source ~/.config/nvim/init.vim<ESC>'                                 },
--- [ 'cp'      ] = { F, '! Rainbow Parenth',      ':RainbowToggle<CR>'                                                   },
--- [ 'W'       ] = { F, 'VimwikiIndex',           '<Plug>VimwikiIndex'                                                   },
--- Execute --
--- Session --
--- [ 'pP'      ] = { F, 'Paste as line above',    'k:put="a' },
--- [ 'pp'      ] = { F, 'Paste as line below',    '' },
--- [ '<C-h>'    ] = {F, 'Left Pane',              '<C-w>h'                                     },
--- [ '<C-j>'    ] = {F, 'Down Pane',              '<C-w>j'                                     },
--- [ '<C-k>'    ] = {F, 'Up Pane',                '<C-w>k'                                     },
--- [ '<C-l>'    ] = {F, 'Right Pane',             '<C-w>l'                                     },
--- }}}
 --[[ info {{{
  _____________________________________________________________________________
  ||                                                                         ||
@@ -313,4 +281,92 @@ KeyMapSetter(REGULAR_MAPPINGS, "", false, true)
  ||    !         | Shell or external command is executing                           ||
  ||    t         | Terminal mode: keys go to the job                                ||
  ||_________________________________________________________________________________||
+
+
+|-----------------------------------------------------------------------------------------------|
+| 2. Special special keys | :help ins-special-special                                           |
+|-----------------------------------------------------------------------------------------------|
+| The following keys are special.  They stop the current insert, do something,                  |
+| and then restart insertion.  This means you can do something without getting                  |
+| out of Insert mode.  This is very handy if you prefer to use the Insert mode                  |
+| all the time, just like editors that don't have a separate Normal mode. You                   |
+| can use CTRL-O if you want to map a function key to a command.                                |
+|                                                                                               |
+| The changes (inserted or deleted characters) before and after these keys can                  |
+| be undone separately.  Only the last change can be redone and always behaves                  |
+| like an "i" command.                                                                          |
+|-----------------------------------------------------------------------------------------------|
+
+| char                 | action                                       | help page               |
+| -------------------- | -------------------------------------------- | ----------------------- |
+| <Up>                 |  cursor one line up                          | i_<Up>                  |
+| <Down>               |  cursor one line down                        | i_<Down>                |
+| CTRL-G <Up>          |  cursor one line up, insert start column     | i_CTRL-G_<Up>           |
+| CTRL-G k             |  cursor one line up, insert start column     | i_CTRL-G_k              |
+| CTRL-G CTRL-K        |  cursor one line up, insert start column     | i_CTRL-G_CTRL-K         |
+| CTRL-G <Down>        |  cursor one line down, insert start column   | i_CTRL-G_<Down>         |
+| CTRL-G j             |  cursor one line down, insert start column   | i_CTRL-G_j              |
+| CTRL-G CTRL-J        |  cursor one line down, insert start column   | i_CTRL-G_CTRL-J         |
+| <Left>               |  cursor one character left                   | i_<Left>                |
+| <Right>              |  cursor one character right                  | i_<Right>               |
+| <S-Left>             |  cursor one word back (like "b" command)     | i_<S-Left>              |
+| <C-Left>             |  cursor one word back (like "b" command)     | i_<C-Left>              |
+| <S-Right>            |  cursor one word forward (like "w" command)  | i_<S-Right>             |
+| <C-Right>            |  cursor one word forward (like "w" command)  | i_<C-Right>             |
+| <Home>               |  cursor to first char in the line            | i_<Home>                |
+| <End>                |  cursor to after last char in the line       | i_<End>                 |
+| <C-Home>             |  cursor to first char in the file            | i_<C-Home>              |
+| <C-End>              |  cursor to after last char in the file       | i_<C-End>               |
+| <LeftMouse>          |  cursor to position of mouse click           | i_<LeftMouse>           |
+| <S-Up>               |  move window one page up                     | i_<S-Up>                |
+| <PageUp>             |  move window one page up                     | i_<PageUp>              |
+| <S-Down>             |  move window one page down                   | i_<S-Down>              |
+| <PageDown>           |  move window one page down                   | i_<PageDown>            |
+| <ScrollWheelDown>    |  move window three lines down                | i_<ScrollWheelDown>     |
+| <S-ScrollWheelDown>  |  move window one page down                   | i_<S-ScrollWheelDown>   |
+| <ScrollWheelUp>      |  move window three lines up                  | i_<ScrollWheelUp>       |
+| <S-ScrollWheelUp>    |  move window one page up                     | i_<S-ScrollWheelUp>     |
+| <ScrollWheelLeft>    |  move window six columns left                | i_<ScrollWheelLeft>     |
+| <S-ScrollWheelLeft>  |  move window one page left                   | i_<S-ScrollWheelLeft>   |
+| <ScrollWheelRight>   |  move window six columns right               | i_<ScrollWheelRight>    |
+| <S-ScrollWheelRight> |  move window one page right                  | i_<S-ScrollWheelRight>  |
+| CTRL-O               |  execute one command, return to Insert mode  | i_CTRL-O                |
+| CTRL-\ CTRL-O        |  like CTRL-O but don't move the cursor       | i_CTRL-\_CTRL-O         |
+| CTRL-G u             |  close undo sequence, start new change       | i_CTRL-G_u              |
+| CTRL-G U             |  don't start a new undo block with the next  | i_CTRL-G_U              |
+|                      |  left/right cursor movement, if the cursor   |                         |
+|                      |  stays within the same line                  |                         |
+
 }}} --]]
+
+-- commented out {{{
+-- vim.keymap.set('n', 'gd', function() vim.lsp.buf.definition() end)
+-- vim.keymap.set('n', 'grr', function() vim.lsp.buf.references() end)
+-- vim.keymap.set('n', '<C-m>', function() vim.diagnostic.open_float() end)
+-- local status1 = '%t %r%m%=[%v] (%L lines) (%{wordcount().words} words)%=%#HLspStatus#%{LspStatus()}%*[%{LspStatus()}] [%F]'
+-- { n,    '<C-|>',    F, 'Search icase exact',     '/\\V'                                       },
+-- { n,    '<C-_>',    F, '',                       '/\\v'                                       },
+-- { n,    '<Tab>',    F, '',                       ':earlier<CR>'                               },
+-- { n,    '<S-Tab>',  F, '',                       ':later<CR>'                                 },
+-- { n,    '\\|',      F, '',                       '?\\V\\c'                                    },
+-- local _l = '<leader>'
+-- { n, 'I'   ,  F, '+ lsp_lines',            ':lua require("lsp_lines").toggle()<CR>'                            },
+-- [ '<C-p>'    ] = {F, 'Substitute',             '<C-i>'                                      },
+-- local l = 'l';
+-- [ '<C-p>'    ] = {F, 'Substitute [All Buffs]', ':%s/\\v\\c'                              },
+-- [ '<C-k>'    ] = {F, 'Delete to end of line',  '<C-g>u<C-o>D'                               },
+-- CTRL-U   Delete all entered characters before the cursor in the current line.
+-- [ '{'        ] = {F, 'Prev Function Start',    ':GotoPrevFunctionStart<CR>'              },
+-- [ '}'        ] = {F, 'Next Function Start',    ':GotoNextFunctionStart<CR>'              },
+-- [ 'S'       ] = { F, 'Source vim config',      ':source ~/.config/nvim/init.vim<ESC>'                                 },
+-- [ 'cp'      ] = { F, '! Rainbow Parenth',      ':RainbowToggle<CR>'                                                   },
+-- [ 'W'       ] = { F, 'VimwikiIndex',           '<Plug>VimwikiIndex'                                                   },
+-- Execute --
+-- Session --
+-- [ 'pP'      ] = { F, 'Paste as line above',    'k:put="a' },
+-- [ 'pp'      ] = { F, 'Paste as line below',    '' },
+-- [ '<C-h>'    ] = {F, 'Left Pane',              '<C-w>h'                                     },
+-- [ '<C-j>'    ] = {F, 'Down Pane',              '<C-w>j'                                     },
+-- [ '<C-k>'    ] = {F, 'Up Pane',                '<C-w>k'                                     },
+-- [ '<C-l>'    ] = {F, 'Right Pane',             '<C-w>l'                                     },
+-- }}}

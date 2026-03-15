@@ -105,30 +105,6 @@ vauto({ "TextYankPost" }, {
 
 ---------------------------------------ExtensionSpecific
 
--- eventually will move this to settings.vim
-vim.filetype.add({
-  extension = {
-    [ 'ex'             ] = 'elixir',
-    [ 'exs'            ] = 'exliir',
-    [ 'hs'             ] = 'haskell',
-    [ 'kalker'         ] = 'kalker',
-    [ 'lisp'           ] = 'lisp',
-    [ 'page'           ] = 'markdown',
-    [ 'schema'         ] = 'sql',
-    [ 'scm'            ] = 'scheme',
-    [ 'sh'             ] = 'bash',
-    [ 'kitty-session'  ] = 'kitty-session',
-    [ 'md'             ] = "markdown",
-  },
-  pattern = {
-    [ '${HOME}/bashrc_files/.*'            ] = 'bash',
-    [ '${XDG_CONFIG_HOME}/polybar/.*%.ini' ] = 'dosini',
-    [ '${XDG_CONFIG_HOME}/i3/.*'           ] = 'i3',
-    [ '${XDG_CONFIG_HOME}/zathura/.*'      ] = 'zathurarc',
-  }
-})
-
-
 local globcomms = {
   [ "*.page"                                 ] = function() vc( "source " .. LanguageSpecificDir .. "/gitit.vim"            ) end,
   [ "~/.bashrc"                              ] = function() vc( "source " .. LanguageSpecificDir .. "/bashrc.vim"           ) end,
@@ -136,6 +112,7 @@ local globcomms = {
   [ "~/TEST/QUICK/*.cpp"                     ] = function() vc( "source " .. LanguageSpecificDir .. "/quick_cpp.vim"        ) end,
 }
 local exts = {
+  -- ["lisp"]   = { chmod = "600" },
   ["sh"]     = { chmod = "700" },
   ["py"]     = { chmod = "700" },
   ["kalker"] = { chmod = "700" },
@@ -144,7 +121,6 @@ local exts = {
   ["ex"]     = { chmod = "700" },
   ["html"]   = { chmod = "700" },
   ["cpp"]    = { chmod = "700" },
-  ["lisp"]   = { chmod = "700" },
   ["hs"]     = { chmod = "700" },
   ["page"]   = { },
   ["md"]     = { },
