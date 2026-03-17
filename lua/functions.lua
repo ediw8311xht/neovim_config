@@ -81,6 +81,7 @@ function KeyMapSetter(map, pre, buffer_only, with_which_key)
 	local which_key = require("which-key")
 	for mode, mode_map in pairs(map) do
 		for key, tbl in pairs(mode_map) do
+      local keymap_cmd
 			if tbl.group then
 				which_key.add({ pre .. key, group = tbl.group, mode = mode })
 				goto continue
@@ -88,7 +89,14 @@ function KeyMapSetter(map, pre, buffer_only, with_which_key)
 			if with_which_key then
 				which_key.add({ pre .. key, desc = tbl[2], mode = mode })
 			end
-			local keymap_cmd = (tbl.cmd and "<CMD>" .. tbl[3] .. "<CR>") or tbl[3]
+      if tbl.cmd then
+        keymap_cmd = "<CMD>" .. tbl[3] .. "<CR>"
+      elseif tbl.vim_command then
+        keymap_cmd = ":call " .. tbl[3] .. "<CR>"
+      else
+        keymap_cmd = tbl[3]
+      end
+			-- local keymap_cmd = (tbl.cmd and "<CMD>" .. tbl[3] .. "<CR>") or tbl[3]
 			vim.keymap.set(mode, pre .. key, keymap_cmd, {
 				remap = tbl[1],
 				desc = tbl[2],
