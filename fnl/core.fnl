@@ -37,7 +37,7 @@
 "" {
   :+          { :desc "End of line"                 :value :g_
                 :remap true }
-  ","         { :desc :<leader>                     :value :<leader> 
+  ","         { :desc :<leader>                     :value :<leader>
                 :remap true }
   ",;"        { :desc ""                            :value ","                                         }
   :x          { :desc ""                            :value "\"xx"                                      }
@@ -68,30 +68,31 @@
                 :typet :vim_command }
   :<C-S-g>    { :desc "! Floating Term"             :value ":FloatermToggle!<ESC>"                     }
   :<C-S-s>    { :desc "Substitute +char +vmagic"    :value ":%s/\\v"                                   }
-  :<C-Tab>    { :desc "Next tab"                    :value :tabnext                                    
+  :<C-Tab>    { :desc "Next tab"                    :value :tabnext
                 :typet :vim_command }
-  :<C-n>      { :desc "+Nerd Tree"                  :value :NERDTreeToggle                             
+  :<C-n>      { :desc "+Nerd Tree"                  :value :NERDTreeToggle
                 :typet :vim_command }
   :<C-s>      { :desc "Substitute i"                :value ":%s/\\v\\c"                                }
   :<C-w>n     { :desc "New Buffer Right"            :value ":new<ESC><C-w>L"                           }
   :<ESC>      { :desc :Clear                        :value ":noh<ESC>:echon \"\"<enter>"               }
   :?          { :desc "Search +back +vmagic"        :value "?\\v\\c"                                   }
-  :ZC         { :desc "Delete Buffer"               :value ":bd<ESC>"                                  }
-  :ZG         { :desc "Write quit all"              :value :wqall                                      
+  :ZC         { :desc "Delete Buffer"               :value :bd
+                :typet :vim_command }
+  :ZG         { :desc "Write quit all"              :value :wqall
                 :typet :vim_command }
   "`"         { :desc :Fold                         :value "@=(foldlevel('.')?'za':\"<Space>\")<CR>"   }
-  :gne        { :desc "Next Function End"           :value :GotoNextFunctionEnd                        
+  :gne        { :desc "Next Function End"           :value :GotoNextFunctionEnd
                 :typet :vim_command }
-  "{"         { :desc "Prev Function Start"         :value :GotoPrevFunctionStart                      
+  "{"         { :desc "Prev Function Start"         :value :GotoPrevFunctionStart
                 :typet :vim_command }
   :|          { :desc "Search nomagic"              :value "/\\V\\c"                                   }
-  "}"         { :desc "Next Function Start"         :value :GotoNextFunctionStart                      
+  "}"         { :desc "Next Function Start"         :value :GotoNextFunctionStart
                 :typet :vim_command }
 }
 :t {
-  :<C-S-g>    { :desc "! Floating Term"             :value  "<C-w>:FloatermToggle!<ESC>"               
+  :<C-S-g>    { :desc "! Floating Term"             :value  "<C-w>:FloatermToggle!<ESC>"
                 :remap true }
-  :<C-w>      { :desc "Normal Mode"                 :value "<C-\\><C-n>"                               
+  :<C-w>      { :desc "Normal Mode"                 :value "<C-\\><C-n>"
                 :remap true }
 }
 :v {
@@ -100,13 +101,24 @@
   "`"         { :desc ""                            :value :zf                                         }
 }
 [:c :i] {
-     :<C-a>    { :desc "Start of line"          :value :<home>     }
-     :<C-b>    { :desc "Backward char"          :value :<left>     }
-     :<C-e>    { :desc "End of line"            :value :<end>      }
-     :<C-f>    { :desc "Forward char"           :value :<right>    }
-     :<C-w>    { :desc "Forward word"           :value :<S-right>  }
-     :<C-S-w>  { :desc "Backward word"          :value :<S-left>   }
-     :<C-BS>   { :desc "Delete word backwards"  :value :<C-w>      }
+  :<C-a>    { :desc "Start of line"          :value :<home>     }
+  :<C-b>    { :desc "Backward char"          :value :<left>     }
+  :<C-e>    { :desc "End of line"            :value :<end>      }
+  :<C-f>    { :desc "Forward char"           :value :<right>    }
+  :<C-w>    { :desc "Forward word"           :value :<S-right>  }
+  :<C-S-w>  { :desc "Backward word"          :value :<S-left>   }
+  :<C-BS>   { :desc "Delete word backwards"  :value :<C-w>      }
+}
+[ :n :v :t :i ] {
+  :<C-1> { :desc "Go to tab 1"    :value :1gt           }
+  :<C-2> { :desc "Go to tab 2"    :value :2gt           }
+  :<C-3> { :desc "Go to tab 3"    :value :3gt           }
+  :<C-4> { :desc "Go to tab 4"    :value :4gt           }
+  :<C-5> { :desc "Go to tab 5"    :value :5gt           }
+  :<C-6> { :desc "Go to tab 6"    :value :6gt           }
+  :<C-7> { :desc "Go to tab 7"    :value :7gt           }
+  :<C-8> { :desc "Go to tab 8"    :value :8gt           }
+  :<C-9> { :desc "Go to last tab" :value :tablast :typet :vim_command  }
 }
 })
 

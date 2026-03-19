@@ -10,78 +10,6 @@ local t = 't';
 local v = 'v';
 local current_file = vim.fn.expand('%:p')
 
--- Regular Mappings {{{
--- note to self: look into using `<cmd>` and `<expr>` more IGNORE
-REGULAR_MAPPINGS={
-  [e] = {
-    [ '+'        ] = {T, 'End of line',            'g_'                                         },
-    [ ','        ] = {T, '<leader>',               '<leader>'                                   },
-    [ ',;'       ] = {F, '',                       ','                                          },
-    [ 'x'        ] = {F, '',                       '"xx'                                        },
-  }, [n] = {
-    [ '/'        ] = {F, 'Search vmagic',          '/\\v\\c'                                    },
-    [ '<C-S-E>'  ] = {F, 'End of previous word',   'ge'                                         },
-    [ '<C-S-H>'  ] = {F, 'Left pane',              '<C-w>h'                                     },
-    [ '<C-S-J>'  ] = {F, 'Down pane',              '<C-w>j'                                     },
-    [ '<C-S-K>'  ] = {F, 'Up Pane',                '<C-w>k'                                     },
-    [ '<C-S-L>'  ] = {F, 'Right pane',             '<C-w>l'                                     },
-    [ '<C-S-Tab>'] = {F, 'Previous tab',           'tabprevious',                      cmd=true },
-    [ '<C-S-g>'  ] = {F, '! Floating Term',        ':FloatermToggle!<ESC>'                      },
-    [ '<C-S-s>'  ] = {F, 'Substitute +char +vmagic', ':%s/\\v'                                  },
-    [ '<C-Tab>'  ] = {F, 'Next tab',               'tabnext',                          cmd=true },
-    [ '<C-n>'    ] = {F, '+Nerd Tree',             'NERDTreeToggle',                   cmd=true },
-    [ '<C-s>'    ] = {F, 'Substitute i',           ':%s/\\v\\c'                                 },
-    [ '<C-w>n'   ] = {F, 'New Buffer Right',       ':new<ESC><C-w>L'                            },
-    [ '<ESC>'    ] = {F, 'Clear',                  ':noh<ESC>:echon ""<enter>'                  },
-    [ '?'        ] = {F, 'Search +back +vmagic',   '?\\v\\c'                                    },
-    [ 'ZC'       ] = {F, 'Delete Buffer',          ':bd<ESC>'                                   },
-    [ 'ZG'       ] = {F, 'Write quit all',         'wqall',                            cmd=true },
-    [ '`'        ] = {F, 'Fold',                   '@=(foldlevel(\'.\')?\'za\':"<Space>")<CR>'  },
-    [ 'gne'      ] = {F, 'Next Function End',      'GotoNextFunctionEnd',              cmd=true },
-    [ '{'        ] = {F, 'Prev Function Start',    'GotoPrevFunctionStart',            cmd=true },
-    [ '|'        ] = {F, 'Search nomagic',         '/\\V\\c'                                    },
-    [ '}'        ] = {F, 'Next Function Start',    'GotoNextFunctionStart',            cmd=true },
-  }, [t] = {
-    [ '<C-w>'    ] = {T, 'Normal Mode',     '<C-\\><C-n>'                },
-    [ '<C-S-g>'  ] = {T, '! Floating Term', '<C-w>:FloatermToggle!<ESC>' },
-  }, [v] = {
-    [ '<C-S-s>'  ] = {F, 'Sub +vmagic',            ':s/\\%V\\v'                                 },
-    [ '<C-s>'    ] = {F, 'Sub +i +vmagic',         ':s/\\%V\\v\\c'                              },
-    [ '`'        ] = {F, '',                       'zf'                                         },
-  }, [i] = {
-    [ 'jk'       ] = {F, 'Exit Insert[m]',                 '<ESC>'                              },
-    [ '<C-u>'    ] = {F, 'Delete entered chars b4 cursor', '<C-g>u<C-u>'                        },
-    [ '<C-S-b>'  ] = {F, 'Backward whole word',            '<C-o>B'                             },
-    [ '<C-S-f>'  ] = {F, 'Forward whole word',             '<C-o>W'                             },
-    [ '<C-S-g>'  ] = {F, 'New undo point',                 '<C-g>u'                             },
-    [ '<C-S-k>'  ] = {F, 'Delete to end of line',          '<C-g>u<C-o>D'                       },
-    [ '<C-S-t>'  ] = {F, 'Remove indent',                  '<C-d>'                              },
-    [ '<C-S-u>a' ] = {F, 'New undo point',                 '<C-g>u'                             },
-    [ '<C-S-u>r' ] = {F, 'Redo',                           '<C-o><C-r>'                         },
-    [ '<C-S-u>u' ] = {F, 'Undo',                           '<C-o>u'                             },
-  }, [c] = {
-    [ '<C-S-k>'  ] = {F, '',                       '<C-c>D<C-c>'                                },
-  }, [ {c, i} ] = {
-    [ '<C-a>'    ] = {F, 'Start of line',          '<home>'                                     },
-    [ '<C-b>'    ] = {F, 'Backward char',          '<left>'                                     },
-    [ '<C-e>'    ] = {F, 'End of line',            '<end>'                                      },
-    [ '<C-f>'    ] = {F, 'Forward char',           '<right>'                                    },
-    [ '<C-w>'    ] = {F, 'Forward word',           '<S-right>'                                  },
-    [ '<C-S-w>'  ] = {F, 'Backward word',          '<S-left>'                                   },
-    [ '<C-BS>'   ] = {F, 'Delete word backwards',  '<C-w>'                                      },
--- [ '<C-S-e>'  ] = {F, '',                       '<C-e>'                                   },
-  }, [ {n, v, t, i} ] = {
-    [ "<C-1>" ] = { F, 'Go to tab 1',    "1gt"           },
-    [ "<C-2>" ] = { F, 'Go to tab 2',    "2gt"           },
-    [ "<C-3>" ] = { F, 'Go to tab 3',    "3gt"           },
-    [ "<C-4>" ] = { F, 'Go to tab 4',    "4gt"           },
-    [ "<C-5>" ] = { F, 'Go to tab 5',    "5gt"           },
-    [ "<C-6>" ] = { F, 'Go to tab 6',    "6gt"           },
-    [ "<C-7>" ] = { F, 'Go to tab 7',    "7gt"           },
-    [ "<C-8>" ] = { F, 'Go to tab 8',    "8gt"           },
-    [ "<C-9>" ] = { F, 'Go to last tab', ":tablast<CR>"  },
-  },
-} -- }}}
 -- Leader Mappings {{{
 ---------- Remember -----------
 -- inoremap <expr> key command
@@ -200,10 +128,10 @@ LEADER_MAPPINGS = {
     [ 'vt'      ] = { F, 'title case',             ':s/\\%V\\v\\c\\w(\\a*(\'\\a{0,1})?\\w)?/\\u\\0/g<CR>'                 },
   }
 } --}}}
-
-PERSONAL_MAPPINGS = { ["regular"] = REGULAR_MAPPINGS, ["leader"] = LEADER_MAPPINGS }
 KeyMapSetter(LEADER_MAPPINGS, "<leader>", false, true)
-KeyMapSetter(REGULAR_MAPPINGS, "", false, true)
+
+-- PERSONAL_MAPPINGS = { ["regular"] = REGULAR_MAPPINGS, ["leader"] = LEADER_MAPPINGS }
+-- KeyMapSetter(REGULAR_MAPPINGS, "", false, true)
 
 --[[ info {{{
  _____________________________________________________________________________
@@ -340,6 +268,7 @@ KeyMapSetter(REGULAR_MAPPINGS, "", false, true)
 }}} --]]
 
 -- commented out {{{
+-- [ '<C-S-e>'  ] = {F, '',                       '<C-e>'                                   },
 -- vim.keymap.set('n', 'gd', function() vim.lsp.buf.definition() end)
 -- vim.keymap.set('n', 'grr', function() vim.lsp.buf.references() end)
 -- vim.keymap.set('n', '<C-m>', function() vim.diagnostic.open_float() end)

@@ -91,6 +91,7 @@ let g:lf_width    = 0.9
 "-------------------------------------lf
 let g:NERDTreeHijackNetrw = 0 " Add this line if you use NERDTree
 let g:lf_replace_netrw    = 1
+let g:loaded_netrw        = 1
 
 lua <<EOF
 -- eventually will move this to settings.vim
