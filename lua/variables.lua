@@ -42,15 +42,27 @@ vim.g.my_floating_preview_options = {
   offset_x = 20,
 }
 
--- global return
-local sl_session    = "[%{v:lua.require('auto-session.lib').current_session_name()}]"
-local sl_lsp_status = "[%#HLspStatus#%{LspStatus()} %*]"
-local sl_filepath   = "[%F]"
+function StatusGit() return vim.g.gitsigns_head or "" end
+
+local sl_file       = "%#StatusLine_File#" .. " %t %r" .. "%*"
+local sl_git_branch = "%#StatusLine_Git#" .. " %{v:lua.StatusGit()} " .. "%*"
+local sl_session    = "%#StatusLine_Session#" .. " %{v:lua.require('auto-session.lib').current_session_name()} " .. "%*"
+local sl_lsp_status = "%#StatusLine_Lsp#" .. " %{LspStatus()} " .. "%*"
+-- local sl_lsp_status = "" .. "%{LspStatus()}" .. "%*"
+local sl_filepath   = " %F "
+
+function StatusLineFunc()
+  if vim.g.statusline_winid == vim.fn.win_getid() then
+    return vim.fn.printf("%s %s %s %s%s", sl_file, sl_git_branch, sl_session, "%m%=", sl_lsp_status)
+  else
+    return vim.fn.printf("%s[%s][%s]%s%s", sl_file, sl_git_branch, sl_session, "%m%=", sl_lsp_status)
+  end
+end
 
 vim.g.my_statuslines = {
-  { 'default' , "%t %r" .. sl_session .. "%m%=" .. sl_lsp_status .. sl_filepath },
-  { 'small'   , "%t %r" .. "%m"   .. sl_lsp_status },
-  { 'large'   , "%t %r" .. sl_session .. "%m%=" .. sl_lsp_status .. sl_filepath .. "[%l,%c,%p%%]" },
+  { 'default' , "%!v:lua.StatusLineFunc()"},
+  -- { 'medium'  , sl_file .. sl_git_branch .. sl_session .. "%m%=" .. sl_lsp_status .. sl_filepath },
+  { 'large'   , sl_file .. sl_git_branch .. sl_session .. "%m%=" .. sl_lsp_status .. "[%l,%c,%p%%]" .. sl_filepath },
 }
 
 vim.g.my_titlestring = {
@@ -81,13 +93,14 @@ vim.g.fzf_colors = {
   [ 'hl+'    ] = { 'bg', 'Search' },
   -- [ 'border' ] = { 'bg', 'Ignore' },
 }
+vim.g.fzf_layout = {
+  [ 'window' ] = { width = 0.9, height = 0.9, border = "sharp" } --, border = 'no' }
+}
+
 -- {{{
 -- `Colors`   |  `fzf#vim#colors([spec dict], [fullscreen bool])`
 -- vim.g.fzf_vim.colors_options = {'--style', 'full', '--border-label', ' Open Buffers ', '--preview'}
 -- }}}
-vim.g.fzf_layout = {
-  [ 'window' ] = { width = 0.9, height = 0.9, border = "sharp" } --, border = 'no' }
-}
 -- {{{
 -- vim.g.status_line_lists = {
 --   [ 'default' ] = { "%t %r" , sl_session, "%m%=" ,    sl_lsp_status, sl_filepath },

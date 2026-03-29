@@ -12,8 +12,6 @@ vim.g.my_highlight = {
     ["ExtraWhiteSpace"] = { "gui=", "NONE",        "guibg=#0099FF", "guifg=NONE",    },
     ["FoldColumn"]      = { "gui=", "NONE",        "guibg=NONE",    "guifg=#00FF00", },
     ["Folded"]          = { "gui=", "NONE",        "guibg=#222222", "guifg=#999999", },
-    ["HLspStatus"]      = { "gui=", "NONE",        "guibg=NONE",    "guifg=#00FF00", },
-    ["HStatusFullFile"] = { "gui=", "NONE",        "guibg=NONE",    "guifg=#999999", },
     ["IncSearch"]       = { "gui=", "NONE",        "guibg=#FF0000", "guifg=#000000", },
     ["LineNr"]          = { "gui=", "NONE",        "guibg=NONE",    "guifg=#999999", },
     ["LineNrAbove"]     = { "gui=", "NONE",        "guibg=NONE",    "guifg=#990099", },
@@ -23,7 +21,7 @@ vim.g.my_highlight = {
     ["TabLine"]         = { "gui=", "NONE",        "guibg=NONE",    "guifg=#999999", },
     ["TabLineSel"]      = { "gui=", "NONE",        "guibg=NONE",    "guifg=#00FF00", },
     ["TermCursor"]      = { "gui=", "NONE",        "guibg=NONE",    "guifg=#00AA00", },
-    ["WinSeparator"]    = { "gui=", "NONE",        "guibg=NONE",    "guifg=#FFFF00", },
+    ["WinSeparator"]    = { "gui=", "NONE",        "guibg=NONE",    "guifg=#888888", },
     ["lCursor"]         = { "gui=", "NONE",        "guibg=NONE",    "guifg=NONE",    },
     ["ModeMsg"]         = { "gui=", "NONE",        "guibg=#009900", "guifg=#000000", "cterm=NONE",    },
     ["SpellBad"]        = { "gui=", "undercurl",   "guibg=NONE",    "guifg=#AAAAAA", "guisp=#FF0000", },
@@ -31,14 +29,19 @@ vim.g.my_highlight = {
     ["TSCurrentScope"]  = { "gui=NONE", "guibg=#090909" },
     ["clear"]    = { "@lsp.mod",},
   },
-  -- For use with set
   ["Window"] = {
     ["Active"]   = { "guibg=NONE" },
-    ["Inactive"] = { "guibg=#1a1a1a" },
+    ["Inactive"] = { "gui=NONE", "guibg=#090909" },
   },
   ["StatusLine"] = {
-    [""]         = { "gui=NONE",      "guibg=NONE",    "guifg=#229922", },
-    ["NC"]       = { "gui=NONE",      "guibg=NONE",    "guifg=#999999", },
+    [""]          = { "gui=", "BOLD,REVERSE",  "guibg=", "NONE", "guifg=", "#555555", },
+    ["NC"]        = { "gui=", "NONE",  "guibg=", "NONE",    "guifg=", "#999999", },
+    ["_Session"]  = { "gui=", "NONE",  "guibg=", "NONE",    "guifg=", "#FF9900", },
+    ["_Lsp"]      = { "gui=", "NONE",  "guibg=", "NONE",    "guifg=", "#444444", },
+    ["_File"]     = { "gui=", "NONE",  "guibg=", "NONE",    "guifg=", "#009999", },
+    ["_Git"]      = { "gui=", "NONE",  "guibg=", "NONE",    "guifg=", "#009900", },
+
+    ["_FullFile"] = { "gui=", "NONE",  "guibg=", "NONE",    "guifg=", "#999999", },
   },
   ["MarkSign"] = {
     ["NumHL"]      = { "gui=NONE",      "guibg=NONE",    "guifg=NONE", },

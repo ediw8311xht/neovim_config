@@ -35,6 +35,7 @@ require('telescope').setup({
         [ '<C-d>'   ] = require('telescope.actions').results_scrolling_up,
         [ '<C-s>'   ] = require('telescope.actions').select_horizontal,
         [ '<C-v>'   ] = require('telescope.actions').select_vertical,
+        [ '<C-S-d>' ] = require('telescope.actions').delete_buffer,
       }
     }
   }

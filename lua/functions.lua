@@ -90,6 +90,7 @@ function KeyMapSetter(map, pre, buffer_only, with_which_key)
 				which_key.add({ pre .. key, desc = tbl[2], mode = mode })
 			end
       if tbl.cmd then
+        -- doesn't change modes *:map-cmd* / *<CMD>*
         keymap_cmd = "<CMD>" .. tbl[3] .. "<CR>"
       elseif tbl.vim_command then
         keymap_cmd = ":call " .. tbl[3] .. "<CR>"

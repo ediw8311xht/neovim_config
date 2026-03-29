@@ -25,7 +25,7 @@ cmp.setup({
       winhighlight = "FloatBorder:CmpBorder,Normal:NormalFloat",
       border = {'┌', '─', '┐', '│', '┘', '─', '└', '│'},
       min_width = 20,
-      min_height = 20,
+      min_height = 30,
       max_width = nil,
       max_height = nil,
     },

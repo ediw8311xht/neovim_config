@@ -24,8 +24,9 @@ set nowrap
 set number
 set relativenumber
 set ruler
-set signcolumn=auto
-set splitright
+"set splitright
+set nosplitbelow
+set nosplitright
 set t_Co=256
 set textwidth=0
 set undofile
@@ -52,7 +53,8 @@ set guicursor=n:block90,i:ver20
 set cul
 set nocuc
 set cedit=\<C-c>
-set statuscolumn=
+set signcolumn=auto:4
+set statuscolumn=%@SignFunction@%s%=%T%@NumCb@%l│%T
 set foldmethod=marker
 set foldmarker={{{,}}}
 set foldcolumn=1
