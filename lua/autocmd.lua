@@ -112,7 +112,7 @@ local globcomms = {
   [ "~/TEST/QUICK/*.cpp"                     ] = function() vc( "source " .. LanguageSpecificDir .. "/quick_cpp.vim"        ) end,
 }
 local exts = {
-  -- ["lisp"]   = { chmod = "600" },
+  ["lisp"]   = { chmod = "600" },
   ["sh"]     = { chmod = "700" },
   ["py"]     = { chmod = "700" },
   ["kalker"] = { chmod = "700" },

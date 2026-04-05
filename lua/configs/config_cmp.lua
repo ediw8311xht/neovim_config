@@ -37,21 +37,19 @@ cmp.setup({
     ['<C-u>'] = cmp.mapping.scroll_docs(-4),
     ['<C-d>'] = cmp.mapping.scroll_docs(4),
     ['<C-y>'] = cmp.mapping.confirm( { select = true} ),
-    ['<C-S-y>'] = cmp.mapping.complete(),
+    ['<C-Space>'] = cmp.mapping.complete(),
     ['<C-S-e>'] = cmp.mapping.close(),
-    ['<C-S-p>'] = cmp.mapping.complete({
-      config = {
-        sources = {
-          { name = 'path' }
-        }
-      }
+    ['<C-S-y>'] = cmp.mapping.complete({
+      config = { sources = { { name = 'treesitter' }, } }
     }),
+    ['<C-S-p>'] = cmp.mapping.complete({
+      config = { sources = { { name = 'path' },
+                             { name = 'dotenv' }, } } }),
   },
   sources = cmp.config.sources({
     { name = 'nvim_lsp' },
     { name = 'nvim_lua' },
     { name = 'luasnip' },
-    -- { name = 'treesitter' },
     { name = 'nvim_lsp_signature_help' },
     -- { name = 'ctags' },
     -- { name = 'cmp-nvim-tags' },
@@ -70,7 +68,14 @@ cmp.setup({
 
 cmp.setup.filetype( { 'lisp', 'commonlisp' }, {
   sources = {
-    { name = 'omni', },
+    { name = 'omni',   group_index = 0 },
+    { name = 'buffer', group_index = 0 },
+  },
+  mapping = {
+    ['C-S-y'] = cmp.mapping.complete({
+      config = { sources = { { name = 'omni' },
+                             { name = 'treesitter' },
+                           } } })
   }
 })
 cmp.setup.filetype( { 'tex' }, {

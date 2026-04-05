@@ -8,7 +8,6 @@ let g:my_plugins['vim latex']           = [ 'lervag',           'vimtex'        
 let g:my_plugins['auto session']        = [ 'rmagatti',         'auto-session'                  ]
 let g:my_plugins['restore view']        = [ 'vim-scripts',      'restore_view.vim'              ]
 "-- Documentation
-let g:my_plugins['dasht (docs)']        = [ 'sunaku',  'vim-dasht' ]
 "-- Language Server
 let g:my_plugins['lspconfig']           = [ 'neovim',           'nvim-lspconfig'                ]
 let g:my_plugins['lsp lines']           = [ 'maan2003',         'lsp_lines.nvim'                ]
@@ -18,11 +17,12 @@ let g:my_plugins['code-action preview'] = [ 'aznhe21',          'actions-preview
 "-- Paredit
 let g:my_plugins['paredit']             = [ 'julienvincent', 'nvim-paredit', { 'for': ['clojure', 'fennel', 'scheme'] } ]
 " Fennel for neovim
-let g:my_plugins['nfnl (fennel)']       = [ 'Olical', 'nfnl']
+let g:my_plugins['nfnl (fennel)']       = [ 'Olical',           'nfnl']
 "-- Scheme
-let g:my_plugins['conjure']             = [ 'Olical',  'conjure' ]
+let g:my_plugins['conjure']             = [ 'Olical',           'conjure' ]
 "-- Lisp
-let g:my_plugins['slimv']               = [ 'kovisoft', 'slimv', {'for': 'lisp'} ]
+let g:my_plugins['slimv']               = [ 'kovisoft',         'slimv',  { 'for': [ 'lisp', 'commonlisp' ] } ]
+let g:my_plugins['cl-lsp']              = [ 'cxxxr',            'cl-lsp', { 'for': [ 'lisp', 'commonlisp' ] } ]
 "-- Elixir
 let g:my_plugins['elixir']              = [ 'elixir-tools',     'elixir-tools.nvim'             ]
 let g:my_plugins['elixirfiledetect']    = [ 'elixir-editors',   'vim-elixir'                    ]

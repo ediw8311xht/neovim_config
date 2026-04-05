@@ -54,7 +54,9 @@ set cul
 set nocuc
 set cedit=\<C-c>
 set signcolumn=auto:4
-set statuscolumn=%@SignFunction@%s%=%T%@NumCb@%l│%T
+"set statuscolumn=%@SignFunction@%s%=%T%@NumCb@%l│%T
+set statuscolumn=%@v:lua.GutterSign@%s%=%T%@v:lua.GutterNum@%l\ %T
+"set statuscolumn=%@SignCb@%s%=%T%@NumCb@%l│%T
 set foldmethod=marker
 set foldmarker={{{,}}}
 set foldcolumn=1
@@ -100,7 +102,7 @@ lua <<EOF
 vim.filetype.add({
   extension = {
     [ 'ex'             ] = 'elixir',
-    [ 'exs'            ] = 'exliir',
+    [ 'exs'            ] = 'elixir',
     [ 'hs'             ] = 'haskell',
     [ 'kalker'         ] = 'kalker',
     [ 'lisp'           ] = 'lisp',

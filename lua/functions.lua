@@ -177,6 +177,14 @@ function PathValid(path)
   return fn.filewritable(match) == 2
 end
 
+function GutterSign()
+  print("h")
+end
+
+function GutterNum()
+  print("n")
+end
+
 -- {{{
 -- function KeyMapSetter2(map, pre, buffer_only, with_which_key)
 --   local which_key = require("which-key")

@@ -8,19 +8,22 @@ local lang_servers      = { 'cssls', 'html', 'jsonls', 'ts_ls', 'vimls', 'eslint
 
 actions_preview.setup({})
 
--- {{{
---[[
-vim.lsp.config('*', {
-  capabilities = {
-    textDocument = {
-      semanticTokens = {
-        multilineTokenSupport = true,
-      }
-    }
-  }
-})
---]]
--- }}}
+-------------------------------------------- {{{
+-- local configs = require 'lspconfig.configs'
+-- -- https://github.com/neovim/nvim-lspconfig/issues/1767#issuecomment-1100913208
+-- if not configs.cl_lsp then
+-- configs.cl_lsp = {
+--   default_config = {
+--     cmd = { vim.env.HOME .. "/.roswell/bin/cl-lsp"},
+--     filetypes = {'lisp'},
+--     root_dir = require("lspconfig.util").find_git_ancestor,
+--     settings = {},
+--   },
+-- }
+-- end
+-- require('lspconfig').cl_lsp.setup {}
+-------------------------------------------- }}}
+
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
   vim.lsp.handlers.hover, {
     border = "rounded",
@@ -109,7 +112,10 @@ lspconfig('hls', {
 for _,v in ipairs(lang_servers) do
   vim.lsp.enable(v)
 end
+
+-- {{{
 -- lspconfig.jedi_language_server.setup( { capabilities = cmp_capabilities , })
+--
 -- lspconfig.pyright.setup{
 --   on_attach = lsp_status.on_attach,
 --   capabilities = cmp_capabilities,
@@ -121,6 +127,19 @@ end
 --     }
 --   }
 -- }
+--
 -- lspconfig.ccls.setup({
 --   filetypes = {"c", "cpp", "h", "cc", "hpp"},
 -- })
+--
+-- vim.lsp.config('*', {
+--   capabilities = {
+--     textDocument = {
+--       semanticTokens = {
+--         multilineTokenSupport = true,
+--       }
+--     }
+--   }
+-- })
+-- }}}
+

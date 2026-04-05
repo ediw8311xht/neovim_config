@@ -5,7 +5,7 @@ local elixirls = require('elixir.elixirls')
 -- Elixir --
 elixir.setup({
   nextls = {
-    enable = true,
+    enable = false,
     filetypes = { "elixir" },
     init_options = {
       mix_env = "dev",
@@ -16,7 +16,7 @@ elixir.setup({
     },
   },
   elixirls = {
-    enable = false,
+    enable = true,
     filetypes = { "elixir" },
     -- cmd = "/usr/bin/elixir-ls",
     -- default settings, use the `settings` function to override settings
