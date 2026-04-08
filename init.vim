@@ -12,6 +12,11 @@
 "<==------------------======================================------------------==>
 "<==============================================================================>
 "<==============================================================================>
+
+let g:dir_config     = stdpath("config")
+let g:dir_scripts    = g:dir_config .. "/scripts"
+let g:dir_config_vim = g:dir_config .. "/vim"
+
 fu! SourceIf(file)
   let l:file = expand(a:file)
   if file_readable(l:file) 
@@ -27,9 +32,8 @@ lua require("variables")
 lua require("my_highlight")
 
 let vim_files = [ "settings", "functions", "slimv_settings", "conjure_settings", "vimtex_settings", "plugins" ]
-let g:config_dir = expand("$XDG_CONFIG_HOME/nvim/vim")
 for i in vim_files
-  call SourceIf(printf("%s/%s.vim", g:config_dir, i))
+  call SourceIf(printf("%s/%s.vim", g:dir_config_vim, i))
 endfor
 
 lua require('base')

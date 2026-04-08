@@ -11,7 +11,7 @@ let g:my_plugins['restore view']        = [ 'vim-scripts',      'restore_view.vi
 "-- Language Server
 let g:my_plugins['lspconfig']           = [ 'neovim',           'nvim-lspconfig'                ]
 let g:my_plugins['lsp lines']           = [ 'maan2003',         'lsp_lines.nvim'                ]
-let g:my_plugins['lsp saga']            = [ 'nvimdev',          'lspsaga.nvim'                  ]
+"let g:my_plugins['lsp saga']            = [ 'nvimdev',          'lspsaga.nvim'                  ]
 let g:my_plugins['lsp statusline']      = [ 'nvim-lua',         'lsp-status.nvim'               ]
 let g:my_plugins['code-action preview'] = [ 'aznhe21',          'actions-preview.nvim'          ]
 "-- Paredit

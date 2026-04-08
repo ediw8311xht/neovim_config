@@ -1,13 +1,12 @@
 
-local config_dir     = vim.fn.stdpath("config")
 -- lua configs for plugins
-local config_files   = vim.fn.globpath(vim.fn.stdpath("config") .. "/lua/configs/",  "*.lua", 0, 1)
+local config_files   = vim.fn.globpath(vim.g.dir_config .. "/lua/configs/",  "*.lua", 0, 1)
 -- fennel
-local compiled_files = vim.fn.globpath(vim.fn.stdpath("config") .. "/lua/compiled/", "*.lua", 0, 1)
+local compiled_files = vim.fn.globpath(vim.g.dir_config .. "/lua/compiled/", "*.lua", 0, 1)
 
 vim.opt.rtp:append({
-	config_dir .. "/lua/configs",
-	config_dir .. "/lua/compiled",
+	vim.g.dir_config .. "/lua/configs",
+	vim.g.dir_config .. "/lua/compiled",
 })
 local import_files = {
 	{ "functions", "mappings", "textobjects", "my_treesitter_module" },

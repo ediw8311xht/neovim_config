@@ -24,13 +24,23 @@ actions_preview.setup({})
 -- require('lspconfig').cl_lsp.setup {}
 -------------------------------------------- }}}
 
-vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
-  vim.lsp.handlers.hover, {
-    border = "rounded",
-    width = 50,
-    height = 25,
-  }
-)
+-- vim.lsp.handlers["textDocument/hover"] =
+-- function (f)
+--   vim.lsp.handlers.hover(f, {
+--     border = "rounded",
+--     width = 75,
+--     height = 50,
+--   })
+-- end
+
+
+-- vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
+--   vim.lsp.handlers.hover, {
+--     border = "rounded",
+--     width = 50,
+--     height = 25,
+--   }
+-- )
 lspconfig('cssls',   { capabilities = cmp_capabilities })
 lspconfig('html',    { capabilities = cmp_capabilities })
 lspconfig('jsonls',  { capabilities = cmp_capabilities })

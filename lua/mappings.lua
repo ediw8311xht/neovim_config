@@ -42,7 +42,7 @@ LEADER_MAPPINGS = {
     Ihc   = { F, 'clear highlight symbol',  'lua vim.lsp.buf.clear_references()',cmd=true},
     Ihs   = { F, 'highlight symbol',        'lua LspDocumentHighlight()',cmd=true},
     Ii    = { F, 'show diagnostics',        'lua vim.diagnostic.open_float(nil, {focus=T, scope="cursor"})',cmd=true},
-    Il    = { F, 'hover lsp info',          'lua vim.lsp.buf.hover()',cmd=true},
+    Il    = { F, 'hover lsp info',          'lua vim.lsp.buf.hover({max_height=30, max_width=30})',cmd=true},
     In    = { F, 'goto next error',         'lua vim.diagnostic.goto_next()',cmd=true},
     Ip    = { F, 'goto prev error',         'lua vim.diagnostic.goto_prev()',cmd=true},
     Iy    = { F, '[!]lsp_lines',            'lua require("lsp_lines").toggle()',cmd=true},
