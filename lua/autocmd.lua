@@ -15,7 +15,7 @@ MaxLinesCMP = 2000
 local function set_buffer_autocommands(globcomms)
   for glob, cback in pairs(globcomms) do
     vauto({ "BufNewFile", "BufRead" }, {
-      pattern = vfn.expand(glob),
+      pattern = glob,
       callback = cback
     })
   end
@@ -126,8 +126,14 @@ local exts = {
   ["md"]     = { },
 }
 
-set_templates(exts)
+-- vauto({ "BufNewFile", "BufRead" }, {
+--   pattern = "*.page",
+--   callback = function()
+--     vc( "source " .. LanguageSpecificDir .. "/gitit.vim")
+--   end,
+-- })
 set_buffer_autocommands(globcomms)
+set_templates(exts)
 
 -- {{{
 ----------------------------------------------YankedText
@@ -149,7 +155,7 @@ set_buffer_autocommands(globcomms)
 --   -- end
 -- end
 -- -- Disable_CMP_For_Large_Files
--- 
+--
 -- va.nvim_create_augroup("highlight_symbol_treesitter", { clear = true })
 --
 -- function ToggleLspDocumentHighlight()

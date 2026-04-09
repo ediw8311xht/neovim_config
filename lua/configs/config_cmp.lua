@@ -68,13 +68,14 @@ cmp.setup({
 
 cmp.setup.filetype( { 'lisp', 'commonlisp' }, {
   sources = {
-    { name = 'omni',   group_index = 0 },
-    { name = 'buffer', group_index = 0 },
+    { name = 'omni'   },
+    { name = 'buffer' },
   },
   mapping = {
     ['C-S-y'] = cmp.mapping.complete({
       config = { sources = { { name = 'omni' },
                              { name = 'treesitter' },
+                             { name = 'buffer' },
                            } } })
   }
 })
