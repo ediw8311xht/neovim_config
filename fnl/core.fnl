@@ -71,7 +71,7 @@
   :<C-S-K>    { :desc "up Pane"                     :value :<C-w>k                                     }
   :<C-S-L>    { :desc "right pane"                  :value :<C-w>l                                     }
   :<C-S-Tab>  { :desc "previous tab"                :value :tabprevious :typet :vim_command }
-  :<C-S-g>    { :desc "[!]float term"               :value "FloatermToggle!" :typet :vim_command }
+  :<C-S-g>    { :desc "[!]float term"               :value "FloatermToggle" :typet :vim_command }
   :<C-S-s>    { :desc "substitute +char +vmagic"    :value ":%s/\\v"                                   }
   :<C-Tab>    { :desc "next tab"                    :value :tabnext :typet :vim_command }
   :<C-n>      { :desc "[!]NerdTree"                 :value :NERDTreeToggle :typet :vim_command }
@@ -90,7 +90,7 @@
   "[)"        { :desc "next )"                      :value "search(')', 'bW')" :typet :vim_function }
 }
 :t {
-  :<C-S-g>    { :desc "[!]Float Term"             :value  "<C-w>:FloatermToggle!<ESC>"
+  :<C-S-g>    { :desc "[!]Float Term"             :value  "<C-w>:FloatermToggle<ESC>"
                 :remap true }
   :<C-w>      { :desc "normal mode"                 :value "<C-\\><C-n>"
                 :remap true }

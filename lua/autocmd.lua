@@ -132,8 +132,8 @@ local exts = {
 --     vc( "source " .. LanguageSpecificDir .. "/gitit.vim")
 --   end,
 -- })
-set_buffer_autocommands(globcomms)
 set_templates(exts)
+set_buffer_autocommands(globcomms)
 
 -- {{{
 ----------------------------------------------YankedText
