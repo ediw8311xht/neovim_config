@@ -28,32 +28,42 @@ function ClipBoardExit()
 end
 
 function Cycle(check_var, list, func)
-  local o = api.nvim_get_option(check_var)
-  func = func or function(l)
-    api.nvim_set_option_value(check_var, l[2], { scope = "global" })
-    return l[1]
-  end
-  if #list <= 0 then
-    return
-  end
-  for i, v in ipairs(list) do
-    if v[2] == o then
-      return func(list[i % #list + 1])
-    end
-  end
-  return func(list[1])
+	local o = api.nvim_get_option(check_var)
+	func = func or function(l)
+		api.nvim_set_option_value(check_var, l[2], { scope = "global" })
+		return l[1]
+	end
+	if #list <= 0 then
+		return
+	end
+	for i, v in ipairs(list) do
+		if v[2] == o then
+			return func(list[i % #list + 1])
+		end
+	end
+	return func(list[1])
+end
+
+function SetHighlightFromTable(hl_group, hl_table)
+	local conc = "hi " .. hl_group
+	for c, v in pairs(hl_table) do
+		conc = conc .. " " .. c .. "=" .. v
+	end
+	cmd(conc)
 end
 
 function CorrectColors()
-	local function Main(comm, hl_table)
-		if #hl_table == 0 then
-			for c, v in pairs(hl_table) do
-				Main(comm .. c, v)
-			end
+	local function Main(hl_group, hl_table)
+		local _, test_v = next(hl_table)
+		if type(test_v) == "string" then
+			SetHighlightFromTable(hl_group, hl_table)
 		else
-			cmd("hi " .. comm .. " " .. table.concat(hl_table, " "))
+			for c, v in pairs(hl_table) do
+				Main(hl_group .. c, v)
+			end
 		end
 	end
+	cmd("hi clear @lsp.mod")
 	api.nvim_set_option_value("winhighlight", "NormalNC:WindowInactive", { scope = "global" })
 	Main("", vim.g.my_highlight)
 end
@@ -76,12 +86,11 @@ function ToggleHighlight(highlights)
 	end
 end
 
-
 function KeyMapSetter(map, pre, buffer_only, with_which_key)
 	local which_key = require("which-key")
 	for mode, mode_map in pairs(map) do
 		for key, tbl in pairs(mode_map) do
-      local keymap_cmd
+			local keymap_cmd
 			if tbl.group then
 				which_key.add({ pre .. key, group = tbl.group, mode = mode })
 				goto continue
@@ -89,14 +98,16 @@ function KeyMapSetter(map, pre, buffer_only, with_which_key)
 			if with_which_key then
 				which_key.add({ pre .. key, desc = tbl[2], mode = mode })
 			end
-      if tbl.cmd then
-        -- doesn't change modes *:map-cmd* / *<CMD>*
-        keymap_cmd = "<CMD>" .. tbl[3] .. "<CR>"
-      elseif tbl.vim_command then
-        keymap_cmd = ":call " .. tbl[3] .. "<CR>"
-      else
-        keymap_cmd = tbl[3]
-      end
+			if tbl.cmd then
+				-- doesn't change modes *:map-cmd* / *<CMD>*
+				keymap_cmd = "<CMD>" .. tbl[3] .. "<CR>"
+			elseif tbl.vim_command then
+				keymap_cmd = (tbl.print and ":echo " or ":call ") .. tbl[3] .. "<CR>"
+			elseif tbl.lua_call then
+				keymap_cmd = (tbl.print and ":lua= " or ":lua ") .. tbl[3] .. "<CR>"
+			else
+				keymap_cmd = tbl[3]
+			end
 			-- local keymap_cmd = (tbl.cmd and "<CMD>" .. tbl[3] .. "<CR>") or tbl[3]
 			vim.keymap.set(mode, pre .. key, keymap_cmd, {
 				remap = tbl[1],
@@ -129,19 +140,19 @@ end
 ---                 scope:        string,
 ---                 description:  string,
 ---                 command_name: string,
----                 var:          string, 
+---                 var:          string,
 ---                 on:           function,
 ---                 off:          function,
 ---               }
 ---
 function CreateToggle(options)
-  local namespace    = options.namespace    or "CreateToggle__"
-  local scope        = options.scope        or "g"
-  local description  = options.description  or ""
-  local command_name = options.command_name
-  local var          = namespace .. (options.var     or command_name or "temp")
-  local on_function  = options.on
-  local off_function = options.off
+	local namespace = options.namespace or "CreateToggle__"
+	local scope = options.scope or "g"
+	local description = options.description or ""
+	local command_name = options.command_name
+	local var = namespace .. (options.var or command_name or "temp")
+	local on_function = options.on
+	local off_function = options.off
 	local callback_function = function()
 		print(vim[scope][var])
 		if not vim[scope][var] then
@@ -154,9 +165,9 @@ function CreateToggle(options)
 	end
 	if command_name then
 		vim.api.nvim_create_user_command(command_name, callback_function, { nargs = 0, desc = description })
-    return nil
-  else
-	  return callback_function
+		return nil
+	else
+		return callback_function
 	end
 end
 
@@ -172,19 +183,37 @@ end
 ---@param path string Path to check
 ---@return boolean
 function PathValid(path)
-  local match = string.match(path, '^(.*[/])[^/]*$')
-  print(match)
-  return fn.filewritable(match) == 2
+	local match = string.match(path, "^(.*[/])[^/]*$")
+	print(match)
+	return fn.filewritable(match) == 2
 end
 
-function GutterSign()
-  print("h")
+-- do later
+-- function GutterSign()
+-- 	print("h")
+-- end
+--
+-- function GutterNum()
+-- 	print("n")
+-- end
+
+function GetHL()
+	if not pcall(vim.show_pos) then
+		local synid = vim.fn.synID(vim.fn.line("."), vim.fn.col("."), 1)
+		if synid ~= 0 then
+			print(vim.fn.synIDattr(vim.fn.synIDtrans(synid), "name"))
+		end
+	end
 end
 
-function GutterNum()
-  print("n")
-end
-
+-- for id in synstack(line("."), col("."))
+--    echo synIDattr(id, "name")
+-- endfor
+-- if l:synid != 0
+--   echo synIDattr(synIDtrans(l:synid), "name")
+-- else
+--   :Inspect
+-- end
 -- {{{
 -- function KeyMapSetter2(map, pre, buffer_only, with_which_key)
 --   local which_key = require("which-key")

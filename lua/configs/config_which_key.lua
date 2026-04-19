@@ -15,7 +15,7 @@ which_key.setup({
   },
   -- sort = { "group", "local", "alphanum" },
   sort = { "alphanum" },
-  expand = 3,
+  expand = 2,
   win = {
     no_overlap = false,
     border = "double", -- none, single, double, shadow
@@ -53,9 +53,4 @@ which_key.setup({
   },
 })
 
--- which_key.add({
---   { "<leader>B", group = "buffers", expand = function()
---       return require("which-key.extras").expand.buf()
---     end
---   },
--- })
+which_key.add( { "<leader>A", group = "ft specific", mode="n" } )

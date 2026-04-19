@@ -1,19 +1,19 @@
 #!/usr/bin/lua
 
-local F = false;
-local T = true;
-local current_file = vim.fn.expand('%:p')
+local F = false
+-- local T = true
+vim.g.mapping_file = vim.fn.expand('%:p')
 
 -- Leader Mappings {{{
 ---------- Remember -----------
--- inoremap <expr> key command
+-- innoremap <expr> key command
 -------------------------------
 LEADER_MAPPINGS = {
   n = {
     B     = { group="buffer"},
     Bc    = { F, 'copy buffer to clip',     'gg"+yG<c-o>'},
-    Bd    = { F, 'delete buffer',           ':bd<ESC><enter>'},
-    Bn    = { F, 'new buffer',              ':enew<ESC><enter>'},
+    Bd    = { F, 'delete buffer',           'bd',cmd=true},
+    Bn    = { F, 'new buffer',              'enew',cmd=true},
     E     = { F, 'cwd edit',                'feedkeys(":e " . FilePathFull() . "/")',vim_command=true},
     F     = { group="AutoSession"},
     Fa    = { F, '[!]session auto save',    'AutoSession toggle',cmd=true},
@@ -29,23 +29,24 @@ LEADER_MAPPINGS = {
     H     = { group="help"},
     HM    = { F, 'print all mappings',      'GMaps()',vim_command=true},
     Hg    = { F, 'helpgrep',                ':vert helpgrep '},
-    Hh    = { F, 'get highlight',           'GetHL()',vim_command=true},
+    Hh    = { F, 'get highlight',           'GetHL()',lua_call=true},
     Hk    = { F, 'vim help tags',           'Telescope help_tags',cmd=true},
-    Hm    = { F, 'print mappings file',     'edit ' .. current_file,cmd=true},
+    Hm    = { F, 'print mappings file',     'edit ' .. vim.g.mapping_file,cmd=true},
     Ho    = { F, 'vim options',             'Telescope vim_options',cmd=true},
     Ht    = { F, 'telescope commands',      'Telescope commands',cmd=true},
     I     = { group="lsp"},
-    IA    = { F, 'stop lsp',                'LspStop',cmd=true},
-    Ia    = { F, 'start lsp',               'LspStart',cmd=true},
-    Ic    = { F, 'show code-action',        'lua require("actions-preview").code_actions()',cmd=true},
-    Id    = { F, 'go to definition',        'lua vim.lsp.buf.definition()',cmd=true},
-    Ihc   = { F, 'clear highlight symbol',  'lua vim.lsp.buf.clear_references()',cmd=true},
-    Ihs   = { F, 'highlight symbol',        'lua LspDocumentHighlight()',cmd=true},
-    Ii    = { F, 'show diagnostics',        'lua vim.diagnostic.open_float(nil, {focus=T, scope="cursor"})',cmd=true},
-    Il    = { F, 'hover lsp info',          'lua vim.lsp.buf.hover({max_height=30, max_width=30})',cmd=true},
-    In    = { F, 'goto next error',         'lua vim.diagnostic.goto_next()',cmd=true},
-    Ip    = { F, 'goto prev error',         'lua vim.diagnostic.goto_prev()',cmd=true},
-    Iy    = { F, '[!]lsp_lines',            'lua require("lsp_lines").toggle()',cmd=true},
+    IA    = { F, 'stop lsp',                'lsp stop',cmd=true},
+    Ia    = { F, 'start lsp',               'lsp enable',cmd=true}, -- this sucks need to find way to start only those defined by nvim lsp config
+    Ir    = { F, 'restart lsp',             'lsp restart',cmd=true},
+    Ic    = { F, 'show code-action',        'require("actions-preview").code_actions()',lua_call=true},
+    Id    = { F, 'go to definition',        'vim.lsp.buf.definition()',lua_call=true},
+    Ihc   = { F, 'clear highlight symbol',  'vim.lsp.buf.clear_references()',lua_call=true},
+    Ihs   = { F, 'highlight symbol',        'LspDocumentHighlight()',lua_call=true},
+    Ii    = { F, 'show diagnostics',        'vim.diagnostic.open_float(nil, {focus=T, scope="cursor"})',lua_call=true},
+    Il    = { F, 'hover lsp info',          'vim.lsp.buf.hover({max_height=30, max_width=30})',lua_call=true},
+    In    = { F, 'goto next error',         'vim.diagnostic.goto_next()',lua_call=true},
+    Ip    = { F, 'goto prev error',         'vim.diagnostic.goto_prev()',lua_call=true},
+    Iy    = { F, '[!]lsp_lines',            'require("lsp_lines").toggle()',lua_call=true},
     M     = { group="misc"},
     MT    = { F, 'new terminal',            'term',cmd=true},
     Mc    = { F, 'set pwd to currfile',     'cd %:p:h',cmd=true},
@@ -75,7 +76,7 @@ LEADER_MAPPINGS = {
     ce    = { F, '[!]cursorcolumn',         'set cuc!',cmd=true},
     cf    = { F, 'format',                  'lua RunKeepCursorPosition(function() vim.cmd(":Autoformat") end)',cmd=true},
     cg    = { F, '[!]git signs',            'Gitsigns toggle_linehl',cmd=true},
-    ch    = { F, 'format2',                 function() vim.lsp.buf.format() end                                    },
+    ch    = { F, 'format2',                 'vim.lsp.buf.format()', lua_call=true },
     cj    = { F, 'next scheme',             'SetColScheme(+1)',vim_command=true},
     ck    = { F, 'correctcolors()',         'lua CorrectColors()',cmd=true},
     cl    = { F, '[!]cursorline',           'lua ToggleHighlight({"CursorLine"})',cmd=true},
@@ -85,16 +86,15 @@ LEADER_MAPPINGS = {
     cw    = { F, '[!]wrap',                 'set wrap!',cmd=true},
     df    = { F, 'find space eol',          '%s/\\s\\+\\ze$//gc',cmd=true},
     grg   = { F, 'search in all buffers',   function() require("telescope.builtin").live_grep({grep_open_files = true, disable_coordinates = true}) end },
-    i     = { F, 'show diagnostics',        ':lua vim.diagnostic.open_float(nil, {focus=T, scope="cursor"})<ESC>'},
-    q     = { F, 'delete buffer',           ':bd'},
+    i     = { F, 'show diagnostics',        'vim.diagnostic.open_float(nil, {focus=T, scope="cursor"})',lua_call=true},
     s     = { F, 'switch pane',             '<C-w><C-p>'},
     u     = { F, 'lf file manager',         'Lf',cmd=true},
-    vt    = { F, 'title case',              ':s/\\v\\c\\w(\\a*(\'\\a{0,1})?\\w)?/\\u\\0/g | nohl<CR>'},
+    vt    = { F, 'title case',              's/\\v\\c\\w(\\a*(\'\\a{0,1})?\\w)?/\\u\\0/g | nohl', cmd=true},
     wj    = { F, 'decrease size split',     '40<c-w><'},
     wk    = { F, 'increase size split',     '40<c-w>>'},
     wo    = { F, 'toggle fullscreen',       'ToggleFullscreen',cmd=true},
-    x     = { F, 'execute',                 ':!%:p<ESC>'},
-    y     = { F, 'bg transparent',          ':hi Normal guibg=Transparent<ESC>'},
+    x     = { F, 'execute',                 '!%:p',cmd=true},
+    y     = { F, 'bg transparent',          'hi Normal guibg=Transparent',cmd=true},
     z     = { F, '',                        'z'},
     [ ','       ] = { F, 'alternate file',         '<C-^>'},
     [ '-'       ] = { F, 'resize split -20',       '20<c-w><'},

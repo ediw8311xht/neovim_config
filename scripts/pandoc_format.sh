@@ -1,9 +1,12 @@
 #!/usr/bin/bash
 
 __main() {
+  local MARK_FORMAT="commonmark"
+  local FROM
+  local TO
+
   md_format() {
     local enabled=(
-      alerts
       pipe_tables
       raw_html
       strikeout
@@ -15,6 +18,7 @@ __main() {
       yaml_metadata_block
     )
     local disabled=(
+      alerts
       ascii_identifiers
       attributes
       autolink_bare_uris
@@ -37,16 +41,27 @@ __main() {
       wikilinks_title_before_pipe
     )
 
-    local format="commonmark"
-    format+="$(printf -- '+%s' "${enabled[@]}")"
-    format+="$(printf -- '-%s' "${disabled[@]}")"
-    pandoc -f "${format}" -t "${format}" --standalone \
-      --wrap=none --columns=250 \
-      "${1}"
+    MARK_FORMAT+="$(printf -- '+%s' "${enabled[@]}")"
+    MARK_FORMAT+="$(printf -- '-%s' "${disabled[@]}")"
+    pandoc -f "${FROM:-${MARK_FORMAT}}" -t "${TO:-${MARK_FORMAT}}" \
+      --standalone \
+      --wrap=none --columns=250
     # -t markdown+${extensions[*]// /} -i output.md)"
   }
 
-  md_format "${1:-/dev/stdin}"
+  handle_args() {
+    case "${1}" in
+       --from) FROM="${2}" ; shift 1
+    ;;   --to)   TO="${2}" ; shift 1
+    ;;     -*) : # maybe add later
+    ;;      *) : 
+    ;; esac
+    shift 1
+    [[ "${#}" -ge 1 ]] && handle_args "${@}"
+  }
+
+  handle_args "${@}"
+  md_format
 }
 
 __main "${@}"

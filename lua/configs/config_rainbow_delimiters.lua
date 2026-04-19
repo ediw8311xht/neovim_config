@@ -13,13 +13,13 @@ require('rainbow-delimiters.setup').setup {
         lua = 210,
     },
     highlight = {
-        'RainbowDelimiter1',
-        'RainbowDelimiter2',
-        'RainbowDelimiter3',
-        'RainbowDelimiter4',
-        'RainbowDelimiter5',
-        'RainbowDelimiter6',
-        'RainbowDelimiter7',
+        'RainbowDelimiter_1',
+        'RainbowDelimiter_2',
+        'RainbowDelimiter_3',
+        'RainbowDelimiter_4',
+        'RainbowDelimiter_5',
+        'RainbowDelimiter_6',
+        'RainbowDelimiter_7',
     },
 }
 

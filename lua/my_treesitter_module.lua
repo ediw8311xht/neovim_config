@@ -6,6 +6,10 @@ local ts = vim.treesitter
 local vfn = vim.fn
 local vapi = vim.api
 
+local function TableSetDefault(tbl, default)
+  return setmetatable(tbl, { __index = function() return default end })
+end
+
 local M = {
   comment_nodes = { "comment", "comment_content" },
   function_nodes = TableSetDefault({
@@ -72,7 +76,7 @@ function M.GoToQuery(query, args)
   local inner    = args.inner    or false
   ---------------------------------------
 
-  local cpos_row, cpos_col = unpack(vapi.nvim_win_get_cursor(0))
+  local cpos_row, cpos_col = table.unpack(vapi.nvim_win_get_cursor(0))
   local cpos = {cpos_row, cpos_col}
   local iter_range = reverse and {0, cpos_row-1} or {cpos_row-1, vfn.line('$')-1}
   local new_pos

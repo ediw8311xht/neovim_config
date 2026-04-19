@@ -15,7 +15,7 @@ local import_files = {
 }
 local imported_modules = {}
 
-require("nfnl").setup()
+-- require("nfnl").setup()
 for _, i in ipairs(import_files) do
 	for _, j in ipairs(i) do
 		local f = string.gsub(j, ".*lua/([^.]*).lua$", function(x)

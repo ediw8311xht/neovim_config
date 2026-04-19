@@ -7,9 +7,11 @@ fu! MakeSafe(f)
 endfu
 
 fu! WritePreview()
-  let l:temp_file = '/tmp/' .. MakeSafe(expand('%:p')) .. ".html"
+  let l:file = expand("%:p")
+  let l:temp_file = '/tmp/' .. MakeSafe(file) .. ".html"
   echo l:temp_file
-  execute "!pandoc -f markdown -t html % > " .. l:temp_file
+  "execute "!pandoc -f markdown -t html % > " .. l:temp_file
+  execute printf("!%s/pandoc_format.sh --to html <'%s' > %s", g:dir_scripts, l:file, l:temp_file)
   return l:temp_file
 endfu
 
@@ -57,10 +59,10 @@ MARKDOWN_KEYMAP_LEADER = {
   n = {
     cT = { false, "Add table line",     'a| --- <ESC>a|<ESC>' },
     x  = { false, "Format",             'Autoformat', cmd=true },
-    oo = { false, "Preview Markdown",   ':silent call PreviewMarkdown()<esc>' },
-    oq = { false, "q Preview Markdown", ':silent call PreviewMarkdown("q")<esc>' },
-    ob = { false, "b Preview Markdown", ':silent call PreviewMarkdown("b")<esc>' },
-    oO = { false, "n Preview Markdown", 'MarkdownPreview' },
+    -- oo = { false, "Preview Markdown",   ':silent call PreviewMarkdown()<esc>' },
+    -- oq = { false, "q Preview Markdown", ':silent call PreviewMarkdown("q")<esc>' },
+    -- ob = { false, "b Preview Markdown", ':silent call PreviewMarkdown("b")<esc>' },
+    om = { false, "n Preview Markdown", 'MarkdownPreview', cmd=true},
     HB = { false, "print buffer local mappings", "lua= 'leader',MARKDOWN_KEYMAP_LEADER, 'regular',MARKDOWN_KEYMAP", cmd=true },
   },
   v = {

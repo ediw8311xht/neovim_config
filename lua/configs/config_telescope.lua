@@ -5,8 +5,8 @@ require('telescope').setup({
   --   },
   -- },
   defaults = {
-    color_devicons = false,
-    disable_devicons = true,
+    color_devicons = true,
+    disable_devicons = false,
     dynamic_preview_title = true,
     disable_coordinates = true,
     path_display = { "smart", "truncate" },

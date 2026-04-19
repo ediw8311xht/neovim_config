@@ -15,6 +15,13 @@ let g:slimv_strip_ansi   = 1
 let g:slimv_swank_cmd = '! kitty @ launch --type=tab --location=first --keep-focus --tab-title="slimv" sbcl --load "${XDG_DATA_HOME}/nvim/plugged/slimv/slime/start-swank.lisp" &'
 
 
+"lua <<EOF
+"if vim.fn.executable("zeal") then
+"  vim.g.slimv_browser_cmd="zeal"
+"  vim.g.slimv_clhs_root="dash://common_lisp/HyperSpec/HyperSpec/Body/"
+"end
+"EOF
+
 fu! SetupForLisp()
   if exists("*PareditInitBuffer")
     call PareditInitBuffer()

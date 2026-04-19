@@ -29,6 +29,8 @@ fu! CyBack(nextprevious)
     endif
     let i += 1
   endwhile
+  execute "highlight Normal guibg=" . g:MyColorTable[0][0]
+  execute "highlight Normal guifg=" . g:MyColorTable[0][1]
 endfu
 
 fu! SetScheme(scheme)
@@ -128,7 +130,7 @@ fu! GMaps()
 endfunction
 
 fu! LspStatus() abort
-  if luaeval('#vim.lsp.get_clients(bufnr) > 0')
+  if luaeval('#vim.lsp.get_clients({ bufnr = vim.fn.bufnr()}) > 0')
     return luaeval("require('lsp-status').status()")
   endif
   return ""
@@ -139,15 +141,6 @@ fu! FilePathFull()
     "fu! FilePathFull(file_arg=v:false)
     "let l:file = a:file_arg == v:false ? expand("%:p:h") : a:file_arg
   return substitute(expand("%:p:h"), '\V' . $HOME, "~", "")
-endfu
-
-fu! GetHL()
-  let l:synid = synID(line("."), col("."), 1)
-  if l:synid != 0
-    echo synIDattr(synIDtrans(l:synid), "name")
-  else
-    :Inspect
-  end
 endfu
 
 "fu! TestMe(event)

@@ -60,7 +60,7 @@ set statuscolumn=%@v:lua.GutterSign@%s%=%T%@v:lua.GutterNum@%l\ %T
 set foldmethod=marker
 set foldmarker={{{,}}}
 set foldcolumn=1
-set sessionoptions=blank,buffers,curdir,help,tabpages,winsize,winpos,terminal,folds
+set sessionoptions=blank,buffers,curdir,help,tabpages,winsize,winpos,terminal,folds,globals
 set viewoptions=cursor,folds
 set fillchars=fold:\ ,horiz:█,vert:░ 
 set background=dark
