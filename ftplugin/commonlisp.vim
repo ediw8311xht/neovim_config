@@ -24,7 +24,7 @@ local commonlisp_leader_mappings = {
     Ar  = { false, 'reload slimv',    '\\Q\\c' },
     Af  = { false, 'reload slimv',    '\\Q\\c' },
     Al  = { false, 'load system',     'SlimvEvalForm("(asdf:load-system :" .. g:Session_system .. ")")', vim_command=true },
-    At  = { false, 'load system',     'SlimvEvalForm("(asdf:test-system :" .. g:Session_system .. ")")', vim_command=true },
+    At  = { false, 'test system',     'SlimvEvalForm("(asdf:test-system :" .. g:Session_system .. ")")', vim_command=true },
     -- Se  = { false, 'slimv eval at mark e',      '\'e' },
   }
 }

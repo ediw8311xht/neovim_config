@@ -1,137 +1,138 @@
 -- require("variables")
 -- local vauto = va.nvim_create_autocmd
 -- local vc    = vim.cmd
--- local ts    = vim.treesitter
 require("helper_functions")
 local api = vim.api
-local fn = vim.fn
+local fn  = vim.fn
 local cmd = vim.cmd
+local ts  = vim.treesitter
+local printf = vim.fn.printf
 
 local original_floating_preview = vim.lsp.util.open_floating_preview
 function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
-	local n_opts = TableDifference(vim.g.my_floating_preview_options, opts)
-	return original_floating_preview(contents, syntax, n_opts, ...)
+  local n_opts = TableDifference(vim.g.my_floating_preview_options, opts)
+  return original_floating_preview(contents, syntax, n_opts, ...)
 end
 
 function MyTreesitterStatus()
-	return vim.treesitter.highlighter.active[fn.bufnr()] ~= nil
+  return ts.highlighter.active[fn.bufnr()] ~= nil
 end
 
 function AutoSessionStatusLine()
-	return require("auto-session.lib").current_session_name(true)
+  return require("auto-session.lib").current_session_name(true)
 end
 
 function ClipBoardExit()
-	if EnvVarCheck("DISPLAY") and fn.executable("xclip") then
-		fn.system("xclip -selection clipboard -i -r <<< ", fn.shellescape(fn.getreg("")))
-	end
+  if EnvVarCheck("DISPLAY") and fn.executable("xclip") then
+    fn.system("xclip -selection clipboard -i -r <<< ", fn.shellescape(fn.getreg("")))
+  end
 end
 
 function Cycle(check_var, list, func)
-	local o = api.nvim_get_option(check_var)
-	func = func or function(l)
-		api.nvim_set_option_value(check_var, l[2], { scope = "global" })
-		return l[1]
-	end
-	if #list <= 0 then
-		return
-	end
-	for i, v in ipairs(list) do
-		if v[2] == o then
-			return func(list[i % #list + 1])
-		end
-	end
-	return func(list[1])
+  local o = api.nvim_get_option(check_var)
+  func = func or function(l)
+    api.nvim_set_option_value(check_var, l[2], { scope = "global" })
+    return l[1]
+  end
+  if #list <= 0 then
+    return
+  end
+  for i, v in ipairs(list) do
+    if v[2] == o then
+      return func(list[i % #list + 1])
+    end
+  end
+  return func(list[1])
 end
 
 function SetHighlightFromTable(hl_group, hl_table)
-	local conc = "hi " .. hl_group
-	for c, v in pairs(hl_table) do
-		conc = conc .. " " .. c .. "=" .. v
-	end
-	cmd(conc)
+  local conc = "hi " .. hl_group
+  for c, v in pairs(hl_table) do
+    conc = conc .. " " .. c .. "=" .. v
+  end
+  cmd(conc)
 end
 
 function CorrectColors()
-	local function Main(hl_group, hl_table)
-		local _, test_v = next(hl_table)
-		if type(test_v) == "string" then
-			SetHighlightFromTable(hl_group, hl_table)
-		else
-			for c, v in pairs(hl_table) do
-				Main(hl_group .. c, v)
-			end
-		end
-	end
-	cmd("hi clear @lsp.mod")
-	api.nvim_set_option_value("winhighlight", "NormalNC:WindowInactive", { scope = "global" })
-	Main("", vim.g.my_highlight)
+  local function Main(hl_group, hl_table)
+    local _, test_v = next(hl_table)
+    if type(test_v) == "string" then
+      SetHighlightFromTable(hl_group, hl_table)
+    else
+      for c, v in pairs(hl_table) do
+        Main(hl_group .. c, v)
+      end
+    end
+  end
+  cmd("hi clear @lsp.mod")
+  api.nvim_set_option_value("winhighlight", "NormalNC:WindowInactive", { scope = "global" })
+  Main("", vim.g.my_highlight)
 end
 
 function ToggleHighlight(highlights)
-	local seton = IsEmpty(api.nvim_get_hl(0, { name = highlights[1] }))
-	for _, c in pairs(highlights) do
-		if seton then
-			if fn.exists("g:toggle_value__" .. c) == 0 then
-				vim.notify("Variable, toggle_value__" .. c .. ", doesn't exist.", "error", {
-					title = "ToggeHighlight(highlights)",
-				})
-			else
-				api.nvim_set_hl(0, c, vim.api.nvim_get_var("toggle_value__" .. c))
-			end
-		else
-			api.nvim_set_var("toggle_value__" .. c, api.nvim_get_hl(0, { name = highlights[1] }))
-			api.nvim_set_hl(0, c, {})
-		end
-	end
+  local seton = IsEmpty(api.nvim_get_hl(0, { name = highlights[1] }))
+  for _, c in pairs(highlights) do
+    if seton then
+      if fn.exists("g:toggle_value__" .. c) == 0 then
+        vim.notify("Variable, toggle_value__" .. c .. ", doesn't exist.", "error", {
+          title = "ToggeHighlight(highlights)",
+        })
+      else
+        api.nvim_set_hl(0, c, vim.api.nvim_get_var("toggle_value__" .. c))
+      end
+    else
+      api.nvim_set_var("toggle_value__" .. c, api.nvim_get_hl(0, { name = highlights[1] }))
+      api.nvim_set_hl(0, c, {})
+    end
+  end
 end
 
 function KeyMapSetter(map, pre, buffer_only, with_which_key)
-	local which_key = require("which-key")
-	for mode, mode_map in pairs(map) do
-		for key, tbl in pairs(mode_map) do
-			local keymap_cmd
-			if tbl.group then
-				which_key.add({ pre .. key, group = tbl.group, mode = mode })
-				goto continue
-			end
-			if with_which_key then
-				which_key.add({ pre .. key, desc = tbl[2], mode = mode })
-			end
-			if tbl.cmd then
-				-- doesn't change modes *:map-cmd* / *<CMD>*
-				keymap_cmd = "<CMD>" .. tbl[3] .. "<CR>"
-			elseif tbl.vim_command then
-				keymap_cmd = (tbl.print and ":echo " or ":call ") .. tbl[3] .. "<CR>"
-			elseif tbl.lua_call then
-				keymap_cmd = (tbl.print and ":lua= " or ":lua ") .. tbl[3] .. "<CR>"
-			else
-				keymap_cmd = tbl[3]
-			end
-			-- local keymap_cmd = (tbl.cmd and "<CMD>" .. tbl[3] .. "<CR>") or tbl[3]
-			vim.keymap.set(mode, pre .. key, keymap_cmd, {
-				remap = tbl[1],
-				desc = tbl[2],
-				buffer = buffer_only,
-				expr = tbl.expr,
-			})
-			::continue::
-		end
-	end
+  local which_key = require("which-key")
+  for mode, mode_map in pairs(map) do
+    for key, tbl in pairs(mode_map) do
+      local keymap_cmd
+      if tbl.group then
+        which_key.add({ pre .. key, group = tbl.group, mode = mode })
+        goto continue
+      end
+      if with_which_key then
+        which_key.add({ pre .. key, desc = tbl[2], mode = mode })
+      end
+      if tbl.cmd then
+        -- doesn't change modes *:map-cmd* / *<CMD>*
+        keymap_cmd = "<CMD>" .. tbl[3] .. "<CR>"
+      elseif tbl.vim_command then
+        keymap_cmd = (tbl.print and ":echo " or ":call ") .. tbl[3] .. "<CR>"
+      elseif tbl.lua_call then
+        keymap_cmd = (tbl.print and ":lua= " or ":lua ") .. tbl[3] .. "<CR>"
+      else
+        keymap_cmd = tbl[3]
+      end
+      -- local keymap_cmd = (tbl.cmd and "<CMD>" .. tbl[3] .. "<CR>") or tbl[3]
+      vim.keymap.set(mode, pre .. key, keymap_cmd, {
+        remap = tbl[1],
+        desc = tbl[2],
+        buffer = buffer_only,
+        expr = tbl.expr,
+      })
+      ::continue::
+    end
+  end
 end
 
 function LspDocumentHighlight()
-	-- local ignore_modes = { "i", "niI", "niR", "niV", "nt" }
-	vim.lsp.buf.clear_references()
-	-- if in vim.lsp.get_active_clients method="" filter doesn't work for some reason....
-	-- oh wait they are just retards
-	-- https://github.com/neovim/neovim/issues/18939
-	for _, v in ipairs(vim.lsp.get_clients({ bufnr = 0 })) do
-		if v.server_capabilities.documentHighlightProvider then
-			vim.lsp.buf.document_highlight()
-			return
-		end
-	end
+  -- local ignore_modes = { "i", "niI", "niR", "niV", "nt" }
+  vim.lsp.buf.clear_references()
+  -- if in vim.lsp.get_active_clients method="" filter doesn't work for some reason....
+  -- oh wait they are just retards
+  -- https://github.com/neovim/neovim/issues/18939
+  for _, v in ipairs(vim.lsp.get_clients({ bufnr = 0 })) do
+    if v.server_capabilities.documentHighlightProvider then
+      vim.lsp.buf.document_highlight()
+      return
+    end
+  end
 end
 
 ---Create toggle command
@@ -145,67 +146,94 @@ end
 ---                 off:          function,
 ---               }
 ---
+---@return function|nil
 function CreateToggle(options)
-	local namespace = options.namespace or "CreateToggle__"
-	local scope = options.scope or "g"
-	local description = options.description or ""
-	local command_name = options.command_name
-	local var = namespace .. (options.var or command_name or "temp")
-	local on_function = options.on
-	local off_function = options.off
-	local callback_function = function()
-		print(vim[scope][var])
-		if not vim[scope][var] then
-			vim[scope][var] = true
-			on_function()
-		else
-			vim[scope][var] = false
-			off_function()
-		end
-	end
-	if command_name then
-		vim.api.nvim_create_user_command(command_name, callback_function, { nargs = 0, desc = description })
-		return nil
-	else
-		return callback_function
-	end
+  local namespace = options.namespace or "CreateToggle__"
+  local scope = options.scope or "g"
+  local description = options.description or ""
+  local command_name = options.command_name
+  local var = namespace .. (options.var or command_name or "temp")
+  local on_function = options.on
+  local off_function = options.off
+  local callback_function = function()
+    print(vim[scope][var])
+    if not vim[scope][var] then
+      vim[scope][var] = true
+      on_function()
+    else
+      vim[scope][var] = false
+      off_function()
+    end
+  end
+  if command_name then
+    vim.api.nvim_create_user_command(command_name, callback_function, { nargs = 0, desc = description })
+    return nil
+  else
+    return callback_function
+  end
 end
 
 ---Run function and keep cursor position
 ---@param func function Function to run
 function RunKeepCursorPosition(func)
-	local last_cursor_position = vim.api.nvim_win_get_cursor(0)
-	func()
-	vim.api.nvim_win_set_cursor(0, last_cursor_position)
+  local last_cursor_position = vim.api.nvim_win_get_cursor(0)
+  func()
+  vim.api.nvim_win_set_cursor(0, last_cursor_position)
 end
 
 ---Check if path to file exists and is writable
 ---@param path string Path to check
 ---@return boolean
 function PathValid(path)
-	local match = string.match(path, "^(.*[/])[^/]*$")
-	print(match)
-	return fn.filewritable(match) == 2
+  local match = string.match(path, "^(.*[/])[^/]*$")
+  print(match)
+  return fn.filewritable(match) == 2
 end
 
--- do later
+--Get highlight under cursor
+function GetHL()
+  if not pcall(vim.show_pos) then
+    local synid = vim.fn.synID(vim.fn.line("."), vim.fn.col("."), 1)
+    if synid ~= 0 then
+      print(vim.fn.synIDattr(vim.fn.synIDtrans(synid), "name"))
+    else
+      pcall(cmd, ":Inspect")
+    end
+  end
+end
+
+---Write contents of input_file to output_file
+---@param input_file  string
+---@param output_file string
+---@param options? {
+---                  chmod: string,
+---                  line: number,
+---               }
+---
+function ReadInFile(input_file, output_file, options)
+  -- options
+  local opts = options or { line = 0, chmod = nil }
+  if not PathValid(output_file) then
+    error("path: '" .. output_file .. "' is invalid.")
+  else
+    cmd(printf("keepalt %dread %s", opts.line, input_file))
+    cmd.write( { mods = { silent = true } })
+    if opts.chmod then
+      os.execute(printf("chmod %s %s", opts.chmod, output_file))
+    end
+  end
+end
+
+--do later---------------------------------------------------
 -- function GutterSign()
--- 	print("h")
+--   print("h")
 -- end
 --
 -- function GutterNum()
--- 	print("n")
+--   print("n")
 -- end
 
-function GetHL()
-	if not pcall(vim.show_pos) then
-		local synid = vim.fn.synID(vim.fn.line("."), vim.fn.col("."), 1)
-		if synid ~= 0 then
-			print(vim.fn.synIDattr(vim.fn.synIDtrans(synid), "name"))
-		end
-	end
-end
-
+-------------------------------------------------------------
 -- for id in synstack(line("."), col("."))
 --    echo synIDattr(id, "name")
 -- endfor

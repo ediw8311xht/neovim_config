@@ -6,7 +6,7 @@ vim.g.my_highlight = {
     Function        = { gui = "NONE",                                          },
     CmpBorder       = { gui = "NONE",        guibg = "NONE",    guifg = "#009999", },
     ColorColumn     = { gui = "underdotted", guibg = "#222222", guifg = "#999999", },
-    Comment         = { gui = "NONE",        guibg = "NONE",    guifg = "#0077FF", },
+    Comment         = { gui = "italic",      guibg = "NONE",    guifg = "#0077FF", },
     ExtraWhiteSpace = { gui = "NONE",        guibg = "#0099FF", guifg = "NONE",    },
     FoldColumn      = { gui = "NONE",        guibg = "NONE",    guifg = "#00FF00", },
     Folded          = { gui = "NONE",        guibg = "#222222", guifg = "#999999", },

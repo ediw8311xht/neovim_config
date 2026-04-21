@@ -3,8 +3,8 @@
 -- https://jhcha.app/blog/the-power-of-treesitter/
 -- local ts_utils = require("nvim-treesitter.ts_utils")
 local ts = vim.treesitter
-local vfn = vim.fn
-local vapi = vim.api
+local fn = vim.fn
+local api = vim.api
 
 local function TableSetDefault(tbl, default)
   return setmetatable(tbl, { __index = function() return default end })
@@ -21,8 +21,8 @@ local M = {
 
 
 function M.Init()
-  M.br = vapi.nvim_get_current_buf()
-  M.ft = vapi.nvim_get_option_value("ft", { buf = M.br })
+  M.br = api.nvim_get_current_buf()
+  M.ft = api.nvim_get_option_value("ft", { buf = M.br })
   M.lang = ts.language.get_lang(M.ft)
   M.hle = require("vim.treesitter.highlighter")
   M.tree = ts.get_parser():parse()[1]
@@ -44,9 +44,9 @@ function M.check_node_type(node, types)
 end
 
 function M.FirstNode(line_number)
-  local s_column = vfn.match(vfn.getline(line_number), '\\S')
+  local s_column = fn.match(fn.getline(line_number), '\\S')
   if s_column < 0 then s_column=0 end
-  return ts.get_node({bufnr = vfn.bufnr(), pos = {line_number-1, s_column}})
+  return ts.get_node({bufnr = fn.bufnr(), pos = {line_number-1, s_column}})
 end
 
 function M.Less(p1, p2)      return (p1[1]  < p2[1]) end
@@ -63,7 +63,7 @@ function M.more_than_one_line(node)
 end
 
 function M.SetCursorPos(pos)
-  return vapi.nvim_win_set_cursor(0, pos)
+  return api.nvim_win_set_cursor(0, pos)
 end
 
 --[[
@@ -76,9 +76,9 @@ function M.GoToQuery(query, args)
   local inner    = args.inner    or false
   ---------------------------------------
 
-  local cpos_row, cpos_col = table.unpack(vapi.nvim_win_get_cursor(0))
+  local cpos_row, cpos_col = table.unpack(api.nvim_win_get_cursor(0))
   local cpos = {cpos_row, cpos_col}
-  local iter_range = reverse and {0, cpos_row-1} or {cpos_row-1, vfn.line('$')-1}
+  local iter_range = reverse and {0, cpos_row-1} or {cpos_row-1, fn.line('$')-1}
   local new_pos
 
   local parsed_query = ts.query.parse(M.lang, query)
@@ -163,27 +163,27 @@ end
 ---------------- Commands ----------------------
 --]]
 function M.create_commands()
-  vapi.nvim_create_user_command(
+  api.nvim_create_user_command(
     "GotoNextFunctionStart",
     M.GoToFunction,
     { desc="Go to start of next function", nargs=0 })
-  vapi.nvim_create_user_command(
+  api.nvim_create_user_command(
     "GotoPrevFunctionStart",
     function() M.GoToFunction({reverse=true}) end,
     { desc="Go to previous function start", nargs=0 })
-  vapi.nvim_create_user_command(
+  api.nvim_create_user_command(
     "GotoNextFunctionEnd",
     function() M.GoToFunction({goto_end=true}) end,
     { desc="Go to end of next function", nargs=0 })
-  vapi.nvim_create_user_command(
+  api.nvim_create_user_command(
     "GotoInnerFunctionStart",
     function() M.GoToFunction({inner=true}) end,
     { desc="Go to the start of function cursor is currently inside", nargs=0 })
-  vapi.nvim_create_user_command(
+  api.nvim_create_user_command(
     "GotoInnerFunctionEnd",
     function() M.GoToFunction({inner=true, goto_end=true}) end,
     { desc="Go to the end of function cursor is currently inside", nargs=0 })
-  vapi.nvim_create_user_command(
+  api.nvim_create_user_command(
     "FoldComments",
     function(opts) M.fold_comments(MapSplit(opts.fargs[1], " ", {remove_empty = true})) end,
     { desc="Fold comments automatically with expr.",
@@ -245,5 +245,5 @@ return M
 -- end
 --
 -- -- M.Gtest()
--- -- print(ts.highlighter.active(vapi.nvim_get_current_buf()))
+-- -- print(ts.highlighter.active(api.nvim_get_current_buf()))
 -- }}}

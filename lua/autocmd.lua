@@ -1,12 +1,12 @@
 
 local home  = vim.env.HOME
-local va    = vim.api
-local vfn   = vim.fn
+local api   = vim.api
+local fn    = vim.fn
 local vauto = vim.api.nvim_create_autocmd
-local vc    = vim.cmd
+local cmd   = vim.cmd
 
--- ConfigDir = vfn.stdpath("config")
-LanguageSpecificDir = vfn.stdpath("config") .. "/language_specific"
+-- ConfigDir = fn.stdpath("config")
+LanguageSpecificDir = fn.stdpath("config") .. "/language_specific"
 TemplateDir = home .. "/.config/nvim/language_specific/templates"
 MaxLinesCMP = 2000
 
@@ -28,22 +28,16 @@ local function set_templates(exts)
     vauto({ "BufNewFile" }, {
       pattern = "*." .. ext,
       callback = function(args)
-        if not PathValid(args.match) then
-          error("path: '" .. args.match .. "' is invalid.")
-        end
-        local full_path = TemplateDir .. "/template." .. ext
-        vc("keepalt 0read " .. full_path)
-        vc("silent w")
-        if options.chmod then
-          vc("silent !chmod " .. options.chmod .. " %")
-        end
+        local new_file = args.match
+        local template_file = TemplateDir .. "/template." .. ext
+        ReadInFile(template_file, new_file, options)
       end
     })
   end
 end
 
 ---------------------------------------Changing buffer hide cursor on inactive
-va.nvim_create_augroup("cursorline_hide_inactive_buffer", { clear = true })
+api.nvim_create_augroup("cursorline_hide_inactive_buffer", { clear = true })
 vauto({ "BufLeave", "WinLeave" }, {
   group = "cursorline_hide_inactive_buffer",
   callback = function() vim.opt_local.cursorline = false end
@@ -58,7 +52,7 @@ vauto({ "BufEnter", "WinEnter" }, {
 ---------------------------------------Large files disable cmp
 vauto({ "BufEnter", "BufWinEnter" }, {
   callback = function(args)
-    if va.nvim_buf_line_count(args.buf) > MaxLinesCMP then
+    if api.nvim_buf_line_count(args.buf) > MaxLinesCMP then
       vim.treesitter.stop()
       require('cmp').setup.buffer( { enabled = false } )
     end
@@ -69,7 +63,7 @@ vauto({ "BufEnter", "BufWinEnter" }, {
 
 vauto({ "FocusGained", "CursorHold", "CursorHoldI" }, {
   pattern = { "*" },
-  callback = function() vc("silent! checktime") end
+  callback = function() cmd("silent! checktime") end
 })
 
 ------------------------------------------------VimLeave
@@ -82,19 +76,20 @@ vauto({ "VimLeave" }, {
 ------------------------------------------------TermOpen
 vauto({ "TermOpen" }, {
   pattern = "*",
-  callback = function() vc("setlocal statusline=%{b:term_title}") end
+  callback = function() cmd("setlocal statusline=%{b:term_title}") end
 })
 
 -------------------------------------FileType_Formatting
 vauto({ "FileType" }, {
   pattern = "*",
-  callback = function() vc("setlocal formatoptions-=c formatoptions-=r formatoptions-=o") end
+  callback = function() cmd("setlocal formatoptions-=c formatoptions-=r formatoptions-=o") end
 })
 vauto({"FileType"}, {
   pattern = "help",
   command = "wincmd L",
 })
 
+-- highlight text yank
 vauto({ "TextYankPost" }, {
   pattern = "*",
   callback = function()
@@ -102,14 +97,22 @@ vauto({ "TextYankPost" }, {
     -- MapCommandsToReg(vim.v.event)
   end
 })
+-- for make
+vauto({"BufNewFile", "Filetype" }, {
+  pattern = "Makefile",
+  callback = function(args)
+    local template_file = TemplateDir .. "/template." .. "makefile"
+    ReadInFile(template_file, args.match)
+  end
+})
 
 ---------------------------------------ExtensionSpecific
 
 local globcomms = {
-  [ "*.page"                                 ] = function() vc( "source " .. LanguageSpecificDir .. "/gitit.vim"            ) end,
-  [ "~/.bashrc"                              ] = function() vc( "source " .. LanguageSpecificDir .. "/bashrc.vim"           ) end,
-  [ "~/.config/joplin-desktop/userstyle.css" ] = function() vc( "source " .. LanguageSpecificDir .. "/joplin_userstyle.vim" ) end,
-  [ "~/TEST/QUICK/*.cpp"                     ] = function() vc( "source " .. LanguageSpecificDir .. "/quick_cpp.vim"        ) end,
+  [ "*.page"                                 ] = function() cmd( "source " .. LanguageSpecificDir .. "/gitit.vim"            ) end,
+  [ "~/.bashrc"                              ] = function() cmd( "source " .. LanguageSpecificDir .. "/bashrc.vim"           ) end,
+  [ "~/.config/joplin-desktop/userstyle.css" ] = function() cmd( "source " .. LanguageSpecificDir .. "/joplin_userstyle.vim" ) end,
+  [ "~/TEST/QUICK/*.cpp"                     ] = function() cmd( "source " .. LanguageSpecificDir .. "/quick_cpp.vim"        ) end,
 }
 local exts = {
   ["lisp"]   = { chmod = "600" },
@@ -129,7 +132,7 @@ local exts = {
 -- vauto({ "BufNewFile", "BufRead" }, {
 --   pattern = "*.page",
 --   callback = function()
---     vc( "source " .. LanguageSpecificDir .. "/gitit.vim")
+--     cmd( "source " .. LanguageSpecificDir .. "/gitit.vim")
 --   end,
 -- })
 set_templates(exts)
@@ -156,10 +159,10 @@ set_buffer_autocommands(globcomms)
 -- end
 -- -- Disable_CMP_For_Large_Files
 --
--- va.nvim_create_augroup("highlight_symbol_treesitter", { clear = true })
+-- api.nvim_create_augroup("highlight_symbol_treesitter", { clear = true })
 --
 -- function ToggleLspDocumentHighlight()
---   if vfn.exists("highlight_symbol_treesitter") then
+--   if fn.exists("highlight_symbol_treesitter") then
 --     vim.g.enabled_lsp_document_highlight = false
 --     vauto({ "CursorMoved" }, {
 --       group = "highlight_symbol_treesitter",

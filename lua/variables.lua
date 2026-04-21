@@ -2,6 +2,7 @@
 -- vim.api.nvim_set_hl
 -- vim.highlight.create
 -- }}}
+vim.g.treesitter_disable = { tex = true }
 vim.g.python3_host_prog="/usr/bin/python"
 
 vim.g.MyDefaultScheme = { 'pop-punk', 'lua CorrectColors()' }
@@ -21,13 +22,13 @@ vim.g.MySchemes = {
 }
 
 vim.g.MyColorTable = {
-  { "NONE",    "."       },
-  { "#333333", "."       },
-  { "#111111", "."       },
-  { "#220000", "."       },
-  { "#002200", "."       },
-  { "#000022", "."       },
-  { "#002244", "#AAAAAA" },
+  { "NONE",    "."        },
+  { "#333333", "."        },
+  { "#111111", "."        },
+  { "#220000", "."        },
+  { "#002200", "."        },
+  { "#000022", "."        },
+  { "#002244", "#AAAAAA"  },
   { "#999999", "#000000"  },
   { "#AAAAAA", "#000000"  },
 }
@@ -42,11 +43,11 @@ vim.g.my_floating_preview_options = {
 
 function StatusGit() return vim.g.gitsigns_head or "" end
 
+-- local sl_lsp_status = "" .. "%{LspStatus()}" .. "%*"
 local sl_file       = "%#StatusLine_File#" .. " %t %r" .. "%*"
 local sl_git_branch = "%#StatusLine_Git#" .. " %{v:lua.StatusGit()} " .. "%*"
 local sl_session    = "%#StatusLine_Session#" .. " %{v:lua.require('auto-session.lib').current_session_name()} " .. "%*"
 local sl_lsp_status = "%#StatusLine_Lsp#" .. " %{LspStatus()} " .. "%*"
--- local sl_lsp_status = "" .. "%{LspStatus()}" .. "%*"
 local sl_filepath   = " %F "
 
 function StatusLineFunc()
