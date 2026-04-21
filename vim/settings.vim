@@ -33,7 +33,7 @@ set undofile
 set undolevels=10000
 set undoreload=10000
 set updatetime=400
-let nvim_backup_swap = $HOME . '/.mynvim/' . getpid()
+let nvim_backup_swap = $HOME .. '/.mynvim/' .. getpid()
 silent! call mkdir(vimtmp, "p", 0700)
 let &backupdir=nvim_backup_swap
 let &directory=nvim_backup_swap

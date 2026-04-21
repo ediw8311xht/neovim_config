@@ -47,7 +47,7 @@ function StatusGit() return vim.g.gitsigns_head or "" end
 local sl_file       = "%#StatusLine_File#" .. " %t %r" .. "%*"
 local sl_git_branch = "%#StatusLine_Git#" .. " %{v:lua.StatusGit()} " .. "%*"
 local sl_session    = "%#StatusLine_Session#" .. " %{v:lua.require('auto-session.lib').current_session_name()} " .. "%*"
-local sl_lsp_status = "%#StatusLine_Lsp#" .. " %{LspStatus()} " .. "%*"
+local sl_lsp_status = "%#StatusLine_Lsp#" .. " %{v:lua.LspStatus()} " .. "%*"
 local sl_filepath   = " %F "
 
 function StatusLineFunc()

@@ -1,4 +1,3 @@
-
 -- Useful guide to treesitter querying in nvim
 -- https://jhcha.app/blog/the-power-of-treesitter/
 -- local ts_utils = require("nvim-treesitter.ts_utils")
@@ -7,18 +6,31 @@ local fn = vim.fn
 local api = vim.api
 
 local function TableSetDefault(tbl, default)
-  return setmetatable(tbl, { __index = function() return default end })
+  return setmetatable(tbl, {
+    __index = function()
+      return default
+    end,
+  })
+end
+
+local function ArrayToTable(array, tbl)
+  for _, v in ipairs(array) do
+    if tbl[v] == nil then
+      tbl[v] = v
+    end
+  end
+  return tbl
 end
 
 local M = {
   comment_nodes = { "comment", "comment_content" },
   function_nodes = TableSetDefault({
-    ["lua"]        = "((function_declaration) @func_decl)",
-    ["lisp"]       = "((defun)                @func_decl)",
+    ["lua"] = "((function_declaration) @func_decl)",
+    ["lisp"] = "((defun)                @func_decl)",
     ["commonlisp"] = "((defun)                @func_decl)",
-  },  "((function_definition)  @func_decl)")
+  }, "((function_definition)  @func_decl)"),
+  auto_fold_augroup = nil,
 }
-
 
 function M.Init()
   M.br = api.nvim_get_current_buf()
@@ -28,6 +40,7 @@ function M.Init()
   M.tree = ts.get_parser():parse()[1]
   M.comments = M.comments or {}
   M.comments[vim.fn.bufnr()] = M.comments[vim.fn.bufnr()] or TableSetDefault({}, 0)
+  M.auto_fold = M.auto_fold or TableSetDefault({}, {})
 end
 
 --[[
@@ -35,7 +48,7 @@ end
 --]]
 function M.check_node_type(node, types)
   local type = node:type()
-  for _,c_type in ipairs(types) do
+  for _, c_type in ipairs(types) do
     if c_type == type then
       return true
     end
@@ -44,14 +57,22 @@ function M.check_node_type(node, types)
 end
 
 function M.FirstNode(line_number)
-  local s_column = fn.match(fn.getline(line_number), '\\S')
-  if s_column < 0 then s_column=0 end
-  return ts.get_node({bufnr = fn.bufnr(), pos = {line_number-1, s_column}})
+  local s_column = fn.match(fn.getline(line_number), "\\S")
+  if s_column < 0 then
+    s_column = 0
+  end
+  return ts.get_node({ bufnr = fn.bufnr(), pos = { line_number - 1, s_column } })
 end
 
-function M.Less(p1, p2)      return (p1[1]  < p2[1]) end
-function M.LessEqual(p1, p2) return (p1[1] <= p2[1]) end
-function M.Equal(p1, p2)     return (p1[1] == p2[1]) end
+function M.Less(p1, p2)
+  return (p1[1] < p2[1])
+end
+function M.LessEqual(p1, p2)
+  return (p1[1] <= p2[1])
+end
+function M.Equal(p1, p2)
+  return (p1[1] == p2[1])
+end
 
 function M.IsInner(cpos, spos, epos)
   return M.LessEqual(spos, cpos) and M.LessEqual(cpos, epos)
@@ -72,13 +93,13 @@ end
 function M.GoToQuery(query, args)
   ------------- Set options -------------
   local goto_end = args.goto_end or false
-  local reverse  = args.reverse  or false
-  local inner    = args.inner    or false
+  local reverse = args.reverse or false
+  local inner = args.inner or false
   ---------------------------------------
 
   local cpos_row, cpos_col = table.unpack(api.nvim_win_get_cursor(0))
-  local cpos = {cpos_row, cpos_col}
-  local iter_range = reverse and {0, cpos_row-1} or {cpos_row-1, fn.line('$')-1}
+  local cpos = { cpos_row, cpos_col }
+  local iter_range = reverse and { 0, cpos_row - 1 } or { cpos_row - 1, fn.line("$") - 1 }
   local new_pos
 
   local parsed_query = ts.query.parse(M.lang, query)
@@ -86,8 +107,8 @@ function M.GoToQuery(query, args)
   -- Treesitter uses 0 indexed row and nvim uses 1 indexed
   for _, node, _ in parsed_query:iter_captures(M.tree:root(), 0, iter_range[1], iter_range[2]) do
     local node_start_row, node_start_col, node_end_row, node_end_col = node:range()
-    local node_start = {node_start_row+1, node_start_col}
-    local node_end = {node_end_row+1, node_end_col}
+    local node_start = { node_start_row + 1, node_start_col }
+    local node_end = { node_end_row + 1, node_end_col }
 
     new_pos = goto_end and node_end or node_start
     if reverse then
@@ -111,18 +132,16 @@ end
 ---------------- Fold Comments  ----------------
 --]]
 function M.update_comments(buffer_number)
-  for line_nr = 1, vim.fn.line('$')+1 do
+  for line_nr = 1, vim.fn.line("$") + 1 do
     local node = M.FirstNode(line_nr)
-    M.comments[buffer_number][line_nr] = M.check_node_type( node, M.comment_nodes ) and 1 or 0
+    M.comments[buffer_number][line_nr] = M.check_node_type(node, M.comment_nodes) and 1 or 0
   end
 end
 
 function M.fold_comments_multi()
   local line = vim.v.lnum
   local buf = vim.fn.bufnr()
-  if  M.comments[buf][ line   ] == 1 and
-     (M.comments[buf][ line-1 ] == 1 or M.comments[buf][ line+1 ] == 1)
-  then
+  if M.comments[buf][line] == 1 and (M.comments[buf][line - 1] == 1 or M.comments[buf][line + 1] == 1) then
     return 1
   else
     return 0
@@ -138,7 +157,8 @@ function M.fold_comments_single()
   return M.comments[vim.fn.bufnr()][vim.v.lnum]
 end
 
-function M.fold_comments(args)
+---Fold comments
+function M.fold_comments(args) --, options)
   if args[1] == "off" then
     vim.o.foldmethod = args[2] or "marker"
     return
@@ -159,6 +179,32 @@ function M.fold_comments(args)
   end
 end
 
+function M.auto_fold_comments(args)
+  M.Init()
+  local opts = ArrayToTable(args, {})
+  local buf = vim.fn.bufnr()
+  local autocmd_id   = M.auto_fold[buf].id
+  local autocmd_type = M.auto_fold[buf].type
+  local type = opts.single or opts.multi or opts.block or nil
+  if (type and type ~= autocmd_type) or opts.off then
+    if autocmd_id then
+      vim.fn.nvim_del_autocmd(autocmd_id)
+    end
+  end
+  if type then
+    M.fold_comments({ type })
+    M.auto_fold[buf] = {type = type}
+    M.auto_fold[buf].id = vim.api.nvim_create_autocmd(
+      { "BufWrite" }, {
+        buffer = buf,
+        group = M.auto_fold_augroup,
+        callback = function()
+          M.fold_comments({ type })
+        end,
+      })
+  end
+end
+
 --[[
 ---------------- Commands ----------------------
 --]]
@@ -166,33 +212,40 @@ function M.create_commands()
   api.nvim_create_user_command(
     "GotoNextFunctionStart",
     M.GoToFunction,
-    { desc="Go to start of next function", nargs=0 })
-  api.nvim_create_user_command(
-    "GotoPrevFunctionStart",
-    function() M.GoToFunction({reverse=true}) end,
-    { desc="Go to previous function start", nargs=0 })
-  api.nvim_create_user_command(
-    "GotoNextFunctionEnd",
-    function() M.GoToFunction({goto_end=true}) end,
-    { desc="Go to end of next function", nargs=0 })
-  api.nvim_create_user_command(
-    "GotoInnerFunctionStart",
-    function() M.GoToFunction({inner=true}) end,
-    { desc="Go to the start of function cursor is currently inside", nargs=0 })
-  api.nvim_create_user_command(
-    "GotoInnerFunctionEnd",
-    function() M.GoToFunction({inner=true, goto_end=true}) end,
-    { desc="Go to the end of function cursor is currently inside", nargs=0 })
-  api.nvim_create_user_command(
-    "FoldComments",
-    function(opts) M.fold_comments(MapSplit(opts.fargs[1], " ", {remove_empty = true})) end,
-    { desc="Fold comments automatically with expr.",
-      nargs = '?',
-      complete = function(_, cmdline, _) -- (ArgLead, CmdLine, CursorPos)
-        return string.sub(cmdline, -4) == "off"
-          and { "marker", "marker", "manual",  "expr", "indent",  "syntax",  "diff", }
-          or  { "single", "block", "multi", "off", }
-      end })
+    { desc = "Go to start of next function", nargs = 0 }
+  )
+  api.nvim_create_user_command("GotoPrevFunctionStart", function()
+    M.GoToFunction({ reverse = true })
+  end, { desc = "Go to previous function start", nargs = 0 })
+  api.nvim_create_user_command("GotoNextFunctionEnd", function()
+    M.GoToFunction({ goto_end = true })
+  end, { desc = "Go to end of next function", nargs = 0 })
+  api.nvim_create_user_command("GotoInnerFunctionStart", function()
+    M.GoToFunction({ inner = true })
+  end, { desc = "Go to the start of function cursor is currently inside", nargs = 0 })
+  api.nvim_create_user_command("GotoInnerFunctionEnd", function()
+    M.GoToFunction({ inner = true, goto_end = true })
+  end, { desc = "Go to the end of function cursor is currently inside", nargs = 0 })
+  api.nvim_create_user_command("AutoFoldComments", function(opts)
+    M.auto_fold_comments(MapSplit(opts.fargs[1], " ", { remove_empty = true }))
+  end, {
+    desc = "Auto fold comments",
+    nargs = 1,
+    complete = function(_, _, _)
+      return { "off", "single", "multi", "block" }
+    end,
+  })
+  api.nvim_create_user_command("FoldComments", function(opts)
+    M.fold_comments(MapSplit(opts.fargs[1], " ", { remove_empty = true }))
+  end, {
+    desc = "Fold comments automatically with expr.",
+    nargs = "?",
+    complete = function(_, cmdline, _) -- (ArgLead, CmdLine, CursorPos)
+      return string.sub(cmdline, -4) == "off"
+          and { "marker", "marker", "manual", "expr", "indent", "syntax", "diff" }
+        or { "single", "block", "multi", "off" }
+    end,
+  })
 end
 
 return M

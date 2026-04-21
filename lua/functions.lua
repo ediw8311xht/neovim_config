@@ -2,11 +2,12 @@
 -- local vauto = va.nvim_create_autocmd
 -- local vc    = vim.cmd
 require("helper_functions")
-local api = vim.api
-local fn  = vim.fn
-local cmd = vim.cmd
-local ts  = vim.treesitter
+local api    = vim.api
+local fn     = vim.fn
+local cmd    = vim.cmd
+local ts     = vim.treesitter
 local printf = vim.fn.printf
+local home   = vim.env.HOME
 
 local original_floating_preview = vim.lsp.util.open_floating_preview
 function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
@@ -224,6 +225,43 @@ function ReadInFile(input_file, output_file, options)
   end
 end
 
+function LspStatus()
+  if #vim.lsp.get_clients({ bufnr = vim.fn.bufnr()}) > 0 then
+    return require('lsp-status').status()
+  else
+    return ""
+  end
+end
+
+---Get part of file path
+---@param options {
+---               tilde_home: boolean,
+---               expand: string,
+---               }
+---return string
+function GetFile(options)
+  local opts = TableDifference({tilde_home = false, expand = "%"}, options, false)
+  local file = fn.expand(opts.expand)
+  if opts.tilde_home then
+    return vim.fn.substitute(file, '\\V' .. home, "~", "")
+  else
+    return file
+  end
+end
+
+---print all mappings
+---@param file? string filename to output mappings to
+function GMaps(file)
+  local out_file = file or fn.tempname()
+  cmd.redir {"> ", out_file}
+  cmd.imap  {mods  = {silent  = true}}
+  cmd.tmap  {mods  = {silent  = true}}
+  cmd.nmap  {mods  = {silent  = true}}
+  cmd.vmap  {mods  = {silent  = true}}
+  cmd.redir {"end"}
+  cmd.edit  {out_file}
+end
+
 --do later---------------------------------------------------
 -- function GutterSign()
 --   print("h")
@@ -242,7 +280,6 @@ end
 -- else
 --   :Inspect
 -- end
--- {{{
 -- function KeyMapSetter2(map, pre, buffer_only, with_which_key)
 --   local which_key = require("which-key")
 --   for mode, mode_map in pairs(map) do
@@ -270,4 +307,4 @@ end
 --     end
 --   end
 -- end
--- }}}
+

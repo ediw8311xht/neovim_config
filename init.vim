@@ -31,7 +31,11 @@ lua require("autocmd")
 lua require("variables")
 lua require("my_highlight")
 
-let vim_files = [ "settings", "functions", "slimv_settings", "conjure_settings", "vimtex_settings", "plugins" ]
+let vim_files = [ "settings", "functions", "plugins" ]
+"slimv_settings", "conjure_settings", "vimtex_settings", 
+lua <<EOF
+vim.g["conjure#mapping#prefix"] = '\\'
+EOF
 for i in vim_files
   call SourceIf(printf("%s/%s.vim", g:dir_config_vim, i))
 endfor

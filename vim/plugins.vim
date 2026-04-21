@@ -84,9 +84,9 @@ fu! MyInstallPlugin(plg)
     let l:len = len(a:plg)
 
     if l:len == 2
-        Plug a:plg[0] . '/' . a:plg[1]
+        Plug a:plg[0] .. '/' .. a:plg[1]
     elseif l:len == 3
-        Plug a:plg[0] . '/' . a:plg[1], a:plg[2]
+        Plug a:plg[0] .. '/' .. a:plg[1], a:plg[2]
     endif
 endfu
 

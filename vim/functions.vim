@@ -1,15 +1,5 @@
 
 
-fu! M_Map(maptype, keys, leader=0)
-  for i in a:keys
-    if a:leader == 1
-      execute a:maptype.' <leader>'.i[0].' '.i[1]
-    else
-      execute a:maptype.' '.i[0].' '.i[1]
-    endif
-  endfor
-endfu
-
 fu! CyBack(nextprevious)
   let lenny = len(g:MyColorTable)
   let i = 0
@@ -21,16 +11,16 @@ fu! CyBack(nextprevious)
   while i < lenny
     if current_background ==? g:MyColorTable[i][0]
       let j = (i + a:nextprevious) % lenny
-      execute "highlight Normal guibg=" . g:MyColorTable[j][0]
-      execute "highlight Normal guifg=" . g:MyColorTable[j][1]
-      echo j . ' / ' . (lenny-1)
+      execute "highlight Normal guibg=" .. g:MyColorTable[j][0]
+      execute "highlight Normal guifg=" .. g:MyColorTable[j][1]
+      echo j .. ' / ' .. (lenny-1)
       syntax on
       return
     endif
     let i += 1
   endwhile
-  execute "highlight Normal guibg=" . g:MyColorTable[0][0]
-  execute "highlight Normal guifg=" . g:MyColorTable[0][1]
+  execute "highlight Normal guibg=" .. g:MyColorTable[0][0]
+  execute "highlight Normal guifg=" .. g:MyColorTable[0][1]
 endfu
 
 fu! SetScheme(scheme)
@@ -47,7 +37,7 @@ fu! SetColScheme(nextprevious)
   for [l:color, l:specs] in g:MySchemes
     if g:colors_name ==? l:color
       let l:j = (l:i + (a:nextprevious)) % l:length
-      echo g:MySchemes[ l:j ][0] . ' - ' . l:j '/' . (l:length - 1)
+      echo g:MySchemes[ l:j ][0] .. ' - ' .. l:j '/' .. (l:length - 1)
       call SetScheme(g:MySchemes[j])
       syntax on
       return
@@ -64,8 +54,8 @@ let TogLastStatus   = {-> VarToggle("laststatus"  , 2 , 0             ) }
 let TogColorColumn  = {-> VarToggle("colorcolumn" , "0" , "80" , "window" ) }
 let TogFoldColumn   = {-> VarToggle("foldcolumn"  , '0' , '2'  , "window" ) }
 
-":setl[ocal] {option}<	Set the effective value of {option} to its global
-"			value by copying the global value to the local value.
+":setl[ocal] {option}<  Set the effective value of {option} to its global
+"      value by copying the global value to the local value.
 "let VarToggle = {var, v1, v2 -> execute("set ".."var="..v2) }
 "" setbufvar(bufnr(), var, (var == v1 ? v1 : v2))  }
 
@@ -107,41 +97,25 @@ fu! Cycle(checkarr, cvar, doarr, nextprevious)
   endwhile
 endfu
 
-fu! Web(url)
-  enew
-  call termopen('elinks "www.google.com"')
-endfunction
+"fu! Web(url)
+"  enew
+"  call termopen('elinks "www.google.com"')
+"endfunction
 
-fu! IndentHalfOrDouble(half_or_double)
-  if a:half_or_double ==? "double"
-    execute ':%s/  /    /g'
-  else
-    execute ':%s/    /  /g'
-  endif
-endfunction
+"fu! IndentHalfOrDouble(half_or_double)
+"  if a:half_or_double ==? "double"
+"    execute ':%s/  /    /g'
+"  else
+"    execute ':%s/    /  /g'
+"  endif
+"endfunction
 
-fu! GMaps()
-  :redir! > /tmp/nvim_mappings.txt
-  :silent imap
-  :silent nmap
-  :silent vmap
-  :redir END
-  :e /tmp/nvim_mappings.txt
-endfunction
-
-fu! LspStatus() abort
-  if luaeval('#vim.lsp.get_clients({ bufnr = vim.fn.bufnr()}) > 0')
-    return luaeval("require('lsp-status').status()")
-  endif
-  return ""
-endfu
-
-fu! FilePathFull()
-  " gonna add this later to make file argument get from current path
-    "fu! FilePathFull(file_arg=v:false)
-    "let l:file = a:file_arg == v:false ? expand("%:p:h") : a:file_arg
-  return substitute(expand("%:p:h"), '\V' . $HOME, "~", "")
-endfu
+"fu! FilePathFull()
+"  " gonna add this later to make file argument get from current path
+"    "fu! FilePathFull(file_arg=v:false)
+"    "let l:file = a:file_arg == v:false ? expand("%:p:h") : a:file_arg
+"  return substitute(expand("%:p:h"), '\V' .. $HOME, "~", "")
+"endfu
 
 "fu! TestMe(event)
 "    echo a:event
