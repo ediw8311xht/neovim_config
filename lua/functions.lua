@@ -251,7 +251,7 @@ end
 
 ---print all mappings
 ---@param file? string filename to output mappings to
-function GMaps(file)
+function GetMappings(file)
   local out_file = file or fn.tempname()
   cmd.redir {"> ", out_file}
   cmd.imap  {mods  = {silent  = true}}

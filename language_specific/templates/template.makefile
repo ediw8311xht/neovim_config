@@ -1,3 +1,3 @@
 # vi:filetype=make:syntax=make:
-# vi:noautoindent:expandtab
+# vi:noautoindent:expandtab:
 .RECIPEPREFIX := $() $()

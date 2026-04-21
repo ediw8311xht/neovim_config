@@ -109,8 +109,8 @@ vauto({"BufNewFile", "Filetype" }, {
 ---------------------------------------ExtensionSpecific
 
 local globcomms = {
-  [ "*.page"                                 ] = function() cmd( "source " .. LanguageSpecificDir .. "/gitit.vim"            ) end,
-  [ "~/.bashrc"                              ] = function() cmd( "source " .. LanguageSpecificDir .. "/bashrc.vim"           ) end,
+  [ "*.page"                                 ] = function() require( LanguageSpecificDir .. "/gitit.lua"  ) end,
+  [ "~/.bashrc"                              ] = function() require( LanguageSpecificDir .. "/bashrc.lua" ) end,
   [ "~/.config/joplin-desktop/userstyle.css" ] = function() cmd( "source " .. LanguageSpecificDir .. "/joplin_userstyle.vim" ) end,
   [ "~/TEST/QUICK/*.cpp"                     ] = function() cmd( "source " .. LanguageSpecificDir .. "/quick_cpp.vim"        ) end,
 }
