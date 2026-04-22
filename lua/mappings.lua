@@ -57,6 +57,11 @@ LEADER_MAPPINGS = {
     Ob    = { F, 'open in browser',         'silent !"${BROWSER:-"brave"}"  %',cmd=true},
     Oq    = { F, 'open in qutebrowser',     'silent !"qutebrowser" %',cmd=true},
     Or    = { F, 'recent files',            'Telescope oldfiles',cmd=true},
+    S     = { group="execution"},
+    SX    = { F, 'execute with args',      ':!%'},
+    Sl    = { F, 'luafile',                'luafile %',cmd=true},
+    Ss    = { F, 'source file',            '%so',cmd=true},
+    Sx    = { F, 'execute',                '!%',cmd=true},
     T     = { group="treesitter"},
     Tl    = { F, 'get treesitter parser',   'lua= vim.treesitter.get_parser(0):lang()',cmd=true},
     Ts    = { F, 'treesitter status',       'lua= MyTreesitterStatus()',cmd=true},
@@ -65,12 +70,13 @@ LEADER_MAPPINGS = {
     W     = { F, 'write',                   ':w<ESC>'},
     b     = { F, 'open buffer',             function() require("telescope.builtin").buffers({ignore_current_buffer=true, disable_coordinates = true}) end },
     c     = { group="editor setting"},
+    cA    = { F, 'fold comments',           'AutoFoldComments multi',cmd=true},
     cB    = { F, 'prev background',         'CyBack(-1)',vim_command=true},
     cC    = { F, '[!]folds in gutter',      'TogFoldColumn()',vim_command=true},
-    cF    = { F, 'fold comments',           'FoldComments multi',cmd=true},
     cJ    = { F, 'prev scheme',             'SetColScheme(-1)',vim_command=true},
     cL    = { F, 'cycle statusline',        'lua= Cycle("statusline", vim.g.my_statuslines)',cmd=true},
     cS    = { F, '[!]spell',                'set spell!',cmd=true},
+    ca    = { F, 'fold comments',           'AutoFoldComments off',cmd=true},
     cb    = { F, 'next background',         'CyBack(+1)',vim_command=true},
     cc    = { F, '[!]line length indicator','TogColorColumn()',vim_command=true},
     ce    = { F, '[!]cursorcolumn',         'set cuc!',cmd=true},
@@ -114,17 +120,14 @@ LEADER_MAPPINGS = {
     vmq    = { F, 'qalc [math]',            ':!xargs qalc --color=never --terse<ESC>'},
     vs     = { F, 'sort',                   ':sort<ESC>',},
     vt     = { F, 'title case',             ':s/\\%V\\v\\c\\w(\\a*(\'\\a{0,1})?\\w)?/\\u\\0/g<CR>'},
+    -- vx     = { F, 'execute selection',      'lua 
   },
   [ { "v", "n" } ] = {
-    S      = {group="execution"},
-    SX     = { F, 'execute with args',      ':!%'},
-    Sl     = { F, 'luafile',                'luafile %',cmd=true},
-    Ss     = { F, 'source file',            '%so',cmd=true},
-    Sx     = { F, 'execute',                '!%',cmd=true},
   }
 } --}}}
 KeyMapSetter(LEADER_MAPPINGS, "<leader>", false,true)
 
+-- get region 			      
 -- PERSONAL_MAPPINGS = { ["regular"] = REGULAR_MAPPINGS, ["leader"] = LEADER_MAPPINGS }
 -- KeyMapSetter(REGULAR_MAPPINGS, "", false,true)
 

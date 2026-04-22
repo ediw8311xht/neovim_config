@@ -262,6 +262,18 @@ function GetMappings(file)
   cmd.edit  {out_file}
 end
 
+
+function GetVisualSelection()
+  vim.g.region_post = fn.getregionpos(fn.getpos('v'), fn.getpos('.'))
+  local col = ""
+  for _, i in ipairs(vim.g.region_post) do
+    col = col .. table.concat(fn.getregion(i[1], i[2]), '\n') .. '\n'
+  end
+  return col
+end
+
+
+
 --do later---------------------------------------------------
 -- function GutterSign()
 --   print("h")

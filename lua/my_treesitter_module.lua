@@ -26,8 +26,8 @@ local M = {
   comment_nodes = { "comment", "comment_content" },
   function_nodes = TableSetDefault({
     ["lua"] = "((function_declaration) @func_decl)",
-    ["lisp"] = "((defun)                @func_decl)",
-    ["commonlisp"] = "((defun)                @func_decl)",
+    ["lisp"] = "((defun) @func_decl)",
+    ["commonlisp"] = "((defun) @func_decl)",
   }, "((function_definition)  @func_decl)"),
   auto_fold_augroup = nil,
   -- hle = vim.treesitter.highlighter
@@ -188,7 +188,7 @@ end
 function M.auto_fold_comments(args)
   local opts = ArrayToTable(args, {})
   local buf = vim.fn.bufnr()
-  local autocmd_id   = state.auto_fold[buf].id
+  local autocmd_id = state.auto_fold[buf].id
   local autocmd_type = state.auto_fold[buf].type
   local type = opts.single or opts.multi or opts.block or nil
   if autocmd_id then
@@ -198,15 +198,14 @@ function M.auto_fold_comments(args)
     M.fold_comments({ "off" })
   elseif type then
     M.fold_comments({ type })
-    state.auto_fold[buf] = {type = type}
-    state.auto_fold[buf].id = vim.api.nvim_create_autocmd(
-      { "BufWrite" }, {
-        buffer = buf,
-        group = M.auto_fold_augroup,
-        callback = function()
-          M.fold_comments({ type })
-        end,
-      })
+    state.auto_fold[buf] = { type = type }
+    state.auto_fold[buf].id = vim.api.nvim_create_autocmd({ "BufWrite" }, {
+      buffer = buf,
+      group = M.auto_fold_augroup,
+      callback = function()
+        M.fold_comments({ type })
+      end,
+    })
   end
 end
 
