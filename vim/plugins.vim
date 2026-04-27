@@ -1,5 +1,5 @@
 
-" -------------------------------------------------------------------------------------------------------- " {{{
+" -------------------------------------------------------------------------------------------------------- " 
 "Yeah, I use way too many plugins....
 let g:my_plugins = {}
 "-- Latex
@@ -77,9 +77,9 @@ let g:my_plugins['cmp treesitter']      = [ 'ray-x',            'cmp-treesitter'
 let g:my_plugins['cmp conjure']         = [ 'PaterJason',       'cmp-conjure'                   ]
 let g:my_plugins['latex snips 4 vimtex']= [ 'micangl',          'cmp-vimtex'                    ]
 let g:my_plugins['luasnip']             = [ 'L3MON4D3',         'LuaSnip'                       ]
-" -------------------------------------------------------------------------------------------------------- " }}}
+" -------------------------------------------------------------------------------------------------------- " 
 
-" {{{
+" 
 fu! MyInstallPlugin(plg) 
     let l:len = len(a:plg)
 
@@ -97,7 +97,7 @@ call plug#begin()
     Plug 'AndrewRadev/tagalong.vim'
     Plug 'alvan/vim-closetag'
 call plug#end()
-" }}}
+" 
 
 "" {{{
 "let g:my_plugins['devicons'] = [ 'nvim-tree', 'nvim-web-devicons' ]

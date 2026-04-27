@@ -4,8 +4,9 @@
 local ts = vim.treesitter
 local fn = vim.fn
 local api = vim.api
+-- local setopt = vim.api.nvim_set_option_value
 
-local function TableSetDefault(tbl, default)
+local function table_set_default(tbl, default)
   return setmetatable(tbl, {
     __index = function()
       return default
@@ -13,7 +14,7 @@ local function TableSetDefault(tbl, default)
   })
 end
 
-local function ArrayToTable(array, tbl)
+local function array_to_table(array, tbl)
   for _, v in ipairs(array) do
     if tbl[v] == nil then
       tbl[v] = v
@@ -24,26 +25,43 @@ end
 
 local M = {
   comment_nodes = { "comment", "comment_content" },
-  function_nodes = TableSetDefault({
+  function_nodes = table_set_default({
     ["lua"] = "((function_declaration) @func_decl)",
     ["lisp"] = "((defun) @func_decl)",
     ["commonlisp"] = "((defun) @func_decl)",
   }, "((function_definition)  @func_decl)"),
   auto_fold_augroup = nil,
+  default_autofold = "multi",
   -- hle = vim.treesitter.highlighter
+  fold_type = "multi",
+  fold_method = table_set_default({
+    single = "v:lua.require'my_treesitter_module'.fold_comments_single()",
+    multi = "v:lua.require'my_treesitter_module'.fold_comments_multi()",
+  }, "")
 }
 
 local state = {
-  comments = TableSetDefault({}, TableSetDefault({}, 0)),
-  auto_fold = TableSetDefault({}, {}),
-  previous_foldmethod = {},
+  comments = table_set_default({}, table_set_default({}, 0)),
+  auto_fold = table_set_default({}, {}),
+  autocmd_write = nil,
+  autocmd_enter = nil,
+  on = false,
 }
 
 function M.update()
-  M.tree = ts.get_parser():parse()[1]
-  M.br = api.nvim_get_current_buf()
-  M.ft = api.nvim_get_option_value("ft", { buf = M.br })
-  M.lang = ts.language.get_lang(M.ft)
+  local ts_parser = ts.get_parser()
+  if not ts_parser then
+    M.tree = nil
+    M.br = api.nvim_get_current_buf()
+    M.ft = api.nvim_get_option_value("ft", { buf = M.br })
+    M.lang = nil
+  else
+    M.tree = ts_parser:parse()[1]
+    M.br = api.nvim_get_current_buf()
+    M.ft = api.nvim_get_option_value("ft", { buf = M.br })
+    M.lang = ts.language.get_lang(M.ft)
+    return true
+  end
 end
 --[[
 ---------------- Helpers -----------------------
@@ -126,14 +144,25 @@ function M.GoToQuery(query, args)
 end
 
 function M.GoToFunction(args)
-  M.update()
-  M.GoToQuery(M.function_nodes[M.ft], args or {})
+  if M.update() then
+    return M.GoToQuery(M.function_nodes[M.ft], args or {})
+  else
+    return nil
+  end
 end
 
 --[[
 ---------------- Fold Comments  ----------------
 --]]
+---update comments
+---@param buffer_number number
 function M.update_comments(buffer_number)
+  M.update()
+  if not M.tree then
+    state.comments[buffer_number] = table_set_default({}, 0)
+    return
+  end
+
   for line_nr = 1, vim.fn.line("$") + 1 do
     local node = M.FirstNode(line_nr)
     state.comments[buffer_number][line_nr] = M.check_node_type(node, M.comment_nodes) and 1 or 0
@@ -150,60 +179,65 @@ function M.fold_comments_multi()
   end
 end
 
---[[ TO DO --]]
-function M.fold_comments_block()
-  -- local node = M.FirstNode()
-end
-
 function M.fold_comments_single()
   return state.comments[vim.fn.bufnr()][vim.v.lnum]
 end
 
+function M.set_fold()
+  print(state.fold_type)
+  if state.on then
+    vim.wo.foldmethod = "expr"
+    vim.wo.foldexpr = M.fold_method[state.fold_type]
+  else
+    vim.wo.foldmethod = "manual"
+    vim.wo.foldexpr = ""
+  end
+end
 ---Fold comments
 function M.fold_comments(args) --, options)
   M.update()
-  local buf = M.br
-  if args[1] == "off" then
-    vim.o.foldmethod = state.previous_foldmethod[buf]
-    return
+  local a = args[1]
+  if a == "off" then
+    state.on = false
+    M.set_fold()
+  elseif a ~= "update" then
+    state.on = true
+    state.fold_type = a
+    M.set_fold()
   end
-  M.update_comments(buf)
-  if vim.o.foldmethod ~= "expr" then
-    state.previous_foldmethod[buf] = vim.o.foldmethod
-    vim.o.foldmethod = "expr"
-  end
-  if not args[1] or args[1] == "single" then
-    vim.o.foldexpr = "v:lua.require'my_treesitter_module'.fold_comments_single()"
-  elseif args[1] == "update" then
-    return
-  elseif args[1] == "block" then
-    vim.o.foldexpr = "v:lua.require'my_treesitter_module'.fold_comments_block()"
-  elseif args[1] == "multi" then
-    vim.o.foldexpr = "v:lua.require'my_treesitter_module'.fold_comments_multi()"
-  else
-    error("invalid argument")
-  end
+  M.update_comments(M.br)
 end
 
 function M.auto_fold_comments(args)
-  local opts = ArrayToTable(args, {})
-  local buf = vim.fn.bufnr()
-  local autocmd_id = state.auto_fold[buf].id
-  local autocmd_type = state.auto_fold[buf].type
-  local type = opts.single or opts.multi or opts.block or nil
-  if autocmd_id then
-    vim.fn.nvim_del_autocmd(autocmd_id)
+  local opts = array_to_table(args, {})
+  local autocmd_id = state.autocmd_write
+  state.fold_type = opts.single or opts.multi or M.default_autofold
+  -- ensure autocmd_id is deleted
+  if state.autocmd_write then
+    api.nvim_del_autocmd(autocmd_id)
   end
-  if opts.off then
-    M.fold_comments({ "off" })
-  elseif type then
-    M.fold_comments({ type })
-    state.auto_fold[buf] = { type = type }
-    state.auto_fold[buf].id = vim.api.nvim_create_autocmd({ "BufWrite" }, {
-      buffer = buf,
-      group = M.auto_fold_augroup,
-      callback = function()
-        M.fold_comments({ type })
+  if not state.autocmd_enter then
+    state.autocmd_enter = api.nvim_create_autocmd({ "BufEnter", "WinEnter", "SessionloadPost" }, {
+      callback = function(callback_args)
+        M.set_fold()
+        if state.on then
+          M.update_comments(callback_args.buf)
+        end
+      end,
+    })
+  end
+  if opts.off or (opts.toggle and state.on) then
+    state.on = false
+    state.autocmd_write = nil
+    M.set_fold()
+  else
+    state.on = true
+    M.set_fold()
+    M.update_comments(fn.bufnr())
+    state.autocmd_write = api.nvim_create_autocmd({ "BufWritePost" }, {
+      callback = function(callback_args)
+        M.update()
+        M.update_comments(callback_args.buf)
       end,
     })
   end
@@ -238,7 +272,7 @@ function M.create_commands()
     desc = "Auto fold comments",
     nargs = 1,
     complete = function(_, _, _)
-      return { "off", "single", "multi", "block" }
+      return { "off", "single", "multi" }
     end,
   })
   api.nvim_create_user_command("FoldComments", function(opts)
@@ -246,10 +280,11 @@ function M.create_commands()
   end, {
     desc = "Fold comments automatically with expr.",
     nargs = "?",
-    complete = function(_, cmdline, _) -- (ArgLead, CmdLine, CursorPos)
-      return string.match(cmdline, "%s+off%s+$")
-          and { "marker", "marker", "manual", "expr", "indent", "syntax", "diff" }
-        or { "single", "block", "multi", "off" }
+    complete = function(_, _, _) -- (ArgLead, CmdLine, CursorPos)
+      -- return string.match(cmdline, "%s+off%s+$")
+      --     and { "marker", "marker", "manual", "expr", "indent", "syntax", "diff" }
+        -- or { "single", "multi", "off", "on", "off", "toggle" }
+        return { "single", "multi" }
     end,
   })
 end

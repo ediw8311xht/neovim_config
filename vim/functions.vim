@@ -142,16 +142,16 @@ endfu
 "        LspStart()
 "    endif
 "endfun
-
-function! GetVisualSelection()
-  let l:region_pos = getregionpos(getpos('v'), getpos('.'))
-  let l:coll = ""
-  for [l:i, l:j] in l:region_pos
-    for i in getregion(l:i, l:j)
-    endfo
-    "let l:coll = l:coll + getregion(l:start, l:end)
-  endfo
-  return l:coll
-endfu
-vnoremap <leader>V <CMD>let g:region = GetVisualSelection()<CR>
+"
+"function! GetVisualSelection()
+"  let l:region_pos = getregionpos(getpos('v'), getpos('.'))
+"  let l:coll = ""
+"  for [l:i, l:j] in l:region_pos
+"    for i in getregion(l:i, l:j)
+"    endfo
+"    "let l:coll = l:coll + getregion(l:start, l:end)
+"  endfo
+"  return l:coll
+"endfu
+"vnoremap <leader>V <CMD>let g:region = GetVisualSelection()<CR>
 

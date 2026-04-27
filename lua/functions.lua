@@ -2,12 +2,13 @@
 -- local vauto = va.nvim_create_autocmd
 -- local vc    = vim.cmd
 require("helper_functions")
-local api    = vim.api
-local fn     = vim.fn
-local cmd    = vim.cmd
-local ts     = vim.treesitter
-local printf = vim.fn.printf
 local home   = vim.env.HOME
+local api    = vim.api
+local cmd    = vim.cmd
+local fn     = vim.fn
+local fs     = vim.fs
+local printf = vim.fn.printf
+local ts     = vim.treesitter
 
 local original_floating_preview = vim.lsp.util.open_floating_preview
 function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
@@ -272,6 +273,18 @@ function GetVisualSelection()
   return col
 end
 
+---get full path correctly formatted as a string for use with require
+---@param table_or_string string|string[]
+function MakeForRequire(table_or_string)
+  local string = type(table_or_string) == "string" and table_or_string or table.concat(table_or_string, "/")
+  local full_path  = string:gsub("[/]+", "/")
+
+  -- return full_path:gsub("^(.*).lua$", "f")
+  return full_path:gsub("^(.*).lua$", function(x)
+    return x:gsub("[/]", ".")
+  end)
+  -- return a
+end
 
 
 --do later---------------------------------------------------

@@ -1,2 +1,2 @@
 
-nnoremap <buffer> <leader>xx :!%:p<esc>
+nnoremap <buffer> <leader>Sq :!%:p<esc>

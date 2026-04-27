@@ -109,10 +109,10 @@ vauto({"BufNewFile", "Filetype" }, {
 ---------------------------------------ExtensionSpecific
 
 local globcomms = {
-  [ "*.page"                                 ] = function() require( LanguageSpecificDir .. "/gitit.lua"  ) end,
-  [ "~/.bashrc"                              ] = function() require( LanguageSpecificDir .. "/bashrc.lua" ) end,
-  [ "~/.config/joplin-desktop/userstyle.css" ] = function() cmd( "source " .. LanguageSpecificDir .. "/joplin_userstyle.vim" ) end,
-  [ "~/TEST/QUICK/*.cpp"                     ] = function() cmd( "source " .. LanguageSpecificDir .. "/quick_cpp.vim"        ) end,
+  [ "*.page"                                 ] = function() dofile( LanguageSpecificDir .. "/gitit.lua" ) end,
+  [ "~/.bashrc"                              ] = function() dofile( LanguageSpecificDir .. "/bashrc.lua" ) end,
+  [ "~/.config/joplin-desktop/userstyle.css" ] = function() cmd.source( LanguageSpecificDir .. "/joplin_userstyle.vim" ) end,
+  [ "~/TEST/QUICK/*.cpp"                     ] = function() cmd.source( LanguageSpecificDir .. "/quick_cpp.vim"        ) end,
 }
 local exts = {
   ["lisp"]   = { chmod = "600" },
