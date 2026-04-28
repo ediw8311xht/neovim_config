@@ -26,6 +26,16 @@ let g:my_plugins['cl-lsp']              = [ 'cxxxr',            'cl-lsp', { 'for
 "-- Elixir
 let g:my_plugins['elixir']              = [ 'elixir-tools',     'elixir-tools.nvim'             ]
 let g:my_plugins['elixirfiledetect']    = [ 'elixir-editors',   'vim-elixir'                    ]
+"-- UI/Formatting/Appearance
+let g:my_plugins['graphical undo']      = [ 'sjl',              'gundo.vim'                     ]
+let g:my_plugins['floatterm']           = [ 'voldikss',         'vim-floaterm'                  ]
+let g:my_plugins['colorful comp menu']  = [ 'xzbdmw',           'colorful-menu.nvim'            ]
+let g:my_plugins['notify (dep: noice)'] = [ 'rcarriga',         'nvim-notify'                   ]
+let g:my_plugins['nui (dep: noice)']    = [ 'MunifTanjim',      'nui.nvim'                      ]
+let g:my_plugins['rainbow delimeters']  = [ 'HiPhish',          'rainbow-delimiters.nvim'       ]
+let g:my_plugins['autoformat']          = [ 'vim-autoformat',   'vim-autoformat'                ]
+let g:my_plugins['gitsigns']            = [ 'lewis6991',        'gitsigns.nvim'                 ]
+let g:my_plugins['marks']               = [ 'chentoast',        'marks.nvim'                    ]
 "-- Tools
 let g:my_plugins['plenary [telescope]'] = [  'nvim-lua',         'plenary.nvim'                 ]
 let g:my_plugins['telescope']           = [ 'nvim-telescope',   'telescope.nvim',               { 'branch': 'master' } ]
@@ -35,18 +45,9 @@ let g:my_plugins['markdown preview']    = [ 'iamcco',           'markdown-previe
 let g:my_plugins['luarocks for nvim']   = [ 'theHamsta',        'nvim_rocks',                   { 'do': 'pipx install hererocks && python3 -mhererocks . -j2.1.0-beta3 -r3.0.0 && cp nvim_rocks.lua lua'}]
 let g:my_plugins['fzf']                 = [ 'junegunn',         'fzf.vim'                       ]
 "-- Lf File Manager
-let g:my_plugins['floatterm']           = [ 'voldikss',         'vim-floaterm'                  ]
 let g:my_plugins['lf']                  = [ 'ptzz',             'lf.vim'                        ]
 "-- Key Hints
 let g:my_plugins['whichkeys']           = [ 'folke',            'which-key.nvim'                ]
-"-- UI/Formatting/Appearance
-let g:my_plugins['colorful comp menu']  = [ 'xzbdmw',           'colorful-menu.nvim'            ]
-let g:my_plugins['notify (dep: noice)'] = [ 'rcarriga',         'nvim-notify'                   ]
-let g:my_plugins['nui (dep: noice)']    = [ 'MunifTanjim',      'nui.nvim'                      ]
-let g:my_plugins['rainbow delimeters']  = [ 'HiPhish',          'rainbow-delimiters.nvim'       ]
-let g:my_plugins['autoformat']          = [ 'vim-autoformat',   'vim-autoformat'                ]
-let g:my_plugins['gitsigns']            = [ 'lewis6991',        'gitsigns.nvim'                 ]
-let g:my_plugins['marks']               = [ 'chentoast',        'marks.nvim'                    ]
 "-- Treesitter
 let g:my_plugins['treesitter']          = [ 'nvim-treesitter',  'nvim-treesitter',              { 'branch': 'main', 'do': ':TSUpdate'} ]
 let g:my_plugins['treesitter-textobjs'] = [ 'nvim-treesitter',  'nvim-treesitter-textobjects',  {'branch': 'main'} ]

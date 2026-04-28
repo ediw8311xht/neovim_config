@@ -61,10 +61,11 @@ set foldmethod=marker
 set foldmarker={{{,}}}
 set foldcolumn=1
 set sessionoptions=blank,buffers,curdir,help,tabpages,winsize,winpos,terminal,globals
-set viewoptions=cursor,folds
+"set viewoptions=cursor,folds
+set viewoptions=cursor
 set fillchars=fold:\ ,horiz:█,vert:░ 
 set background=dark
-set scrolloff=8
+set scrolloff=4
 "for fennel nfnl
 autocmd FileType bash setlocal keywordprg=:Man
 

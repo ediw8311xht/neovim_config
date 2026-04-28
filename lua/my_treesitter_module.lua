@@ -184,7 +184,6 @@ function M.fold_comments_single()
 end
 
 function M.set_fold()
-  print(state.fold_type)
   if state.on then
     vim.wo.foldmethod = "expr"
     vim.wo.foldexpr = M.fold_method[state.fold_type]
@@ -211,11 +210,12 @@ end
 function M.auto_fold_comments(args)
   local opts = array_to_table(args, {})
   local autocmd_id = state.autocmd_write
-  state.fold_type = opts.single or opts.multi or M.default_autofold
+  state.fold_type = opts.single or opts.multi or state.fold_type or M.default_autofold
   -- ensure autocmd_id is deleted
   if state.autocmd_write then
     api.nvim_del_autocmd(autocmd_id)
   end
+  -- autocmd_enter handles setting foldmethod and foldexpr when state is on/off
   if not state.autocmd_enter then
     state.autocmd_enter = api.nvim_create_autocmd({ "BufEnter", "WinEnter", "SessionloadPost" }, {
       callback = function(callback_args)
@@ -234,7 +234,7 @@ function M.auto_fold_comments(args)
     state.on = true
     M.set_fold()
     M.update_comments(fn.bufnr())
-    state.autocmd_write = api.nvim_create_autocmd({ "BufWritePost" }, {
+    state.autocmd_write = api.nvim_create_autocmd({ "BufWrite" }, {
       callback = function(callback_args)
         M.update()
         M.update_comments(callback_args.buf)

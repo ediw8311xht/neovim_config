@@ -239,7 +239,7 @@ end
 ---               tilde_home: boolean,
 ---               expand: string,
 ---               }
----return string
+---@return string
 function GetFile(options)
   local opts = TableDifference({tilde_home = false, expand = "%"}, options, false)
   local file = fn.expand(opts.expand)
@@ -285,7 +285,6 @@ function MakeForRequire(table_or_string)
   end)
   -- return a
 end
-
 
 --do later---------------------------------------------------
 -- function GutterSign()
