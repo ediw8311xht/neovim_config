@@ -1,6 +1,6 @@
 
---[[ | 
-     |-<< top level functions [start] --]]
+--[[ | ==>
+     | top level functions ]]
 
 ---if test then call func(args) end
 ---@param test     function|any @func or variable to test to
@@ -36,9 +36,8 @@ end
 ---                }
 ---@return { success: boolean, output: any }
 function CatchError(func, options)
---[[  
-    to do
---]]
+--[[ |
+     |- [ ] to do --]]
   local opts = options or {}
   local success, output = pcall(func, opts.args)
   if not success then
@@ -47,7 +46,8 @@ function CatchError(func, options)
   end
   return {success=success, output=output}
 end
-
+--[[ | <==
+     | top level functions top level ]]
 
 -- lua configs for plugins
 local config_files   = vim.fn.globpath(vim.g.dir_config .. "/lua/configs/",  "*.lua", 0, 1)
@@ -63,7 +63,7 @@ local import_files = {
   config_files,
   compiled_files,
 }
-local imported_modules = {}
+MyImportedModules = {}
 
 -- require("nfnl").setup()
 for _, i in ipairs(import_files) do
@@ -76,12 +76,12 @@ for _, i in ipairs(import_files) do
     else
       local success, response = pcall(require, f)
       if not success then print(response)
-      else imported_modules[f] = response end
+      else MyImportedModules[f] = response end
     end
   end
 end
 
-imported_modules["my_treesitter_module"].create_commands()
+MyImportedModules["my_treesitter_module"].create_commands()
 local fullscreen_window_toggle = {
   command_name = "ToggleFullscreen",
   namespace = "fullscreen",
