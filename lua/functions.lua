@@ -73,7 +73,7 @@ end
 
 function ToggleHighlight(highlights)
   local seton = IsEmpty(api.nvim_get_hl(0, { name = highlights[1] }))
-  for _, c in pairs(highlights) do
+  for _,c in pairs(highlights) do
     if seton then
       if fn.exists("g:toggle_value__" .. c) == 0 then
         vim.notify("Variable, toggle_value__" .. c .. ", doesn't exist.", "error", {
@@ -267,7 +267,7 @@ end
 function GetVisualSelection()
   vim.g.region_post = fn.getregionpos(fn.getpos('v'), fn.getpos('.'))
   local col = ""
-  for _, i in ipairs(vim.g.region_post) do
+  for _,i in ipairs(vim.g.region_post) do
     col = col .. table.concat(fn.getregion(i[1], i[2]), '\n') .. '\n'
   end
   return col
@@ -276,6 +276,7 @@ end
 ---get full path correctly formatted as a string for use with require
 ---@param table_or_string string|string[]
 function MakeForRequire(table_or_string)
+  ---@diagnostic disable-next-line: param-type-mismatch
   local string = type(table_or_string) == "string" and table_or_string or table.concat(table_or_string, "/")
   local full_path  = string:gsub("[/]+", "/")
 
@@ -286,7 +287,19 @@ function MakeForRequire(table_or_string)
   -- return a
 end
 
---do later---------------------------------------------------
+---Get buffer number by name
+---@param name string
+---@return integer|nil @buffer number or nil if matching buffer not found
+function GetBufByName(name)
+  for _,i in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_get_name(i) == name then
+      return i
+    end
+  end
+  return nil
+end
+
+--do later---------------------------------------------------{{{
 -- function GutterSign()
 --   print("h")
 -- end
@@ -331,4 +344,4 @@ end
 --     end
 --   end
 -- end
-
+-- }}}

@@ -45,5 +45,16 @@ toc: true
       |----------------------------------------------------------------------------------|---------------------|----------------|
       | Go to older/newer text state {count} times.                                      | `:earlier`/`:later` | `count`        |
       | Go to older/newer text state about {N} seconds before (secs\|mins\|hours\|days). | `:earlier` `:later` | `[0-9]+[smdh]` |
-
-  - .
+- fzf
+  - `fzf#run`
+    - `sink`: command to run with selection
+    - `source`: command to run to determine selections
+    - example:
+      - `call fzf#run({'source': 'git ls-files', 'sink': 'e'})`
+      - pick file from those tracked by git repo to use with `:e`
+- mappings
+  - trigger completion in mapping
+    - `call feedkeeys(":e \t", "t")`
+    - `t` mode: handle keys as if typed
+- buffers
+  - `vim.fn.nvim_buf_call` - call function from buffer

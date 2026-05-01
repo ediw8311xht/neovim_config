@@ -36,6 +36,7 @@ let g:my_plugins['rainbow delimeters']  = [ 'HiPhish',          'rainbow-delimit
 let g:my_plugins['autoformat']          = [ 'vim-autoformat',   'vim-autoformat'                ]
 let g:my_plugins['gitsigns']            = [ 'lewis6991',        'gitsigns.nvim'                 ]
 let g:my_plugins['marks']               = [ 'chentoast',        'marks.nvim'                    ]
+let g:my_plugins['view images']         = [ '3rd',              'image.nvim'                    ]
 "-- Tools
 let g:my_plugins['plenary [telescope]'] = [  'nvim-lua',         'plenary.nvim'                 ]
 let g:my_plugins['telescope']           = [ 'nvim-telescope',   'telescope.nvim',               { 'branch': 'master' } ]

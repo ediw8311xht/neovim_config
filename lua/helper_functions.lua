@@ -77,6 +77,36 @@ function Split(s, f)
   return MapSplit(s, f)
 end
 
+---@param table table
+---@param func function<any, any> @func(value, key)
+function ForEach(table, func)
+  for k,v in pairs(table) do
+    func(v, k)
+  end
+end
+
+---@param table table
+---@param func fun(value, key): new_value: any, new_key: any
+function Map(table, func)
+  local new_table = {}
+  for k,v in pairs(table) do
+    local nv, nk = func(v, k)
+    new_table[nk] = nv
+  end
+  return new_table
+end
+
+---@param table table
+---@param func fun(accum, value, key): any
+---@return any @accumulation
+function Reduce(table, func, initial)
+  local accum = initial
+  for k,v in pairs(table) do
+    accum = func(accum, v, k)
+  end
+  return accum
+end
+
 function TableSetDefault(tbl, default)
   return setmetatable(tbl, { __index = function() return default end })
 end

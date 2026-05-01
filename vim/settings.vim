@@ -66,6 +66,7 @@ set viewoptions=cursor
 set fillchars=fold:\ ,horiz:█,vert:░ 
 set background=dark
 set scrolloff=4
+set exrc "enable project-local configuration |exrc|
 "for fennel nfnl
 autocmd FileType bash setlocal keywordprg=:Man
 

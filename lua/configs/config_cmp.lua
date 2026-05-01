@@ -112,6 +112,13 @@ cmp.setup.filetype({ "markdown", "text" }, {
   },
 })
 
+cmp.setup.filetype({ "lua" }, {
+  sources = {
+    { name = "nvim_lua" },
+    { name = "nvim_lsp" },
+  },
+})
+
 cmp_dict.setup({
   paths = { "$XDG_DATA_HOME/dict/en_words" },
   exact_length = 2,
