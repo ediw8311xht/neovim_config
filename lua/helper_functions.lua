@@ -3,6 +3,10 @@ function IsEmpty(table)
   return next(table) == nil
 end
 
+---Deep copy
+---@generic T : any
+---@param value T
+---@return T
 function DeepCopy(value)
   local deep_copy = {}
   if type(value) ~= table then
@@ -14,6 +18,11 @@ function DeepCopy(value)
   return deep_copy
 end
 
+---Difference between two tables with table_b taking priority over table_a
+---@param table_a table
+---@param table_b table
+---@param in_place? boolean
+---@return table
 function TableDifference(table_a, table_b, in_place)
   -- allow editing in place or passing new table
   local output = (in_place ~= nil) and table_a or DeepCopy(table_a)

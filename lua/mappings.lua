@@ -1,5 +1,6 @@
 #!/usr/bin/lua
 
+local T = true
 local F = false
 -- local T = true
 vim.g.mapping_file = vim.fn.expand('%:p')
@@ -10,6 +11,9 @@ vim.g.mapping_file = vim.fn.expand('%:p')
 -------------------------------
 LEADER_MAPPINGS = {
   n = {
+    --[[ reserved --]]
+    A     = { group="filetype specific" },
+    --[[ --]]
     B     = { group="buffer"},
     Bc    = { F, 'copy buffer to clip',     'gg"+yG<c-o>'},
     Bd    = { F, 'delete buffer',           'bd',cmd=true},

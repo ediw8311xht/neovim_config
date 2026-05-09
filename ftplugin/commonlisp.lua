@@ -11,7 +11,7 @@ vim.bo.expandtab      = true
 vim.bo.syntax         = "commonlisp"
 vim.bo.filetype       = "lisp" -- ensure for slimv
 
--- ---Add directories defined in vim.g.lisp_directories to asdf:*central-registry*
+-- ---Add directories defined in vim.g.lisp_directories to asdf:*central-registry* {{{
 -- ---@param verbose? boolean @print directories that are added to central registry
 -- function LispAddToCentralRegistry(verbose)
 --   if type(vim.g.lisp_directories) ~= "table" then
@@ -20,17 +20,36 @@ vim.bo.filetype       = "lisp" -- ensure for slimv
 --   end
 --   for _,i in ipairs(vim.g.lisp_directories) do
 --   end
--- end
+-- end }}}
 
-
+---Add list of forms to history for repl
+---@param forms string[]
+function LispAddToHistory(forms)
+  if vim.g.slimv_loaded == 1 then
+    vim.call("SlimvAddHistory", forms)
+  else
+    vim.print("Repl not loaded yet...")
+  end
+end
 ---evaluates form in lisp repl, defaults to slimv
 ---@param form string|any[] @string of form or list of values to be computed with vim.fn.printf
+---@param options? {
+---                  add_to_history: boolean,
+---                }
 ---@return nil|0 @return 0 when vim.fn.SlimvEvalForm is successful
-function LispEvalForm(form)
+function LispEvalForm(form, options)
   ---@diagnostic disable-next-line: deprecated, param-type-mismatch
   local computed_form = (type(form) == "string" and form) or vim.fn.printf(unpack(form))
+  local opts = options or {}
+  -- add to history
+  if opts.add_to_history then
+    LispAddToHistory({computed_form})
+  end
+
   if vim.g.slimv_loaded == 1 then
     return vim.fn.SlimvEvalForm(computed_form)
+  else
+    vim.print("Repl not loaded yet...")
   end
   return nil
 end
@@ -42,12 +61,14 @@ function LispAddToCentralRegistry(directory)
   end
   LispEvalForm(vim.fn.printf('(push (truename "%s") asdf:*central-registry*)', directory))
 end
-function LispLoadSystem(system)  LispEvalForm({ '(asdf:load-system :%s)', system } ) end
-function LispClearSystem(system) LispEvalForm({ '(asdf:clear-system :%s)', system }) end
-
 function LispAddAllDirectories() ForEach(vim.g.lisp_directories, LispAddToCentralRegistry) end
+
+function LispLoadSystem(system)  LispEvalForm({ '(asdf:load-system :%s)', system } ) end
 function LispLoadAllSystems()    ForEach(vim.g.lisp_systems, LispLoadSystem) end
+
+function LispClearSystem(system) LispEvalForm({ '(asdf:clear-system :%s)', system }) end
 function LispClearAllSystems()   ForEach(vim.g.lisp_systems, LispClearSystem) end
+
 
 function LispQuickSetup()
   LispAddAllDirectories()
@@ -55,25 +76,36 @@ function LispQuickSetup()
 end
 
 
-function LispGetSlimvBuf()
-  return GetBufByName(vim.g.slimv_repl_name)
+function LispGetReplBuf()
+  if vim.g.slimv_loaded == 1 then
+    return GetBufByName(vim.g.slimv_repl_name)
+  else
+    return nil
+  end
 end
 
--- function LispSlimvReplBuf()
---   local buf = LispGetSlimvBuf()
---   if buf then
---
---   end
--- end
+function LispEvalFromHistory()
+  local cmdhistory = vim.g.slimv_cmdhistory
+  if cmdhistory then
+    vim.call("fzf#run", {
+      source = cmdhistory,
+      sink   = LispEvalForm,
+    })
+  else
+    vim.print("No command history found.")
+  end
+end
 
 local commonlisp_leader_mappings = {
   n = {
     x   = { false, 'execute [sbcl]',         '!sbcl --script "%"', cmd=true },
     X   = { false, 'execute [sbcl] w/ args', ':!sbcl --script "%" ' },
     cf  = { false, 'format',          'Autoformat | silent! %s/([ ]\\+/(/g', cmd=true },
-    A   = { group="filetype specific" },
+    A   = { group="lisp" },
     Ac  = { false, 'complete lisp functions', 'feedkeys(":lua Lisp\\t", "t")', vim_command=true },
-    Ae  = { false, "slimv eval put into 'e" ,   '"e\\e' },
+    Ae  = { group="lisp eval" },
+    Aee = { false, "slimv eval put into 'e" ,   '"e\\e' },
+    Aeh = { false, 'repl eval from history', LispEvalFromHistory },
     Af  = { false, 'reload slimv',    '\\Q\\c' },
     Al  = { false, 'load system',     'SlimvEvalForm("(asdf:load-system :" .. g:Session_system .. ")")', vim_command=true },
     Ar  = { false, 'reload slimv',    '\\Q\\c' },

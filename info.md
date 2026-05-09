@@ -1,5 +1,6 @@
 ---
 categories: nvim editor vimscript lua
+format: markdown
 title: nvim info
 toc: true
 ---
@@ -58,3 +59,21 @@ toc: true
     - `t` mode: handle keys as if typed
 - buffers
   - `vim.fn.nvim_buf_call` - call function from buffer
+- lua
+  - regex - `vim.regex(<regex>)`
+  - using vim functions/commands
+    - see: help: \|lua-vimscript\|
+    - command:
+      - `vim.cmd.<command>(args...)`
+      - `vim.cmd(<command>, args...)`
+      - 
+    - function:
+      - `vim.fn.<function>(args...)`
+      - `vim.call(<func>, args...)`
+        - example: `vim.call("fzf#run", {sink = "e"})`
+- look into
+  - ``` help
+    vim.on_key({fn}, {ns_id}, {opts})                               *vim.on_key()*
+        Adds Lua function {fn} with namespace id {ns_id} as a listener to every,
+        yes every, input key.
+    ```

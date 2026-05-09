@@ -34,8 +34,6 @@
     (each [key mapping (pairs sub_table)]
       (mod.register_binding {: key : mode} mapping))))
 
-
-
 (global REGULAR_MAPPINGS {; {{{
 "" {
   :+          { :desc "End of line"                 :value :g_
@@ -90,7 +88,7 @@
   "[)"        { :desc "next )"                      :value "search(')', 'bW')" :typet :vim_function }
 }
 :t {
-  :<C-S-g>    { :desc "[!]Float Term"             :value  "<C-w>:FloatermToggle<ESC>"
+  :<C-S-g>    { :desc "[!]Float Term"               :value  "<C-w>:FloatermToggle<ESC>"
                 :remap true }
   :<C-w>      { :desc "normal mode"                 :value "<C-\\><C-n>"
                 :remap true }
@@ -99,6 +97,9 @@
   :<C-S-s>    { :desc "sub +vmagic"                 :value ":s/\\%V\\v"                                }
   :<C-s>      { :desc "sub +i +vmagic"              :value ":s/\\%V\\v\\c"                             }
   "`"         { :desc ""                            :value :zf                                         }
+}
+[:x :n] {
+  :ga       { :desc "easy align" :value "<Plug>(EasyAlign)" }
 }
 [:c :i] {
   :<C-a>    { :desc "start of line"          :value :<home>     }

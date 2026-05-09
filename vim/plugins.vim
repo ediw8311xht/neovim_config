@@ -45,6 +45,7 @@ let g:my_plugins['neoterm']             = [ 'kassio',           'neoterm'       
 let g:my_plugins['markdown preview']    = [ 'iamcco',           'markdown-preview.nvim',        { 'do': 'cd app && yarn install' } ]
 let g:my_plugins['luarocks for nvim']   = [ 'theHamsta',        'nvim_rocks',                   { 'do': 'pipx install hererocks && python3 -mhererocks . -j2.1.0-beta3 -r3.0.0 && cp nvim_rocks.lua lua'}]
 let g:my_plugins['fzf']                 = [ 'junegunn',         'fzf.vim'                       ]
+let g:my_plugins['easy align']          = [ 'junegunn',         'vim-easy-align'                ]
 "-- Lf File Manager
 let g:my_plugins['lf']                  = [ 'ptzz',             'lf.vim'                        ]
 "-- Key Hints
