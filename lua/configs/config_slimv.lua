@@ -36,12 +36,12 @@ vim.g.slimv_swank_cmd    = 'lua LispConnectSwank()'
 -- end
 -- EOF
 function LispSetup()
-  if vim.fn.exists("*PareditInitBuffer") then
+  if vim.fn.exists("*PareditInitBuffer") == 1 then
     vim.fn.PareditInitBuffer()
   end
 end
 
 vim.api.nvim_create_autocmd( {"BufWinEnter"}, {
-  pattern = "*.lisp",
+  pattern = { "*.lisp", "*.asd" },
   callback = LispSetup
 })

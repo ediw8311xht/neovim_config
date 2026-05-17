@@ -6,7 +6,7 @@ local home   = vim.env.HOME
 local api    = vim.api
 local cmd    = vim.cmd
 local fn     = vim.fn
-local fs     = vim.fs
+-- local fs     = vim.fs
 local printf = vim.fn.printf
 local ts     = vim.treesitter
 
@@ -93,36 +93,80 @@ function KeyMapSetter(map, pre, buffer_only, with_which_key)
   local which_key = require("which-key")
   for mode, mode_map in pairs(map) do
     for key, tbl in pairs(mode_map) do
-      local keymap_cmd
       if tbl.group then
         which_key.add({ pre .. key, group = tbl.group, mode = mode })
         goto continue
       end
+      local remap = tbl.remap or tbl[1]
+      local desc = tbl.desc or tbl[2]
+      local command = tbl.command or tbl[3]
+      local expr = tbl.expr
+      local keymap_cmd
       if with_which_key then
-        which_key.add({ pre .. key, desc = tbl[2], mode = mode })
+        which_key.add({ pre .. key, desc = desc, mode = mode })
       end
       if tbl.cmd then
         -- doesn't change modes *:map-cmd* / *<CMD>*
-        keymap_cmd = "<CMD>" .. tbl[3] .. "<CR>"
+        keymap_cmd = "<CMD>" .. command .. "<CR>"
       elseif tbl.vim_command then
-        keymap_cmd = (tbl.print and ":echo " or ":call ") .. tbl[3] .. "<CR>"
+        keymap_cmd = (tbl.print and ":echo " or ":call ") .. command .. "<CR>"
       elseif tbl.lua_call then
-        keymap_cmd = (tbl.print and ":lua= " or ":lua ") .. tbl[3] .. "<CR>"
+        keymap_cmd = (tbl.print and ":lua= " or ":lua ") .. command .. "<CR>"
       else
-        keymap_cmd = tbl[3]
+        keymap_cmd = command
       end
-      -- local keymap_cmd = (tbl.cmd and "<CMD>" .. tbl[3] .. "<CR>") or tbl[3]
+      -- local keymap_cmd = (tbl.cmd and "<CMD>" .. command .. "<CR>") or command
       vim.keymap.set(mode, pre .. key, keymap_cmd, {
-        remap = tbl[1],
-        desc = tbl[2],
+        remap = remap,
+        desc = desc,
         buffer = buffer_only,
-        expr = tbl.expr,
+        expr = expr,
       })
       ::continue::
     end
   end
 end
 
+function KeyMapSetter2(map, pre, buffer_only, with_which_key)
+  local function handle_command(tbl, key)
+    if tbl.cmd then
+      -- doesn't change modes *:map-cmd* / *<CMD>*
+      return "<CMD>" .. tbl.cmd .. "<CR>"
+    elseif tbl.vim_command then
+      return (tbl.print and ":echo " or ":call ") .. tbl.vim_command .. "<CR>"
+    elseif tbl.lua_call then
+      return (tbl.print and ":lua= " or ":lua ") .. tbl.lua_call .. "<CR>"
+    elseif tbl.default then
+      return tbl.default
+    else
+      error(fn.printf("command not set on table: %s = %s", (key or ""), tbl))
+    end
+  end
+  local which_key = require("which-key")
+  for mode, mode_map in pairs(map) do
+    for key, tbl in pairs(mode_map) do
+      if tbl.group then
+        which_key.add({ pre .. key, group = tbl.group, mode = mode })
+        goto continue
+      end
+      local remap = tbl.remap
+      local desc = tbl.desc
+      local command = handle_command(tbl, key)
+      local expr = tbl.expr
+      if with_which_key then
+        which_key.add({ pre .. key, desc = desc, mode = mode })
+      end
+      -- local keymap_cmd = (tbl.cmd and "<CMD>" .. command .. "<CR>") or command
+      vim.keymap.set(mode, pre .. key, command, {
+        remap = remap,
+        desc = desc,
+        buffer = buffer_only,
+        expr = expr,
+      })
+      ::continue::
+    end
+  end
+end
 function LspDocumentHighlight()
   -- local ignore_modes = { "i", "niI", "niR", "niV", "nt" }
   vim.lsp.buf.clear_references()
@@ -195,9 +239,9 @@ end
 --Get highlight under cursor
 function GetHL()
   if not pcall(vim.show_pos) then
-    local synid = vim.fn.synID(vim.fn.line("."), vim.fn.col("."), 1)
+    local synid = fn.synID(fn.line("."), fn.col("."), 1)
     if synid ~= 0 then
-      print(vim.fn.synIDattr(vim.fn.synIDtrans(synid), "name"))
+      print(fn.synIDattr(fn.synIDtrans(synid), "name"))
     else
       pcall(cmd, ":Inspect")
     end
@@ -227,7 +271,7 @@ function ReadInFile(input_file, output_file, options)
 end
 
 function LspStatus()
-  if #vim.lsp.get_clients({ bufnr = vim.fn.bufnr()}) > 0 then
+  if #vim.lsp.get_clients({ bufnr = fn.bufnr()}) > 0 then
     return require('lsp-status').status()
   else
     return ""
@@ -244,7 +288,7 @@ function GetFile(options)
   local opts = TableDifference({tilde_home = false, expand = "%"}, options, false)
   local file = fn.expand(opts.expand)
   if opts.tilde_home then
-    return vim.fn.substitute(file, '\\V' .. home, "~", "")
+    return fn.substitute(file, '\\V' .. home, "~", "")
   else
     return file
   end

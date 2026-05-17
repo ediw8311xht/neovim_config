@@ -1,4 +1,4 @@
-
+---@diagnostic disable: deprecated
 --[[ | ==>
      | top level functions ]]
 
