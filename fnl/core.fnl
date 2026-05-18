@@ -41,6 +41,7 @@
   ","         { :desc :<leader>                     :value :<leader>
                 :remap true }
   ",;"        { :desc ""                            :value ","                                         }
+  "<enter>"   { :desc ""                            :value ","                                         }
   :x          { :desc ""                            :value "\"xx"                                      }
 }
 :c {

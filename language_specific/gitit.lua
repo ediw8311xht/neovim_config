@@ -8,7 +8,8 @@ function JournalFindCreateToday()
   local date = os.date("%Y_%m_%d")
   local relative_file = date .. ".page"
   local fullpath_file = fn.printf("%s/%s", vim.g.journal_dir, relative_file)
-  if fn.exists(fullpath_file) ~= 1 then
+  vim.print(fullpath_file)
+  if fn.filereadable(fullpath_file) ~= 1 then
     cmd["!"]("cp", vim.g.journal_template, fullpath_file)
     cmd["!"]("sed", "-i", fn.printf("'s/{DATE}/%s/g'", date), fullpath_file)
   end

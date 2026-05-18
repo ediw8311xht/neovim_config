@@ -17,11 +17,12 @@ which_key.setup({
   sort = { "alphanum" },
   expand = 2,
   win = {
+    height = { min = 4, max = 50 },
     no_overlap = false,
     border = "double", -- none, single, double, shadow
-    padding = {1, 1},
+    padding = {2, 2},
     wo = {
-      winblend =  0, -- value between 0-100 0 for fully opaque and 100 for fully transparent
+      winblend =  20, -- value between 0-100 0 for fully opaque and 100 for fully transparent
     },
   },
   layout = {
