@@ -22,7 +22,7 @@ which_key.setup({
     border = "double", -- none, single, double, shadow
     padding = {2, 2},
     wo = {
-      winblend =  20, -- value between 0-100 0 for fully opaque and 100 for fully transparent
+      winblend =  10, -- value between 0-100 0 for fully opaque and 100 for fully transparent
     },
   },
   layout = {

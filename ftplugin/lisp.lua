@@ -79,28 +79,44 @@ function LispGetReplBuf()
   end
 end
 
-function LispEvalFromHistory()
-  local cmdhistory = vim.g.slimv_cmdhistory
-  if cmdhistory then
+function LispEvalFZF(coms, options)
+  if type(coms) == "table" and coms[1] then
     vim.call("fzf#run", {
-      source = cmdhistory,
-      sink   = LispEvalForm,
-      options = { '--no-preview' },
+      source = coms,
+      sink = function(x) LispEvalForm(x, options) end,
+      options = { '--no-preview' }
     })
   else
-    vim.print("No command history found.")
+    vim.print(options.error or "No commands found in passed datastructure")
   end
 end
 
--- todo
--- function LispEval(options)
---   local opts           = options or {}
---   local prompt         = opts.prompt or "Expr: "
---   local add_to_history = opts.add_to_history or nil
---   local fn             = opts.fn or LispEvalFormAddToHistory
---   vim.ui.input({prompt=prompt}, fn)
--- end
-  
+function LispEval(options)
+  local opts           = options or {}
+  local prompt         = opts.prompt or "Expr: "
+  local printf         = opts.printf
+  local fn
+  -- local add_to_history = opts.add_to_history or nil
+  if printf then
+    fn = function(x) LispEvalForm(vim.fn.printf(printf, x), opts) end
+  else
+    fn = opts.fn or function(x) LispEvalForm(x, opts) end
+  end
+
+  vim.ui.input({prompt=prompt}, fn)
+end
+
+function LispEvalFromHistory()
+  LispEvalFZF(vim.g.slimv_cmdhistory, {error="No command history found."})
+end
+
+function LispEvalSavedForms()
+  LispEvalFZF(vim.g.lisp_saved_forms, {error="No command history found."})
+end
+
+function LispQlQuickload()
+  LispEval({prompt="quickload package: ", printf='(ql:quickload "%s")', add_to_history=nil })
+end
 
 local commonlisp_leader_mappings = {
   n = {
@@ -112,14 +128,14 @@ local commonlisp_leader_mappings = {
     Ae  = { group="lisp eval" },
     Aee = { desc="slimv eval put into 'e",  default='"e\\e' },
     Aeh = { desc='repl eval from history',  default=LispEvalFromHistory },
+    Aes = { desc='repl eval from saved forms',  default=LispEvalSavedForms },
     Al  = { desc='load system',             vim_command='SlimvEvalForm("(asdf:load-system :" .. g:lisp_session_system .. ")")' },
     Ar  = { desc='reload slimv',            default='\\Q\\c' },
     At  = { desc='test system',             vim_command='SlimvEvalForm("(asdf:test-system :" .. g:lisp_session_system .. ")")' },
-    As  = { desc='lisp setup',              lua_call='LispQuickSetup()' },
-    Au  = { desc='clear systems',           lua_call='LispClearAllSystems()' },
+    As  = { desc='lisp setup',              default=LispQuickSetup },
+    Au  = { desc='clear systems',           default=LispClearAllSystems },
     Aq  = { group="lisp quicklisp" },
-    -- Aqq = { desc='quickload',  function() LispEval({prompt="package", }) end },
--- to-do    -- Aql = { false, 'quickload',       '', lua_call=true },
+    Aqq = { desc='[ql] quickload',          default=LispQlQuickload },
     Ah  = { group="lisp help" },
     Ahp = { desc='paredit help',            cmd='execute (":vsplit " .. expand(g:paredit_help))' },
     Ahs = { desc='slime help',              cmd='execute (":vsplit " .. expand(g:slime_help))' },
@@ -128,6 +144,7 @@ local commonlisp_leader_mappings = {
 
 }
 
+KeyMapSetter2(commonlisp_leader_mappings, '<leader>', true, true)
 --[[
 local commonlisp_mappings = {
   i = {
@@ -137,7 +154,6 @@ local commonlisp_mappings = {
 }
 KeyMapSetter(commonlisp_mappings, '', true, true)
 --]]
-KeyMapSetter2(commonlisp_leader_mappings, '<leader>', true, true)
 -- "nnoremap <buffer> <leader>hh :execute (':vsplit ' . expand(g:vlime_help))<CR>
 -- nnoremap <buffer> <leader>hh :execute (':vsplit ' . expand(g:slimv_help))<CR>
 -- nnoremap <buffer> <leader>J :join<CR>
