@@ -56,6 +56,7 @@ function LispAddToCentralRegistry(directory)
   end
   LispEvalForm(vim.fn.printf('(push (truename "%s") asdf:*central-registry*)', directory))
 end
+
 function LispAddAllDirectories() ForEach(vim.g.lisp_directories, LispAddToCentralRegistry) end
 
 function LispLoadSystem(system)  LispEvalForm({ '(asdf:load-system :%s)', system } ) end
@@ -91,70 +92,51 @@ function LispEvalFZF(coms, options)
   end
 end
 
-function LispEval(options)
+function LispEvalInput(options)
   local opts           = options or {}
   local prompt         = opts.prompt or "Expr: "
   local printf         = opts.printf
   local fn
-  -- local add_to_history = opts.add_to_history or nil
   if printf then
     fn = function(x) LispEvalForm(vim.fn.printf(printf, x), opts) end
   else
     fn = opts.fn or function(x) LispEvalForm(x, opts) end
   end
-
   vim.ui.input({prompt=prompt}, fn)
 end
 
-function LispEvalFromHistory()
-  LispEvalFZF(vim.g.slimv_cmdhistory, {error="No command history found."})
-end
-
-function LispEvalSavedForms()
-  LispEvalFZF(vim.g.lisp_saved_forms, {error="No command history found."})
-end
-
-function LispQlQuickload()
-  LispEval({prompt="quickload package: ", printf='(ql:quickload "%s")', add_to_history=nil })
-end
+function LispEvalFromHistory() LispEvalFZF(vim.g.slimv_cmdhistory, {error="No command history found."}) end
+function LispEvalSavedForms() LispEvalFZF(vim.g.lisp_saved_forms, {error="No command history found."}) end
+function LispQlQuickload() LispEvalInput({prompt="quickload package: ", printf='(ql:quickload "%s")', add_to_history=nil }) end
 
 local commonlisp_leader_mappings = {
   n = {
-    x   = { desc='execute [sbcl]',          cmd='!sbcl --script "%"' },
-    X   = { desc='execute [sbcl] w/ args',  default=':!sbcl --script "%" ' },
-    cf  = { desc='format',                  cmd='Autoformat | silent! %s/([ ]\\+/(/g' },
-    A   = { group="lisp" },
-    Ac  = { desc='complete lisp functions', vim_command='feedkeys(":lua Lisp\\t", "t")' },
-    Ae  = { group="lisp eval" },
-    Aee = { desc="slimv eval put into 'e",  default='"e\\e' },
-    Aeh = { desc='repl eval from history',  default=LispEvalFromHistory },
-    Aes = { desc='repl eval from saved forms',  default=LispEvalSavedForms },
-    Al  = { desc='load system',             vim_command='SlimvEvalForm("(asdf:load-system :" .. g:lisp_session_system .. ")")' },
-    Ar  = { desc='reload slimv',            default='\\Q\\c' },
-    At  = { desc='test system',             vim_command='SlimvEvalForm("(asdf:test-system :" .. g:lisp_session_system .. ")")' },
-    As  = { desc='lisp setup',              default=LispQuickSetup },
-    Au  = { desc='clear systems',           default=LispClearAllSystems },
-    Aq  = { group="lisp quicklisp" },
-    Aqq = { desc='[ql] quickload',          default=LispQlQuickload },
-    Ah  = { group="lisp help" },
-    Ahp = { desc='paredit help',            cmd='execute (":vsplit " .. expand(g:paredit_help))' },
-    Ahs = { desc='slime help',              cmd='execute (":vsplit " .. expand(g:slime_help))' },
+    x   = { desc='execute [sbcl]',             cmd='!sbcl --script "%"' },
+    X   = { desc='execute [sbcl] w/ args',     default=':!sbcl --script "%" ' },
+    cf  = { desc='format',                     cmd='Autoformat | silent! %s/([ ]\\+/(/g' },
+
+    A   = { group="lisp"                       },
+    Ac  = { desc='complete lisp functions',    vim_command='feedkeys(":lua Lisp\\t", "t")' },
+
+    Ae  = { group="lisp eval"                  },
+    Aee = { desc="slimv eval put into 'e",     default='"e\\e' },
+    Aeh = { desc='repl eval from history',     default=LispEvalFromHistory },
+    Aes = { desc='repl eval from saved forms', default=LispEvalSavedForms },
+
+    Al  = { desc='load system',                vim_command='SlimvEvalForm("(asdf:load-system :" .. g:lisp_session_system .. ")")' },
+    Ar  = { desc='reload slimv',               default='\\Q\\c' },
+    As  = { desc='lisp setup',                 default=LispQuickSetup },
+    At  = { desc='test system',                vim_command='SlimvEvalForm("(asdf:test-system :" .. g:lisp_session_system .. ")")' },
+    Au  = { desc='clear systems',              default=LispClearAllSystems },
+
+    Aq  = { group="lisp quicklisp"             },
+    Aqq = { desc='[ql] quickload',             default=LispQlQuickload },
+
+    Ah  = { group="lisp help"                  },
+    Ahp = { desc='paredit help',               cmd='execute (":vsplit " .. expand(g:paredit_help))' },
+    Ahs = { desc='slime help',                 cmd='execute (":vsplit " .. expand(g:slime_help))' },
     -- Se  = { false, 'slimv eval at mark e',      '\'e' },
   }
-
 }
 
 KeyMapSetter2(commonlisp_leader_mappings, '<leader>', true, true)
---[[
-local commonlisp_mappings = {
-  i = {
-    [ "<C-p>" ] = { false, 'slimv previous command', 'call SlimvPreviousCommand()', cmd=true },
-    [ "<C-n>" ] = { false, 'slimv next command', 'call SlimvNextCommand()', cmd=true },
-  }
-}
-KeyMapSetter(commonlisp_mappings, '', true, true)
---]]
--- "nnoremap <buffer> <leader>hh :execute (':vsplit ' . expand(g:vlime_help))<CR>
--- nnoremap <buffer> <leader>hh :execute (':vsplit ' . expand(g:slimv_help))<CR>
--- nnoremap <buffer> <leader>J :join<CR>
-

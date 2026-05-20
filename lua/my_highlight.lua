@@ -103,7 +103,12 @@ vim.g.my_highlight = {
     _5 = { gui = "NONE", guifg = "#4363D8", }, -- Blue
     _6 = { gui = "NONE", guifg = "#911EB4", }, -- Purple
     _7 = { gui = "NONE", guifg = "#F032E6", }, -- Magenta
-  }
+  },
+  ["@function."] = {
+    [".macro"] =  {
+      [".commonlisp"] = { gui = "NONE", guifg="#EEBB00" },
+    }
+  },
 }
 -- ["EndOfBuffer"]     = { gui = "NONE",      guibg = "NONE",    guifg = "#333333",   },
 -- ["Normal"]          = { gui = "NONE",      guibg = "NONE",    guifg = "#D0D0D0",   },
