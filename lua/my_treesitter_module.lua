@@ -187,14 +187,17 @@ end
 
 function M.auto_fold_comments(args)
   local opts = ArrayToTable(args, {})
+  local on_off = not opts.off
   local buf = vim.fn.bufnr()
   local autocmd_id   = state.auto_fold[buf].id
   local autocmd_type = state.auto_fold[buf].type
   local type = opts.single or opts.multi or opts.block or nil
+  vim.notify("AutoFoldComments turned " .. (on_off and "on." or "off"))
   if autocmd_id then
-    vim.fn.nvim_del_autocmd(autocmd_id)
+    pcall(api.nvim_del_autocmd, autocmd_id)
+    state.auto_fold[buf].id = nil
   end
-  if opts.off then
+  if not on_off then
     M.fold_comments({ "off" })
   elseif type then
     M.fold_comments({ type })

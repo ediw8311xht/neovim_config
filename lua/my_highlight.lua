@@ -26,6 +26,10 @@ vim.g.my_highlight = {
     -- Tree Sitter --
     TSCurrentScope  = { gui = "NONE", guibg = "#090909" },
   },
+  man = {
+    Bold = { gui="bold", guibg="NONE", guifg="#04AA04" },
+    Italic = { gui="italic", guibg="black", guifg="#999999" },
+  },
   Window = {
     Active   = { guibg = "NONE" },
     Inactive = { gui = "NONE", guibg = "#090909" },
