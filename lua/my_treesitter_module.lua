@@ -24,6 +24,7 @@ end
 
 local M = {
   comment_nodes = { "comment", "comment_content" },
+  comment_block_nodes = { "block_comment" },
   function_nodes = TableSetDefault({
     ["lua"] = "((function_declaration) @func_decl)",
     ["lisp"] = "((defun) @func_decl)",
@@ -99,6 +100,7 @@ function M.GoToQuery(query, args)
   local inner = args.inner or false
   ---------------------------------------
 
+  ---@diagnostic disable: deprecated yeah this is annoying....
   local cpos_row, cpos_col = unpack(api.nvim_win_get_cursor(0))
   local cpos = { cpos_row, cpos_col }
   local iter_range = reverse and { 0, cpos_row - 1 } or { cpos_row - 1, fn.line("$") - 1 }
@@ -136,27 +138,36 @@ end
 function M.update_comments(buffer_number)
   for line_nr = 1, vim.fn.line("$") + 1 do
     local node = M.FirstNode(line_nr)
-    state.comments[buffer_number][line_nr] = M.check_node_type(node, M.comment_nodes) and 1 or 0
+    if M.check_node_type(node, M.comment_block_nodes) then
+      local _,_,node_end_row,_ = node:range()
+      while line_nr <= (node_end_row + 1) do
+        state.comments[buffer_number][line_nr] = 2
+        line_nr = line_nr + 1
+      end
+    elseif  M.check_node_type(node, M.comment_nodes) then
+      state.comments[buffer_number][line_nr] = 1
+    else
+      state.comments[buffer_number][line_nr] = 0
+    end
   end
 end
 
 function M.fold_comments_multi()
   local line = vim.v.lnum
   local buf = vim.fn.bufnr()
-  if state.comments[buf][line] == 1 and (state.comments[buf][line - 1] == 1 or state.comments[buf][line + 1] == 1) then
+  if state.comments[buf][line] ~= 0 and (state.comments[buf][line - 1] ~= 0 or state.comments[buf][line + 1] ~= 0) then
     return 1
   else
     return 0
   end
 end
 
---[[ TO DO --]]
 function M.fold_comments_block()
-  -- local node = M.FirstNode()
+  return (state.comments[vim.fn.bufnr()][vim.v.lnum] == 2)
 end
 
 function M.fold_comments_single()
-  return state.comments[vim.fn.bufnr()][vim.v.lnum]
+  return (state.comments[vim.fn.bufnr()][vim.v.lnum] ~= 0 and 1)
 end
 
 ---Fold comments
@@ -187,12 +198,12 @@ end
 
 function M.auto_fold_comments(args)
   local opts = ArrayToTable(args, {})
-  local on_off = not opts.off
+  local on_off = opts.off ~= "off"
   local buf = vim.fn.bufnr()
   local autocmd_id   = state.auto_fold[buf].id
-  local autocmd_type = state.auto_fold[buf].type
+  -- local autocmd_type = state.auto_fold[buf].type
   local type = opts.single or opts.multi or opts.block or nil
-  vim.notify("AutoFoldComments turned " .. (on_off and "on." or "off"))
+  vim.notify("AutoFoldComments turned " .. (on_off and "on" or "off"))
   if autocmd_id then
     pcall(api.nvim_del_autocmd, autocmd_id)
     state.auto_fold[buf].id = nil
@@ -260,53 +271,3 @@ end
 
 return M
 
--- {{{
--- function M.OnSameLine(node1, node2)
---   local sr1, sc1 = node1:range()
---   local sr2, sc2 = node2:range()
---   return sr1 == sr2
--- end
---
--- function M.Gtest()
---   local comment_query = [[
---     ((comment) @my_capture)
---   ]]
---
---   local br = vim.api.nvim_get_current_buf()
---   local ft = vim.api.nvim_get_option_value("ft", { buf = br })
---   local lang = vim.treesitter.language.get_lang(ft)
---   local hle = require("vim.treesitter.highlighter")
---
---   M.tree = ts.get_parser():parse()[1]
---   local query = ts.query.parse(lang, comment_query)
---   if not hle.active[br] then print("[CommentFold] No parser found for treesitter.") return end
---
---   for id, node, metadata in query:iter_captures(M.tree:root(), 0) do
---     local row1, col1, row2, col2 = node:range() -- range of the capture
---     print(row1, col1)
---     local prev_sibling = node:prev_sibling()
---     local next_sibling = node:next_sibling()
---     if prev_sibling:type() ~= "comment" then
---       print(M.OnSameLine(prev_sibling, node))
---       -- print("HI: ", prev_sibling:type())
---     end
---   end
---   -- local query = vim.treesitter.query.parse(lang, bnr);
---   -- ; query
---   -- ]]
---   -- )
---   -- for i in query:iter_captures(
---   -- for v=1,39 do
---   --   print(M.FirstNode(v))
---   --   print("\n")
---   -- end
---   -- print(M.FirstNode(26))
---   -- print("\n")
---   -- for id, node, metadata in query:iter_captures(M.tree:root(), 0) do
---   --   local row1, col1, row2, col2 = node:range() -- range of the capture
---   -- end
--- end
---
--- -- M.Gtest()
--- -- print(ts.highlighter.active(api.nvim_get_current_buf()))
--- }}}
