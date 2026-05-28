@@ -1,0 +1,13 @@
+
+-- require("tcl-lsp").setup({
+--   -- Auto-start LSP when opening TCL/RVT files (default: true)
+--   auto_start = true,
+--
+--   -- Root directory markers (default: { ".git", "tcl.toml", "project.tcl" })
+--   root_markers = { ".git", "tcl.toml", "project.tcl", "Makefile" },
+--
+--   -- Background indexer (default: disabled, can cause UI lag)
+--   indexer = {
+--     enabled = false,
+--   },
+-- })

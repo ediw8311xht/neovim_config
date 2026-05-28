@@ -115,8 +115,12 @@ local globcomms = {
   [ "~/TEST/QUICK/*.cpp"                     ] = function() cmd.source( LanguageSpecificDir .. "/quick_cpp.vim"        ) end,
   [ "*.asd"                                  ] = function() vim.bo.filetype="commonlisp" ; vim.bo.syntax="commonlisp" end,
 }
+-- sets file with templates
 local exts = {
+  ["page"]   = { chmod = "600" },
+  ["md"]     = { chmod = "600" },
   ["lisp"]   = { chmod = "600" },
+
   ["sh"]     = { chmod = "700" },
   ["py"]     = { chmod = "700" },
   ["kalker"] = { chmod = "700" },
@@ -126,8 +130,7 @@ local exts = {
   ["html"]   = { chmod = "700" },
   ["cpp"]    = { chmod = "700" },
   ["hs"]     = { chmod = "700" },
-  ["page"]   = { },
-  ["md"]     = { },
+  ["tcl"]    = { chmod = "700" },
 }
 
 -- vauto({ "BufNewFile", "BufRead" }, {

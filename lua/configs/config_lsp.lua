@@ -7,39 +7,6 @@ local lang_servers      = { 'cssls', 'html', 'jsonls', 'ts_ls', 'vimls', 'eslint
 
 actions_preview.setup({})
 
--------------------------------------------- {{{
--- local configs = require 'lspconfig.configs'
--- -- https://github.com/neovim/nvim-lspconfig/issues/1767#issuecomment-1100913208
--- if not configs.cl_lsp then
--- configs.cl_lsp = {
---   default_config = {
---     cmd = { vim.env.HOME .. "/.roswell/bin/cl-lsp"},
---     filetypes = {'lisp'},
---     root_dir = require("lspconfig.util").find_git_ancestor,
---     settings = {},
---   },
--- }
--- end
--- require('lspconfig').cl_lsp.setup {}
--------------------------------------------- }}}
-
--- vim.lsp.handlers["textDocument/hover"] =
--- function (f)
---   vim.lsp.handlers.hover(f, {
---     border = "rounded",
---     width = 75,
---     height = 50,
---   })
--- end
-
-
--- vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
---   vim.lsp.handlers.hover, {
---     border = "rounded",
---     width = 50,
---     height = 25,
---   }
--- )
 lspconfig('cssls',   { capabilities = cmp_capabilities })
 lspconfig('html',    { capabilities = cmp_capabilities })
 lspconfig('jsonls',  { capabilities = cmp_capabilities })
@@ -152,3 +119,38 @@ end
 -- })
 -- }}}
 
+-------------------------------------------- {{{
+-- local configs = require 'lspconfig.configs'
+-- -- https://github.com/neovim/nvim-lspconfig/issues/1767#issuecomment-1100913208
+-- if not configs.cl_lsp then
+-- configs.cl_lsp = {
+--   default_config = {
+--     cmd = { vim.env.HOME .. "/.roswell/bin/cl-lsp"},
+--     filetypes = {'lisp'},
+--     root_dir = require("lspconfig.util").find_git_ancestor,
+--     settings = {},
+--   },
+-- }
+-- end
+-- require('lspconfig').cl_lsp.setup {}
+-------------------------------------------- }}}
+
+-------------------------------------------- {{{
+-- vim.lsp.handlers["textDocument/hover"] =
+-- function (f)
+--   vim.lsp.handlers.hover(f, {
+--     border = "rounded",
+--     width = 75,
+--     height = 50,
+--   })
+-- end
+
+
+-- vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
+--   vim.lsp.handlers.hover, {
+--     border = "rounded",
+--     width = 50,
+--     height = 25,
+--   }
+-- )
+-------------------------------------------- }}}
