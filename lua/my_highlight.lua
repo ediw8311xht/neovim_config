@@ -3,7 +3,8 @@
 vim.g.my_highlight = {
   [""] = {
     Keyword         = { gui = "NONE",                                          },
-    Function        = { gui = "NONE",                                          },
+    -- Function        = { gui = "bold" },
+    Function        = { gui = "bold", guibg="#00DD00", guifg="#000000" },
     CmpBorder       = { gui = "NONE",        guibg = "NONE",    guifg = "#009999", },
     ColorColumn     = { gui = "underdotted", guibg = "#222222", guifg = "#999999", },
     Comment         = { gui = "italic",      guibg = "NONE",    guifg = "#0077FF", },
@@ -27,7 +28,7 @@ vim.g.my_highlight = {
     TSCurrentScope  = { gui = "NONE", guibg = "#090909" },
   },
   man = {
-    Bold = { gui="bold", guibg="NONE", guifg="#04AA04" },
+    Bold = { gui="NONE", guibg="NONE", guifg="#04AA04", cterm="NONE", ctermfg="red" },
     Italic = { gui="italic", guibg="black", guifg="#999999" },
   },
   Window = {
@@ -109,8 +110,14 @@ vim.g.my_highlight = {
     _7 = { gui = "NONE", guifg = "#F032E6", }, -- Magenta
   },
   ["@function."] = {
-    [".macro"] =  {
-      [".commonlisp"] = { gui = "NONE", guifg="#EEBB00" },
+    ["macro."] =  {
+      ["commonlisp"] = { gui = "NONE", guifg="#EEBB00" },
+    }
+  },
+  ["@variable."] = {
+    ["parameter."] = {
+      ["commonlisp"] = { gui = "underline", guisp = "#FFFFFF" },
+      -- ["commonlisp"] = { gui = "NONE", guibg="#003300", guifg="#AAAAAA" },
     }
   },
 }

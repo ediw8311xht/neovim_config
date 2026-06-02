@@ -11,12 +11,14 @@ let g:my_plugins['restore view']        = [ 'vim-scripts',      'restore_view.vi
 "-- Language Server
 let g:my_plugins['lspconfig']           = [ 'neovim',           'nvim-lspconfig'                ]
 let g:my_plugins['lsp lines']           = [ 'maan2003',         'lsp_lines.nvim'                ]
-"let g:my_plugins['lsp tcl']             = [ 'unknownbreaker',   'tcl-lsp.nvim'                  ]
+
 "let g:my_plugins['lsp saga']            = [ 'nvimdev',          'lspsaga.nvim'                  ]
 let g:my_plugins['lsp statusline']      = [ 'nvim-lua',         'lsp-status.nvim'               ]
 let g:my_plugins['code-action preview'] = [ 'aznhe21',          'actions-preview.nvim'          ]
+"-- Tcl
+"let g:my_plugins['nvim lint']           = [ 'mfussenegger',     'nvim-lint' ]
 "-- Paredit
-let g:my_plugins['paredit']             = [ 'julienvincent', 'nvim-paredit', { 'for': ['clojure', 'fennel', 'scheme'] } ]
+let g:my_plugins['paredit']             = [ 'julienvincent',    'nvim-paredit', { 'for': ['clojure', 'fennel', 'scheme'] } ]
 " Fennel for neovim
 let g:my_plugins['nfnl (fennel)']       = [ 'Olical',           'nfnl']
 "-- Scheme
