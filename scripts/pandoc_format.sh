@@ -6,7 +6,12 @@ __main() {
   local TO
   local -a ARGS
 
-  local enabled=(
+  local DEFAULT_ARGS=(
+    --standalone
+    --wrap=none
+    --columns=250
+  )
+  local ENABLED_EXTS=(
     pipe_tables
     raw_html
     strikeout
@@ -17,7 +22,7 @@ __main() {
     tex_math_gfm
     yaml_metadata_block
   )
-  local disabled=(
+  local DISABLED_EXTS=(
     alerts
     ascii_identifiers
     attributes
@@ -40,14 +45,12 @@ __main() {
     wikilinks_title_after_pipe
     wikilinks_title_before_pipe
   )
-  MARK_FORMAT+="$(printf -- '+%s' "${enabled[@]}")"
-  MARK_FORMAT+="$(printf -- '-%s' "${disabled[@]}")"
+  MARK_FORMAT+="$(printf -- '+%s' "${ENABLED_EXTS[@]}")"
+  MARK_FORMAT+="$(printf -- '-%s' "${DISABLED_EXTS[@]}")"
   md_format() {
 
-    pandoc -f "${FROM}" -t "${TO}" \
-      --standalone \
-      --wrap=none --columns=250
-      "${ARGS[@]}"
+    pandoc -f "${FROM:-${MARK_FORMAT}}" -t "${TO:-${MARK_FORMAT}}" \
+      "${ARGS[@]:-${DEFAULT_ARGS[@]}}"
     # -t markdown+${extensions[*]// /} -i output.md)"
   }
 
@@ -63,9 +66,6 @@ __main() {
   }
 
   handle_args "${@}"
-  FROM="${FROM:-${MARK_FORMAT}}"
-  TO="${TO:-${MARK_FORMAT}}"
-  echo -e "converting from: '${FROM}'\n to: '${TO}'\n"
   md_format
 }
 

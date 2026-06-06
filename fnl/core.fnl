@@ -83,10 +83,6 @@
   :ZQ         { :desc "!quit all"                   :value :q!                      :typet :vim_command }
   :gne        { :desc "next function end"           :value :GotoNextFunctionEnd     :typet :vim_command }
   :|          { :desc "search nomagic"              :value "/\\V\\c"                                   }
-  "]("        { :desc "previous ("                  :value "search('(', 'W')" :typet :vim_function }
-  "])"        { :desc "previous )"                  :value "search(')', 'W')" :typet :vim_function }
-  "[("        { :desc "next ("                      :value "search('(', 'bW')" :typet :vim_function }
-  "[)"        { :desc "next )"                      :value "search(')', 'bW')" :typet :vim_function }
 }
 :t {
   :<C-S-g>    { :desc "[!]Float Term"               :value  "<C-w>:FloatermToggle<ESC>"
@@ -98,6 +94,12 @@
   :<C-S-s>    { :desc "sub +vmagic"                 :value ":s/\\%V\\v"                                }
   :<C-s>      { :desc "sub +i +vmagic"              :value ":s/\\%V\\v\\c"                             }
   "`"         { :desc ""                            :value :zf                                         }
+}
+[:n :v] {
+  "](" { :desc "previous ("  :value "search('(', 'W')" :typet :vim_function }
+  "])" { :desc "previous )"  :value "search(')', 'W')" :typet :vim_function }
+  "[(" { :desc "next ("      :value "search('(', 'bW')" :typet :vim_function }
+  "[)" { :desc "next )"      :value "search(')', 'bW')" :typet :vim_function }
 }
 [:x :n] {
   :ga       { :desc "easy align" :value "<Plug>(EasyAlign)" }
