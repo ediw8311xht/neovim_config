@@ -87,6 +87,11 @@ vim.g.my_highlight = {
     -- ["Value"]      = { gui = "italic", guibg = "NONE", guifg = "#777777", },
   },
   -- markup / markdown
+  ["@comment."] = {
+    ["documentation."] = {
+      lua = { gui="reverse,bold" }
+    }
+  },
   ["@markup."] = {
     ["heading."] = {
       ["1.markdown"] = { gui = "bold", guibg = "black", guifg = "#00ffff", guisp = "black", },
@@ -115,13 +120,13 @@ vim.g.my_highlight = {
     ["call"] = { gui = "NONE", guifg="#55bbbb" },
     ["commonlisp"] = { gui = "NONE", guibg = "#0c942b", guifg="black" },
     ["macro."] =  {
-      ["commonlisp"] = { gui = "NONE", guifg="#eebb00" },
+      commonlisp = { gui = "NONE", guifg="#eebb00" },
     },
   },
   [ "@string.special.symbol.commonlisp" ] = { gui = "none", guibg = "black", guifg="#ff00ff" },
   ["@variable."] = {
     ["parameter."] = {
-      ["commonlisp"] = { gui = "underline", guisp = "#ffffff" },
+      commonlisp = { gui = "underline", guisp = "#ffffff" },
       -- ["commonlisp"] = { gui = "NONE", guibg="#003300", guifg="#aaaaaa" },
     }
   },

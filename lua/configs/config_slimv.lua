@@ -28,13 +28,31 @@ vim.g.slimv_balloon      = 1
 vim.g.slimv_strip_ansi   = 1
 vim.g.slimv_swank_cmd    = 'lua LispConnectSwank()'
 
+--[[ 
+  needed for indent for special forms..... UGH!!!!!
+  and yes i have labels that extend 500 lines.
+--]]
+vim.g.slimv_indent_maxlines = 300
+--[[
+  slimv.vim:1752 (SlimvIndentUnsafe)
+  ```
+  " Handle special indentation style for flet, labels, etc.
+  " When searching for containing forms, don't go back
+  " more than g:slimv_indent_maxlines lines.
+  let backline = max([pnum-g:slimv_indent_maxlines, 1])
+  let indent_keylists = g:slimv_indent_keylists
+  ```
+--]]
 
--- lua <<EOF
--- if vim.fn.executable("zeal") then
---   vim.g.slimv_browser_cmd="zeal"
---   vim.g.slimv_clhs_root="dash://common_lisp/HyperSpec/HyperSpec/Body/"
--- end
--- EOF
+
+--[[
+-- weird how zeal will search correctly, then suddenly won't....
+-- i have no idea why
+if vim.fn.executable("zeal") then
+vim.g.slimv_browser_cmd="zeal"
+vim.g.slimv_clhs_root="dash://common_lisp/HyperSpec/HyperSpec/Body/"
+end
+--]]
 function LispSetup()
   if vim.fn.exists("*PareditInitBuffer") == 1 then
     vim.fn.PareditInitBuffer()

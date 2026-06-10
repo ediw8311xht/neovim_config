@@ -36,7 +36,7 @@ treesitter.setup {
 
   indent = {
     enable = true,
-    disable = {},
+    disable = { "lisp", "commonlisp" },
   },
   highlight = {
     enable = true,

@@ -20,7 +20,7 @@ function MyTreesitterStatus()
   return ts.highlighter.active[fn.bufnr()] ~= nil
 end
 
-function AutoSessionStatusLine()
+function AutoSessionGetCurrentName()
   return require("auto-session.lib").current_session_name(true)
 end
 
@@ -55,6 +55,8 @@ function SetHighlightFromTable(hl_group, hl_table)
   cmd(conc)
 end
 
+---custom highlighting settings
+---runs highlight settings from vim.g.my_highlight with a few additional rules
 function CorrectColors()
   local function Main(hl_group, hl_table)
     local _, test_v = next(hl_table)
@@ -71,6 +73,8 @@ function CorrectColors()
   Main("", vim.g.my_highlight)
 end
 
+---toggle a highlight group
+---toggle value is kept in vim.g.toggle_value__<highlight_group>
 function ToggleHighlight(highlights)
   local seton = IsEmpty(api.nvim_get_hl(0, { name = highlights[1] }))
   for _,c in pairs(highlights) do
@@ -167,6 +171,8 @@ function KeyMapSetter2(map, pre, buffer_only, with_which_key)
     end
   end
 end
+
+---highlight symbol
 function LspDocumentHighlight()
   -- local ignore_modes = { "i", "niI", "niR", "niV", "nt" }
   vim.lsp.buf.clear_references()
@@ -308,6 +314,7 @@ function GetMappings(file)
 end
 
 
+---get visual selection when :'<,'> just won't cut it
 function GetVisualSelection()
   vim.g.region_post = fn.getregionpos(fn.getpos('v'), fn.getpos('.'))
   local col = ""
@@ -343,7 +350,7 @@ function GetBufByName(name)
   return nil
 end
 
---do later---------------------------------------------------{{{
+---do later---------------------------------------------------{{{
 -- function GutterSign()
 --   print("h")
 -- end

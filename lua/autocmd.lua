@@ -10,8 +10,7 @@ LanguageSpecificDir = fn.stdpath("config") .. "/language_specific"
 TemplateDir = home .. "/.config/nvim/language_specific/templates"
 MaxLinesCMP = 2000
 
-------------------------------------------Buffer-Specific
-
+---for filename/filepath specific code when reading in buffer
 local function set_buffer_autocommands(globcomms)
   for glob, cback in pairs(globcomms) do
     vauto({ "BufNewFile", "BufRead" }, {
@@ -21,8 +20,7 @@ local function set_buffer_autocommands(globcomms)
   end
 end
 
-------------------------------------------------Templates
-
+---set templates to use when creating newfile with certain extension
 local function set_templates(exts)
   for ext, options in pairs(exts) do
     vauto({ "BufNewFile" }, {
@@ -36,20 +34,21 @@ local function set_templates(exts)
   end
 end
 
----------------------------------------Changing buffer hide cursor on inactive
+---disable cursor when leaving buffer/window
 api.nvim_create_augroup("cursorline_hide_inactive_buffer", { clear = true })
 vauto({ "BufLeave", "WinLeave" }, {
   group = "cursorline_hide_inactive_buffer",
   callback = function() vim.opt_local.cursorline = false end
 })
 
+---renable cursor when entering buffer/window
 vauto({ "BufEnter", "WinEnter" }, {
   pattern = { "*" },
   group ="cursorline_hide_inactive_buffer",
   callback = function() vim.opt_local.cursorline = true end
 })
 
----------------------------------------Large files disable cmp
+---large files disable cmp
 vauto({ "BufEnter", "BufWinEnter" }, {
   callback = function(args)
     if api.nvim_buf_line_count(args.buf) > MaxLinesCMP then
@@ -59,27 +58,25 @@ vauto({ "BufEnter", "BufWinEnter" }, {
   end
 })
 
----------------------------------------Check-File-Updates
-
+---check file updates
 vauto({ "FocusGained", "CursorHold", "CursorHoldI" }, {
   pattern = { "*" },
   callback = function() cmd("silent! checktime") end
 })
 
-------------------------------------------------VimLeave
-
+---preserve clipboard when exiting
 vauto({ "VimLeave" }, {
   pattern = "*",
   callback = function() ClipBoardExit() end
 })
 
-------------------------------------------------TermOpen
+---TermOpen
 vauto({ "TermOpen" }, {
   pattern = "*",
   callback = function() cmd("setlocal statusline=%{b:term_title}") end
 })
 
--------------------------------------FileType_Formatting
+---FileType_Formatting
 vauto({ "FileType" }, {
   pattern = "*",
   callback = function() cmd("setlocal formatoptions-=c formatoptions-=r formatoptions-=o") end
@@ -89,7 +86,7 @@ vauto({"FileType"}, {
   command = "wincmd L",
 })
 
--- highlight text yank
+---highlight text yank
 vauto({ "TextYankPost" }, {
   pattern = "*",
   callback = function()
@@ -97,7 +94,8 @@ vauto({ "TextYankPost" }, {
     -- MapCommandsToReg(vim.v.event)
   end
 })
--- for make
+
+---for Makefiles
 vauto({"BufNewFile", "Filetype" }, {
   pattern = "Makefile",
   callback = function(args)
@@ -106,8 +104,7 @@ vauto({"BufNewFile", "Filetype" }, {
   end
 })
 
----------------------------------------ExtensionSpecific
-
+---special settings based on filepath/filename 
 local globcomms = {
   [ "*.page"                                 ] = function() dofile( LanguageSpecificDir .. "/gitit.lua" ) end,
   [ "~/.bashrc"                              ] = function() dofile( LanguageSpecificDir .. "/bashrc.lua" ) end,
@@ -115,12 +112,16 @@ local globcomms = {
   [ "~/TEST/QUICK/*.cpp"                     ] = function() cmd.source( LanguageSpecificDir .. "/quick_cpp.vim"        ) end,
   [ "*.asd"                                  ] = function() vim.bo.filetype="commonlisp" ; vim.bo.syntax="commonlisp" end,
 }
--- sets file with templates
-local exts = {
-  ["page"]   = { chmod = "600" },
-  ["md"]     = { chmod = "600" },
-  ["lisp"]   = { chmod = "600" },
 
+---sets templates for extension. on new file with extension will read in template.
+---options are passed to ReadInFile
+local exts = {
+  ["page"]     = { }, -- gitit
+  ["md"]       = { },
+  ["lisp"]     = { },
+  ["nvim.lua"] = { }, -- this sets project settings for a directory (must trust if want to use)
+
+  --obviously these files will have a shebang to allow executing
   ["sh"]     = { chmod = "700" },
   ["py"]     = { chmod = "700" },
   ["kalker"] = { chmod = "700" },
@@ -133,17 +134,17 @@ local exts = {
   ["tcl"]    = { chmod = "700" },
 }
 
+set_templates(exts)
+set_buffer_autocommands(globcomms)
+
+-- {{{
 -- vauto({ "BufNewFile", "BufRead" }, {
 --   pattern = "*.page",
 --   callback = function()
 --     cmd( "source " .. LanguageSpecificDir .. "/gitit.vim")
 --   end,
 -- })
-set_templates(exts)
-set_buffer_autocommands(globcomms)
-
--- {{{
-----------------------------------------------YankedText
+---YankedText
 -- -- For use with MapCommandsToReg
 -- vim.g.reg_filter_map = {
 --   [ 'normal' ] = { 'd', 'c', 'D', 'C' },

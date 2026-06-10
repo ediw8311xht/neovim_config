@@ -47,17 +47,10 @@ fu! SetColScheme(nextprevious)
   call SetScheme(g:MySchemes[0])
 endfu
 
-"let TogSL = {-> QuickToggle(&ls, 0, "set ru \| set ls=2", "set noru \| set ls=0") }
-"let TogCC = {-> QuickToggle(&cc, 0, "set cc=80", "set cc=0") }
 let TogVirtualEdit  = {-> QuickToggle(&virtualedit, "none", "set ve=all \| echo &ve", "set ve=none \| echo &ve") }
 let TogLastStatus   = {-> VarToggle("laststatus"  , 2 , 0             ) }
 let TogColorColumn  = {-> VarToggle("colorcolumn" , "0" , "80" , "window" ) }
 let TogFoldColumn   = {-> VarToggle("foldcolumn"  , '0' , '2'  , "window" ) }
-
-":setl[ocal] {option}<  Set the effective value of {option} to its global
-"      value by copying the global value to the local value.
-"let VarToggle = {var, v1, v2 -> execute("set ".."var="..v2) }
-"" setbufvar(bufnr(), var, (var == v1 ? v1 : v2))  }
 
 fu! VarToggle(var, v1, v2, type="global")
   if a:type == "window"
@@ -96,6 +89,14 @@ fu! Cycle(checkarr, cvar, doarr, nextprevious)
     let l:i += 1
   endwhile
 endfu
+
+"{{{
+"let TogSL = {-> QuickToggle(&ls, 0, "set ru \| set ls=2", "set noru \| set ls=0") }
+"let TogCC = {-> QuickToggle(&cc, 0, "set cc=80", "set cc=0") }
+":setl[ocal] {option}<  Set the effective value of {option} to its global
+"      value by copying the global value to the local value.
+"let VarToggle = {var, v1, v2 -> execute("set ".."var="..v2) }
+"" setbufvar(bufnr(), var, (var == v1 ? v1 : v2))  }
 
 "fu! Web(url)
 "  enew
@@ -154,4 +155,4 @@ endfu
 "  return l:coll
 "endfu
 "vnoremap <leader>V <CMD>let g:region = GetVisualSelection()<CR>
-
+"}}}
