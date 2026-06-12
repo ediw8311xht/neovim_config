@@ -1,9 +1,4 @@
-
-require('telescope').setup({
-  -- pickers = {
-  --   buffers = {
-  --   },
-  -- },
+MyTelescopeOpts = {
   defaults = {
     color_devicons = true,
     disable_devicons = false,
@@ -11,7 +6,7 @@ require('telescope').setup({
     disable_coordinates = true,
     path_display = { "smart", "truncate" },
     multi_icon = "",
-    layout_strategy = 'horizontal',
+    layout_strategy = "horizontal",
     layout_config = {
       width = 0.95,
     },
@@ -27,16 +22,21 @@ require('telescope').setup({
     },
     mappings = {
       i = {
-        [ '<C-t>'   ] = require('telescope.actions.layout').toggle_preview,
-        [ '<C-S-t>' ] = require('telescope.actions').select_tab,
-        [ '<C-g>'   ] = require('telescope.actions').preview_scrolling_down,
-        [ '<C-h>'   ] = require('telescope.actions').preview_scrolling_up,
-        [ '<C-u>'   ] = require('telescope.actions').results_scrolling_down,
-        [ '<C-d>'   ] = require('telescope.actions').results_scrolling_up,
-        [ '<C-s>'   ] = require('telescope.actions').select_horizontal,
-        [ '<C-v>'   ] = require('telescope.actions').select_vertical,
-        [ '<C-S-d>' ] = require('telescope.actions').delete_buffer,
-      }
-    }
-  }
-})
+        ["<C-t>"] = require("telescope.actions.layout").toggle_preview,
+        ["<C-S-t>"] = require("telescope.actions").select_tab,
+        ["<C-g>"] = require("telescope.actions").preview_scrolling_down,
+        ["<C-h>"] = require("telescope.actions").preview_scrolling_up,
+        ["<C-u>"] = require("telescope.actions").results_scrolling_down,
+        ["<C-d>"] = require("telescope.actions").results_scrolling_up,
+        ["<C-s>"] = require("telescope.actions").select_horizontal,
+        ["<C-v>"] = require("telescope.actions").select_vertical,
+        ["<C-S-d>"] = require("telescope.actions").delete_buffer,
+      },
+    },
+  },
+}
+-- require("telescope").setup(vim.g.telescope_opts)
+require("telescope").setup(MyTelescopeOpts)
+-- local builtin = require("telescope.builtin")
+-- local themes = require("telescope.themes")
+-- builtin.find_files(themes.get_ivy(vim.g.telescope_opts))

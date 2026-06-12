@@ -62,6 +62,7 @@ LEADER_MAPPINGS = {
     Mn    = { desc='new file',                  cmd='enew'},
     Mt    = { desc='new tab',                   cmd='tabnew'},
     O     = { group="open"},
+    Of    = { desc="find file",                 cmd="Telescope find_files" },
     Ob    = { desc='open in browser',           cmd='silent !"${BROWSER:-"brave"}"  %'},
     Oq    = { desc='open in qutebrowser',       cmd='silent !"qutebrowser" %'},
     Or    = { desc='recent files',              cmd='Telescope oldfiles'},

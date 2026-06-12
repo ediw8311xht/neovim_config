@@ -5,9 +5,6 @@ require("auto-session").setup({
   preserve_buffer_on_restore = false,
   purge_after_minutes = nil,
 
-  picker_opts = {
-    preview = true,
-  },
   session_lens = {
     picker = "telescope", -- "telescope"|"snacks"|"fzf"|"select"|nil Pickers are detected automatically but you can also set one manually. Falls back to vim.ui.select
     load_on_setup = true, -- Only used for telescope, registers the telescope extension at startup so you can use :Telescope session-lens
@@ -23,6 +20,19 @@ require("auto-session").setup({
       control_filename = "session_control.json", -- File name of the session control file
     },
     -- picker_opts = nil, -- Table passed to Telescope / Snacks / Fzf-Lua to configure the picker. See below for more information
+
+    picker_opts = {
+      border = true,
+      defaults = {
+        preview = true,
+      },
+      layout_strategy = 'horizontal',
+      layout_config = {
+        height = 0.9,
+        width = 0.9,
+      },
+      previewer = true,
+    },
   },
 })
 
