@@ -54,14 +54,18 @@ cmp.setup({
     ["<C-u>"] = cmp.mapping.scroll_docs(-4),
     ["<C-d>"] = cmp.mapping.scroll_docs(4),
     ["<C-y>"] = cmp.mapping.confirm({ select = true }),
-    ["<C-Space>"] = cmp.mapping.complete(),
     ["<C-S-e>"] = cmp.mapping.close(),
+    ["<C-Space>"] = cmp.mapping.complete(),
+    ---specific completion sources
     ["<C-S-y>"] = cmp.mapping.complete({
       config = { sources = { { name = "treesitter" } } },
     }),
     ["<C-S-p>"] = cmp.mapping.complete({
       config = { sources = { { name = "path" }, { name = "dotenv" } } },
     }),
+    ["<C-S-S>"] = cmp.mapping.complete({
+      config = { sources = { { name = "dictionary" } } },
+    })
   },
   sources = cmp.config.sources({
     { name = "nvim_lsp" },

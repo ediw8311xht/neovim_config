@@ -116,17 +116,17 @@ local commonlisp_leader_mappings = {
     cf  = { desc='format',                     cmd='Autoformat | silent! %s/([ ]\\+/(/g' },
 
     A   = { group="lisp"                       },
-    Ac  = { desc='complete lisp functions',    vim_command='feedkeys(":lua Lisp\\t", "t")' },
+    Ac  = { desc='complete lisp functions',    vim_call='feedkeys(":lua Lisp\\t", "t")' },
 
     Ae  = { group="lisp eval"                  },
     Aee = { desc="slimv eval put into 'e",     default='"e\\e' },
     Aeh = { desc='repl eval from history',     default=LispEvalFromHistory },
     Aes = { desc='repl eval from saved forms', default=LispEvalSavedForms },
 
-    Al  = { desc='load system',                vim_command='SlimvEvalForm("(asdf:load-system :" .. g:lisp_session_system .. ")")' },
+    Al  = { desc='load system',                vim_call='SlimvEvalForm("(asdf:load-system :" .. g:lisp_session_system .. ")")' },
     Ar  = { desc='reload slimv',               default='\\Q\\c' },
     As  = { desc='lisp setup',                 default=LispQuickSetup },
-    At  = { desc='test system',                vim_command='SlimvEvalForm("(asdf:test-system :" .. g:lisp_session_system .. ")")' },
+    At  = { desc='test system',                vim_call='SlimvEvalForm("(asdf:test-system :" .. g:lisp_session_system .. ")")' },
     Au  = { desc='clear systems',              default=LispClearAllSystems },
 
     Aq  = { group="lisp quicklisp"             },
@@ -135,8 +135,10 @@ local commonlisp_leader_mappings = {
     Ah  = { group="lisp help"                  },
     Ahp = { desc='paredit help',               cmd='execute (":vsplit " .. expand(g:paredit_help))' },
     Ahs = { desc='slime help',                 cmd='execute (":vsplit " .. expand(g:slime_help))' },
+    ASc = { desc="set clesh shebang",          lua_call='vim.api.nvim_buf_set_lines(0, 0, 0, false, {"#!/usr/bin/env clesh_script.sh"})' },
     -- Se  = { false, 'slimv eval at mark e',      '\'e' },
   }
 }
 
 KeyMapSetter2(commonlisp_leader_mappings, '<leader>', true, true)
+

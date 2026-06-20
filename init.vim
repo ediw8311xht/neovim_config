@@ -41,4 +41,3 @@ lua require('base')
 
 colorscheme pop-punk
 lua CorrectColors()
-

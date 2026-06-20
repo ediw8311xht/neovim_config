@@ -3,6 +3,7 @@
 -- vim.highlight.create
 -- }}}
 vim.g.treesitter_disable = { tex = true }
+vim.g.treesitter_with_vim_regex_highlighting = { lua = true }
 vim.g.python3_host_prog="/usr/bin/python"
 
 vim.g.MyDefaultScheme = { 'pop-punk', 'lua CorrectColors()' }
@@ -95,6 +96,12 @@ vim.g.fzf_colors = {
 vim.g.fzf_layout = {
   [ 'window' ] = { width = 0.9, height = 0.9, border = "sharp" } --, border = 'no' }
 }
+
+-- command! -bang -nargs=? -complete=dir Files
+--     \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+-- vim.api.nvim_create_user_command("GotoPrevFunctionStart", function()
+--   M.GoToFunction({ reverse = true })
+-- end, { desc = "Go to previous function start", nargs = 0 })
 
 -- {{{
 -- `Colors`   |  `fzf#vim#colors([spec dict], [fullscreen bool])`

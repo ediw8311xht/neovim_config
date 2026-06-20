@@ -1,6 +1,9 @@
--- require("variables")
--- local vauto = va.nvim_create_autocmd
--- local vc    = vim.cmd
+
+-- local api = vim.api.nvim_create_autocmd
+-- local autocmd = vim.api.nvim_create_autocmd
+-- local cmd     = vim.cmd
+-- local fn      = vim.fn
+
 require("helper_functions")
 local home   = vim.env.HOME
 local api    = vim.api
@@ -112,7 +115,7 @@ function KeyMapSetter(map, pre, buffer_only, with_which_key)
       if tbl.cmd then
         -- doesn't change modes *:map-cmd* / *<CMD>*
         keymap_cmd = "<CMD>" .. command .. "<CR>"
-      elseif tbl.vim_command then
+      elseif tbl.vim_call then
         keymap_cmd = (tbl.print and ":echo " or ":call ") .. command .. "<CR>"
       elseif tbl.lua_call then
         keymap_cmd = (tbl.print and ":lua= " or ":lua ") .. command .. "<CR>"
@@ -136,8 +139,8 @@ function KeyMapSetter2(map, pre, buffer_only, with_which_key)
     if tbl.cmd then
       -- doesn't change modes *:map-cmd* / *<CMD>*
       return "<CMD>" .. tbl.cmd .. "<CR>"
-    elseif tbl.vim_command then
-      return (tbl.print and ":echo " or ":call ") .. tbl.vim_command .. "<CR>"
+    elseif tbl.vim_call then
+      return (tbl.print and ":echo " or ":call ") .. tbl.vim_call .. "<CR>"
     elseif tbl.lua_call then
       return (tbl.print and ":lua= " or ":lua ") .. tbl.lua_call .. "<CR>"
     elseif tbl.default then
@@ -284,19 +287,34 @@ function LspStatus()
   end
 end
 
----Get part of file path
----@param options {
+---get part of file path
+---@param options? {
 ---               tilde_home: boolean,
 ---               expand: string,
 ---               }
 ---@return string
 function GetFile(options)
-  local opts = TableDifference({tilde_home = false, expand = "%"}, options, false)
+  local opts = TableDifference({tilde_home = false, expand = "%"}, (options or {}), false)
   local file = fn.expand(opts.expand)
   if opts.tilde_home then
     return fn.substitute(file, '\\V' .. home, "~", "")
   else
     return file
+  end
+end
+
+---Get extension of file
+---@param filename? string
+---@param options? {
+---               glob: boolean,
+---               }
+---@return string
+function GetExtension(filename, options)
+  local glob = options and options.glob
+  if glob or not filename then
+    return vim.fn.expand("%" or filename .. ":e")
+  else
+    return filename:match("([^.]+$)$")
   end
 end
 
@@ -326,6 +344,7 @@ end
 
 ---get full path correctly formatted as a string for use with require
 ---@param table_or_string string|string[]
+---@return string|string,integer
 function MakeForRequire(table_or_string)
   ---@diagnostic disable-next-line: param-type-mismatch
   local string = type(table_or_string) == "string" and table_or_string or table.concat(table_or_string, "/")
@@ -338,7 +357,7 @@ function MakeForRequire(table_or_string)
   -- return a
 end
 
----Get buffer number by name
+---get buffer number by name
 ---@param name string
 ---@return integer|nil @buffer number or nil if matching buffer not found
 function GetBufByName(name)
@@ -350,6 +369,31 @@ function GetBufByName(name)
   return nil
 end
 
+---browse buffers with file extension
+---@param ext? string
+---@return nil
+function FZFBuffersWithExtension(ext)
+  local buffers = {}
+  ---@diagnostic disable-next-line: redefined-local
+  local ext = ext or GetExtension("%", {glob=true})
+  for _,bufnr in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_is_valid(bufnr) and vim.bo[bufnr].buflisted then
+      local buf_ext = GetExtension('#' .. bufnr, { glob=true })
+      if buf_ext == ext then table.insert(buffers, vim.api.nvim_buf_get_name(bufnr)) end
+    end
+  end
+  vim.fn['fzf#vim#buffers']("", buffers, vim.fn['fzf#vim#with_preview']())
+end
+--
+--
+--
+-- vim.api.nvim_create_user_command("BuffersWithExtension", function(opts)
+--   return FZFBuffersWithExtension()
+-- end, { desc = "Browse open buffers with specific extension (default current extension)", nargs = "?" })
+
+-- command! -bang -nargs=? -complete=dir Files
+--     \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+
 ---do later---------------------------------------------------{{{
 -- function GutterSign()
 --   print("h")
@@ -358,7 +402,6 @@ end
 -- function GutterNum()
 --   print("n")
 -- end
-
 -------------------------------------------------------------
 -- for id in synstack(line("."), col("."))
 --    echo synIDattr(id, "name")

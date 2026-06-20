@@ -4,7 +4,6 @@ DisabledLangs = { "txt", "help", "vimdoc", "vim", "doc", "man", "plantuml", "lat
 DisabledLangs = {}
 --]]
 
-local treesitter = require('nvim-treesitter')
 
 --[[
 disable = function(lang, buf)
@@ -20,6 +19,7 @@ disable = function(lang, buf)
 end,
 --]]
 
+local treesitter = require('nvim-treesitter')
 treesitter.setup {
   -- A list of parser names, or "all" (the five listed parsers should always be installed)
   ensure_installed = {},
@@ -41,7 +41,8 @@ treesitter.setup {
   highlight = {
     enable = true,
     disable = { "zathurarc" },
-    -- additional_vim_regex_highlighting = false,
+    -- additional_vim_regex_highlighting = true,
+    -- additional_vim_regex_highlighting = { "lisp", "lua", "vim" },
   },
   incremental_selection = {
     enable = true
@@ -69,13 +70,16 @@ treesitter.setup {
 vim.api.nvim_create_autocmd('FileType', {
   pattern = { "*" },
 
-  callback = function(args)
-    if not vim.g.treesitter_disable[args.match] then
+  callback = function(ev)
+    if not vim.g.treesitter_disable[ev.match] then
       pcall(vim.treesitter.start)
+      if vim.g.treesitter_with_vim_regex_highlighting[ev.match] then
+        vim.bo[ev.buf].syntax = 'ON'
+      end
     end
   end,
 })
-
+--
 --[[
 local my_installed_langs = {
   'bash',

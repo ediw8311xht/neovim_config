@@ -7,6 +7,28 @@ toc: true
 
 
 
+# syntax highlighting
+
+## treesitter
+
+- regex syntax (default vim syntax) is disabled when calling `vim.treesitter.start()`{.lua}
+  - ``` vimdoc
+    start({bufnr}, {lang}) *vim.treesitter.start()*
+    [...]
+      Note: By default, disables regex syntax highlighting, which may be
+      required for some plugins. In this case, add `vim.bo.syntax = 'ON'` after
+      the call to `start`.
+    [...]
+    Example: >lua
+        vim.api.nvim_create_autocmd( 'FileType', { pattern = 'tex',
+            callback = function(ev)
+                vim.treesitter.start(ev.buf, 'latex')
+                vim.bo[ev.buf].syntax = 'ON'  -- only if additional legacy syntax is needed
+            end
+        })
+    <
+    ```
+
 # reset option back to default
 
 - `:set {option}&`{.vim}

@@ -26,11 +26,13 @@ vim.g.my_highlight = {
     SpellBad        = { gui = "undercurl",   guibg = "NONE",    guifg = "#aaaaaa", guisp = "#ff0000", },
     -- Tree Sitter --
     TSCurrentScope  = { gui = "NONE", guibg = "#090909" },
+    -- Custom ---
+    -- LuaDocLine = { gui = "NONE", guibg = "#FF0000", guifg="#0099FF" },
   },
   man = {
     Bold           = { gui = "underline", guisp="#FFAA00" },
     Italic         = { gui = "italic",    guibg = "black",   guifg = "#999999" },
-    SectionHeading = { gui="bold", guibg = "#bbdc00", guifg = "black", cterm = "NONE", ctermfg = "black" },
+    SectionHeading = { gui="none", guifg="#44FF44" },
   },
   Window = {
     Active   = { guibg = "NONE" },
