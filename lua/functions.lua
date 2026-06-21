@@ -312,7 +312,7 @@ end
 function GetExtension(filename, options)
   local glob = options and options.glob
   if glob or not filename then
-    return vim.fn.expand("%" or filename .. ":e")
+    return vim.fn.expand( (filename or "%" ) .. ":e")
   else
     return filename:match("([^.]+$)$")
   end

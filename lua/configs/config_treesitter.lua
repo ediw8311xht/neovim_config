@@ -41,8 +41,6 @@ treesitter.setup {
   highlight = {
     enable = true,
     disable = { "zathurarc" },
-    -- additional_vim_regex_highlighting = true,
-    -- additional_vim_regex_highlighting = { "lisp", "lua", "vim" },
   },
   incremental_selection = {
     enable = true
