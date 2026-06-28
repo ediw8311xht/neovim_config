@@ -1,18 +1,15 @@
-;!/usr/bin/env -S sbcl --script
+#!/usr/bin/env -S clesh_script.sh -s
 
-(load "~/.sbclrc")
-
-; required packages
-; (require :import-package-1) ; require here
-; ..
-; (require :import-package-n)
-; (defpackage :my-package-name
-;   (:use :cl :required-package :required-package-n)
-;   (:export #:main))
+; (require :import-package-1)
+; (import 'clesh:script)
 
 
-; (in-package :my-package-name)
+(defun main (&rest args)
+  (pprint args)
+  )
 
-(defun main ())
+   
+
+(apply #'main (cdr sb-ext:*posix-argv*))
 
    

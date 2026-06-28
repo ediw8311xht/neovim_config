@@ -26,9 +26,11 @@ local M = {
   comment_nodes = { "comment", "comment_content" },
   comment_block_nodes = { "block_comment" },
   function_nodes = TableSetDefault({
-    ["lua"] = "((function_declaration) @func_decl)",
-    ["lisp"] = "((defun) @func_decl)",
+    ["lua"]        = "((function_declaration) @func_decl)",
+    ["lisp"]       = "((defun) @func_decl)",
     ["commonlisp"] = "((defun) @func_decl)",
+    --- just because i like navigating tags
+    ["html"]       = "((start_tag) @func_decl)",
   }, "((function_definition)  @func_decl)"),
   auto_fold_augroup = nil,
   -- hle = vim.treesitter.highlighter

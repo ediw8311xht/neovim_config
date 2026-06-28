@@ -20,6 +20,7 @@ vim.g.MySchemes = {
     { 'industry'       ,   "."  },
     { 'murphy'         ,   "."  },
     { 'vividchalk'     ,   "."  },
+    { 'everforest'     ,   "."  },
 }
 
 vim.g.MyColorTable = {

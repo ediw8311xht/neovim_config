@@ -57,7 +57,7 @@ vim.g.my_highlight = {
     Border     = { guibg = "black", guifg = "black", },
   },
   CursorLine = {
-    [""]     = { gui = "underline", guisp = "#444444", guibg = "black", guifg = "NONE",    },
+    [""]     = { gui = "underline", guisp = "#444444", guibg = "NONE", guifg = "NONE",    },
     Nr   = { gui = "NONE", guibg = "#111111", guifg = "#ff9900", },
     Sign = { gui = "NONE", guibg = "black", guifg = "black", },
   },

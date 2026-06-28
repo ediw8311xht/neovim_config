@@ -88,14 +88,14 @@ LEADER_MAPPINGS = {
     Iy    = { desc='[!]lsp_lines',              default=require("lsp_lines").toggle },
     ---[group] misc
     M     = { group="misc"},
-    MT    = { desc='new terminal',              cmd='term'},
+    Mt    = { desc='new terminal',              cmd='term'},
     Mc    = { desc='set pwd to currfile',       cmd='cd %:p:h'},
     Me    = { desc='telescope',                 cmd='Telescope'},
     ---[group] open
     O     = { group="open"},
     Ob    = { desc='[open] buffers with extension', default=FZFBuffersWithExtension },
-    OBb   = { desc='[open] w/ $BROWSER',        cmd='silent !"${BROWSER:-"brave"}"  %'},
-    OBq   = { desc='[open] w/ qutebrowser',     cmd='silent !"qutebrowser" %'},
+    OBb   = { desc='[open] w/ $BROWSER',        cmd='silent !"${BROWSER:-"brave"}"  %:p'},
+    OBq   = { desc='[open] w/ qutebrowser',     cmd='silent !"qutebrowser" %:p'},
     ONb   = { desc='[open-new] buffer',         cmd='enew'},
     ONf   = { desc="[open] file",               cmd="Telescope find_files" },
     ONn   = { desc='[open-new] file',           cmd='enew'},
@@ -103,10 +103,10 @@ LEADER_MAPPINGS = {
     Ot    = { desc='[open-new] tab',            cmd='tabnew'},
     ---[group] execution
     S     = { group="execution"},
-    SX    = { desc='[execute] w/ args',         default=':!%'},
-    Sl    = { desc='luafile',                   cmd='luafile %'},
+    SX    = { desc='[execute] w/ args',         default=':!%:p'},
+    Sl    = { desc='luafile',                   cmd='luafile %:p'},
     Ss    = { desc='[source] current file',     cmd='%so'},
-    Sx    = { desc='[execute]',                 cmd='!%'},
+    Sx    = { desc='[execute]',                 cmd='!%:p'},
     ---[group] treesitter
     T     = { group="treesitter"},
     Tl    = { desc='[show] treesitter parser',  lua_call='vim.treesitter.get_parser(0):lang()', print=true},

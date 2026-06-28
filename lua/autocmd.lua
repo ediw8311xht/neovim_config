@@ -120,18 +120,18 @@ local exts = {
   ["md"]       = { },
   ["lisp"]     = { },
   ["nvim.lua"] = { }, -- this sets project settings for a directory (must trust if want to use)
+  ["html"]     = { },
 
-  --obviously these files will have a shebang to allow executing
+  -- these files will have a shebang to allow executing
   ["sh"]     = { chmod = "700" },
   ["py"]     = { chmod = "700" },
   ["kalker"] = { chmod = "700" },
   ["exs"]    = { chmod = "700" },
-  ["tex"]    = { chmod = "700" },
   ["ex"]     = { chmod = "700" },
-  ["html"]   = { chmod = "700" },
   ["cpp"]    = { chmod = "700" },
   ["hs"]     = { chmod = "700" },
   ["tcl"]    = { chmod = "700" },
+  ["tex"]    = { chmod = "700" }, -- maybe
 }
 
 set_templates(exts)

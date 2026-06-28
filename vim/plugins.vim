@@ -102,6 +102,7 @@ call plug#begin()
     endfor
     Plug 'AndrewRadev/tagalong.vim'
     Plug 'alvan/vim-closetag'
+    packadd! everforest 
 call plug#end()
 " 
 

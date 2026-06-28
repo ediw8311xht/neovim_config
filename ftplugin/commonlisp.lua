@@ -43,6 +43,19 @@ function LispEvalForm(form, options)
   return nil
 end
 
+function LispEvalForms(forms, options)
+  for _,f in ipairs(forms) do
+    local form, lopts = nil, options
+    if type(f) == table then
+      form = f[0]
+      lopts = f[1]
+    else
+      form = f
+    end
+    LispEvalForm(form, lopts)
+  end
+end
+
 function LispEvalFormAddToHistory(form, options)
   local opts = options or {}
   opts.add_to_history = true
@@ -58,26 +71,18 @@ function LispAddToCentralRegistry(directory)
 end
 
 function LispAddAllDirectories() ForEach(vim.g.lisp_directories, LispAddToCentralRegistry) end
-
 function LispLoadSystem(system)  LispEvalForm({ '(asdf:load-system :%s)', system } ) end
 function LispLoadAllSystems()    ForEach(vim.g.lisp_systems, LispLoadSystem) end
-
 function LispClearSystem(system) LispEvalForm({ '(asdf:clear-system :%s)', system }) end
 function LispClearAllSystems()   ForEach(vim.g.lisp_systems, LispClearSystem) end
-
 
 function LispQuickSetup()
   LispAddAllDirectories()
   LispLoadAllSystems()
 end
 
-
 function LispGetReplBuf()
-  if vim.g.slimv_loaded == 1 then
-    return GetBufByName(vim.g.slimv_repl_name)
-  else
-    return nil
-  end
+  return (vim.g.slimv_loaded == 1 and GetBufByName(vim.g.slimv_repl_name)) or nil
 end
 
 function LispEvalFZF(coms, options)
@@ -105,9 +110,10 @@ function LispEvalInput(options)
   vim.ui.input({prompt=prompt}, fn)
 end
 
-function LispEvalFromHistory() LispEvalFZF(vim.g.slimv_cmdhistory, {error="No command history found."}) end
-function LispEvalSavedForms() LispEvalFZF(vim.g.lisp_saved_forms, {error="No command history found."}) end
-function LispQlQuickload() LispEvalInput({prompt="quickload package: ", printf='(ql:quickload "%s")', add_to_history=nil }) end
+function LispEvalFromHistory()  LispEvalFZF(vim.g.slimv_cmdhistory, {error="No command history found."}) end
+function LispEvalSavedForms()   LispEvalFZF(vim.g.lisp_saved_forms, {error="No command history found."}) end
+function LispEvalStartupForms() LispEvalForms(vim.g.lisp_startup_forms) end
+function LispQlQuickload()      LispEvalInput({prompt="quickload package: ", printf='(ql:quickload "%s")', add_to_history=nil }) end
 
 local commonlisp_leader_mappings = {
   n = {
@@ -122,6 +128,7 @@ local commonlisp_leader_mappings = {
     Aee = { desc="slimv eval put into 'e",     default='"e\\e' },
     Aeh = { desc='repl eval from history',     default=LispEvalFromHistory },
     Aes = { desc='repl eval from saved forms', default=LispEvalSavedForms },
+    AeS = { desc="eval startup forms",         default=LispEvalStartupForms },
 
     Al  = { desc='load system',                vim_call='SlimvEvalForm("(asdf:load-system :" .. g:lisp_session_system .. ")")' },
     Ar  = { desc='reload slimv',               default='\\Q\\c' },
