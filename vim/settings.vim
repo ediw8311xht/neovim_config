@@ -20,7 +20,7 @@ set magic
 set modelines=5
 set nocompatible
 set nowrap
-"-------------------line numbers 
+"-------------------line numbers
 set number
 set relativenumber
 set ruler
@@ -63,11 +63,12 @@ set foldcolumn=1
 set sessionoptions=blank,buffers,curdir,help,tabpages,winsize,winpos,terminal,globals
 "set viewoptions=cursor,folds
 set viewoptions=cursor
-set fillchars=fold:\ ,horiz:█,vert:░ 
+set fillchars=fold:\ ,horiz:█,vert:░
 set background=dark
 set scrolloff=4
 set exrc "enable project-local configuration |exrc|
 set secure
+set cmdwinheight=30 "for cmd history `q:`
 "for fennel nfnl
 autocmd FileType bash setlocal keywordprg=:Man
 

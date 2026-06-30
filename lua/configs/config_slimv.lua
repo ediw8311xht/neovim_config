@@ -3,14 +3,14 @@
 -- "let g:slimv_disable_clojure = 1 "disable for clojure
 -- "let g:slimv_disable_scheme = 1 "disable for scheme
 function LispConnectSwank()
-  local dir = vim.g.project_directory or vim.fn.getcwd()
+  local dir = vim.g.project_directory or '${PWD}'
   vim.cmd['!'] {
     'kitty @ launch',
       '--type=tab',
       '--location=first',
       '--tab-title="swank"',
       '--keep-focus',
-      vim.fn.printf("--cwd='%s'", dir),
+      vim.fn.printf('--cwd="%s"', dir),
     'sbcl',
       '--load', '"${XDG_DATA_HOME}/nvim/plugged/slimv/slime/start-swank.lisp"',
     '&'
