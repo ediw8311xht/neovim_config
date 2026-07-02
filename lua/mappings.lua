@@ -33,7 +33,7 @@ LEADER_MAPPINGS = {
     z     = { desc='',                          default='z'},
     ---[misc-special]
     [ ','       ] = { desc='alternate file',    default='<C-^>'},
-    [ '.'       ] = { desc='next window',       default='<C-w>w'},
+    [ '.'       ] = { desc='next window',       default=':keepalt wincmd w<CR>'},
     [ '-'       ] = { desc='resize split -20',  default='20<c-w><'},
     [ '<C-S-x>' ] = { desc='execute with args', default=':!%:p '},
     [ '<C-s>'   ] = { desc='sub in all buffs',  default=':budfo %s/\\v\\c'},

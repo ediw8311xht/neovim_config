@@ -120,7 +120,7 @@ function LispQlQuickload()      LispEvalInput({prompt="quickload package: ", pri
 
 local commonlisp_mappings = {
   [ {"n", "i", "v"} ] = {
-    ["<C-S-i>"] = { desc="toggle floating repl", cmd='keepalt lua FloatingWindowToggle("cl-repl")' },
+    ["<C-S-i>"] = { desc="toggle floating repl", cmd='keepalt lua FloatingWindowToggle("cl-repl", false, {height=80})' },
   },
 }
 local commonlisp_leader_mappings = {

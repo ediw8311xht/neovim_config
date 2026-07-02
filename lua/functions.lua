@@ -419,7 +419,7 @@ function FloatingWindowToggle(buf, enter, options)
     border = { "╔", "═", "╗", "║", "╝", "═", "╚", "║" },
   }
   local opts = TableDifference(default_opts, options or {}, false)
-  return api.nvim_open_win(buffer or 0, enter or true, opts)
+  return api.nvim_open_win(buffer or 0, enter, opts)
 end
 --
 --
