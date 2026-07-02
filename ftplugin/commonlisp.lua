@@ -115,6 +115,14 @@ function LispEvalSavedForms()   LispEvalFZF(vim.g.lisp_saved_forms, {error="No c
 function LispEvalStartupForms() LispEvalForms(vim.g.lisp_startup_forms) end
 function LispQlQuickload()      LispEvalInput({prompt="quickload package: ", printf='(ql:quickload "%s")', add_to_history=nil }) end
 
+
+-- function CreateToggle(options: { namespace: string, scope: string, description: string, command_name: string, var: string, on: function, off: function })
+
+local commonlisp_mappings = {
+  [ {"n", "i", "v"} ] = {
+    ["<C-S-i>"] = { desc="toggle floating repl", cmd='keepalt lua FloatingWindowToggle("cl-repl")' },
+  },
+}
 local commonlisp_leader_mappings = {
   n = {
     x   = { desc='execute [sbcl]',             cmd='!sbcl --script "%"' },
@@ -147,5 +155,6 @@ local commonlisp_leader_mappings = {
   }
 }
 
+KeyMapSetter2(commonlisp_mappings,        '', true, true)
 KeyMapSetter2(commonlisp_leader_mappings, '<leader>', true, true)
 

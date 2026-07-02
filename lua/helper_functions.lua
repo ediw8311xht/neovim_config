@@ -9,7 +9,7 @@ end
 ---@return T
 function DeepCopy(value)
   local deep_copy = {}
-  if type(value) ~= table then
+  if type(value) ~= "table" then
     return value
   end
   for k,v in table do
@@ -86,31 +86,36 @@ function Split(s, f)
   return MapSplit(s, f)
 end
 
----@param table table
+---@param tbl table
 ---@param func function<any, any> @func(value, key)
-function ForEach(table, func)
-  for k,v in pairs(table) do
+function ForEach(tbl, func)
+  for k,v in pairs(tbl) do
     func(v, k)
   end
 end
 
----@param table table
+---@param tbl table
 ---@param func fun(value, key): new_value: any, new_key: any
-function Map(table, func)
-  local new_table = {}
-  for k,v in pairs(table) do
+function Map(tbl, func)
+  local new_tbl = {}
+  for k,v in pairs(tbl) do
     local nv, nk = func(v, k)
-    new_table[nk] = nv
+    if nk == nil then
+      table.insert(new_tbl, nv)
+    else
+      new_tbl[nk] = nv
+    end
   end
-  return new_table
+  return new_tbl
 end
 
----@param table table
+---@param tbl table
 ---@param func fun(accum, value, key): any
+---@param initial? any
 ---@return any @accumulation
-function Reduce(table, func, initial)
+function Reduce(tbl, func, initial)
   local accum = initial
-  for k,v in pairs(table) do
+  for k,v in pairs(tbl) do
     accum = func(accum, v, k)
   end
   return accum

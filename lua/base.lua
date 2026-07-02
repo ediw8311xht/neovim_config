@@ -47,7 +47,7 @@ function CatchError(func, options)
   return {success=success, output=output}
 end
 --[[ | <==
-     | top level functions top level ]]
+     | top level functions ]]
 
 -- lua configs for plugins
 local config_files   = vim.fn.globpath(vim.g.dir_config .. "/lua/configs/",  "*.lua", 0, 1)
@@ -89,11 +89,13 @@ local fullscreen_window_toggle = {
   var = "on",
   on = function()
     vim.t.fullscreen_state = vim.fn.winrestcmd()
-    vim.cmd("vertical resize")
-    vim.cmd("horizontal resize")
+    vim.cmd([[
+        vertical resize
+        horizontal resize
+    ]])
   end,
   off = function()
-    vim.cmd("execute t:fullscreen_state")
+    vim.cmd.execute("t:fullscreen_state")
   end,
 }
 

@@ -2,7 +2,7 @@
 
 vim.g.mapping_file = vim.fn.expand('%:p')
 local function my_buffers()
-  require("telescope.builtin").buffers({ignore_current_buffer=true, disable_coordinates = true, sort_lastused=true})
+  require("telescope.builtin").buffers({ignore_current_buffer=true, disable_coordinates = true, sort_mru=true})
 end
 
 local function my_live_grep()
@@ -33,6 +33,7 @@ LEADER_MAPPINGS = {
     z     = { desc='',                          default='z'},
     ---[misc-special]
     [ ','       ] = { desc='alternate file',    default='<C-^>'},
+    [ '.'       ] = { desc='next window',       default='<C-w>w'},
     [ '-'       ] = { desc='resize split -20',  default='20<c-w><'},
     [ '<C-S-x>' ] = { desc='execute with args', default=':!%:p '},
     [ '<C-s>'   ] = { desc='sub in all buffs',  default=':budfo %s/\\v\\c'},

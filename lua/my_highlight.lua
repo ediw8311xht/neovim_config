@@ -29,6 +29,10 @@ vim.g.my_highlight = {
     -- Custom ---
     -- LuaDocLine = { gui = "NONE", guibg = "#FF0000", guifg="#0099FF" },
   },
+  My = {
+    TextYank = { gui="bold", guibg="#FFFF00", guifg="#000000" },
+  },
+
   man = {
     Bold           = { gui = "underline", guisp="#FFAA00" },
     Italic         = { gui = "italic",    guibg = "black",   guifg = "#999999" },

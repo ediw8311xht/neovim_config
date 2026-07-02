@@ -16,18 +16,20 @@ function LispConnectSwank()
     '&'
   }
 end
-vim.g.paredit_leader     = '-'
-vim.g.slimv_impl         = 'sbcl'       -- sbcl
-vim.g.slimv_leader       = '\\'
-vim.g.slimv_menu         = 1            -- enable slimv menu
-vim.g.slimv_repl_name    = 'cl-repl'    -- repl buffer name
-vim.g.slimv_repl_split   = 3            -- split left
-vim.g.slimv_repl_syntax  = 1            -- enable syntax highlighting in repl
-vim.g.slimv_swank_path   = vim.fn.expand('~/quicklisp/slime-helper.el')
-vim.g.slimv_balloon      = 1
-vim.g.slimv_strip_ansi   = 1
-vim.g.slimv_swank_cmd    = 'lua LispConnectSwank()'
-
+vim.g.paredit_leader        = '-'
+vim.g.slimv_impl            = 'sbcl'       -- sbcl
+vim.g.slimv_leader          = '\\'
+vim.g.slimv_menu            = 1            -- enable slimv menu
+vim.g.slimv_repl_name       = 'cl-repl'    -- repl buffer name
+vim.g.slimv_repl_split      = 3            -- split left
+vim.g.slimv_repl_syntax     = 1            -- enable syntax highlighting in repl
+vim.g.slimv_swank_path      = vim.fn.expand('~/quicklisp/slime-helper.el')
+vim.g.slimv_balloon         = 1
+vim.g.slimv_strip_ansi      = 1
+vim.g.slimv_swank_cmd       = 'lua LispConnectSwank()'
+vim.g.slimv_repl_split_size = 35
+vim.g.slimv_repl_split      = 0
+vim.g.slimv_repl_wrap       = 0
 --[[ 
   needed for indent for special forms..... UGH!!!!!
   and yes i have labels that extend 500 lines.

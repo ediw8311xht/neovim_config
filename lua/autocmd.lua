@@ -1,4 +1,5 @@
 
+---@diagnostic disable: deprecated
 local home  = vim.env.HOME
 local api   = vim.api
 local fn    = vim.fn
@@ -10,9 +11,71 @@ LanguageSpecificDir = fn.stdpath("config") .. "/language_specific"
 TemplateDir = home .. "/.config/nvim/language_specific/templates"
 MaxLinesCMP = 2000
 
+---special settings based on filepath/filename 
+local special_settings = {
+  [ "*.page"                                 ] = function() dofile( LanguageSpecificDir .. "/gitit.lua" ) end,
+  [ "~/.bashrc"                              ] = function() dofile( LanguageSpecificDir .. "/bashrc.lua" ) end,
+  [ "~/.config/joplin-desktop/userstyle.css" ] = function() cmd.source( LanguageSpecificDir .. "/joplin_userstyle.vim" ) end,
+  [ "~/TEST/QUICK/*.cpp"                     ] = function() cmd.source( LanguageSpecificDir .. "/quick_cpp.vim"        ) end,
+  [ "*.asd"                                  ] = function() vim.bo.filetype="commonlisp" ; vim.bo.syntax="commonlisp" end,
+}
+
+---sets templates for extension. on new file with extension will read in template.
+---options are passed to ReadInFile
+local template_extensions = {
+  page     = { }, -- gitit
+  md       = { },
+  lisp     = { },
+  html     = { },
+  Makefile = { exact_match = true },
+  ["nvim.lua"] = { }, -- this sets project settings for a directory (must trust if want to use)
+  -- executable
+  sh     = { chmod = "700" },
+  py     = { chmod = "700" },
+  kalker = { chmod = "700" },
+  exs    = { chmod = "700" },
+  ex     = { chmod = "700" },
+  cpp    = { chmod = "700" },
+  hs     = { chmod = "700" },
+  tcl    = { chmod = "700" },
+  tex    = { chmod = "700" }, -- maybe
+}
+
+api.nvim_create_augroup("cursorline_hide_inactive_buffer", { clear = true })
+MyAutoCommands = {
+  ---hide cursor for inactive window
+  [ { "BufLeave", "WinLeave" } ] = { group = "cursorline_hide_inactive_buffer",
+    callback = function() vim.opt_local.cursorline = false end
+  },
+  [ { "BufEnter", "WinEnter" } ] = { group ="cursorline_hide_inactive_buffer",
+    callback = function() vim.opt_local.cursorline = true end
+  },
+  ---large files disable cmp
+  [ { "BufEnter", "BufWinEnter" } ] = {
+    callback = function(args)
+      if api.nvim_buf_line_count(args.buf) > MaxLinesCMP then
+        vim.treesitter.stop()
+        require('cmp').setup.buffer( { enabled = false } )
+      end
+    end
+  },
+  ---check file updates
+  [ { "FocusGained", "CursorHold", "CursorHoldI" } ] = { callback = function() cmd("silent! checktime") end },
+  ---preserve clipboard when exiting
+[ { "VimLeave" } ] = { callback = function() ClipBoardExit() end },
+  ---set status line to terminal title
+  [ { "TermOpen" } ] = { callback = function() cmd("setlocal statusline=%{b:term_title}") end },
+  ---filetype formatting
+  [ { "FileType" } ] = { callback = function() cmd("setlocal formatoptions-=c formatoptions-=r formatoptions-=o") end },
+  ---open help on right side
+  [ { {"FileType"}, "help" } ] = { command = "wincmd L", },
+  ---highlight text yank
+  [ { "TextYankPost" } ] = { callback = function() vim.hl.on_yank( { higroup="MyTextYank", timeout=300 } ) end },
+}
+
 ---for filename/filepath specific code when reading in buffer
-local function set_buffer_autocommands(globcomms)
-  for glob, cback in pairs(globcomms) do
+local function set_buffer_autocommands(globs_commands)
+  for glob, cback in pairs(globs_commands) do
     vauto({ "BufNewFile", "BufRead" }, {
       pattern = glob,
       callback = cback
@@ -23,8 +86,9 @@ end
 ---set templates to use when creating newfile with certain extension
 local function set_templates(exts)
   for ext, options in pairs(exts) do
+    local ext_pattern = (options.exact_match and ext or ("*." .. ext))
     vauto({ "BufNewFile" }, {
-      pattern = "*." .. ext,
+      pattern = ext_pattern,
       callback = function(args)
         local new_file = args.match
         local template_file = TemplateDir .. "/template." .. ext
@@ -34,110 +98,21 @@ local function set_templates(exts)
   end
 end
 
----disable cursor when leaving buffer/window
-api.nvim_create_augroup("cursorline_hide_inactive_buffer", { clear = true })
-vauto({ "BufLeave", "WinLeave" }, {
-  group = "cursorline_hide_inactive_buffer",
-  callback = function() vim.opt_local.cursorline = false end
-})
-
----renable cursor when entering buffer/window
-vauto({ "BufEnter", "WinEnter" }, {
-  pattern = { "*" },
-  group ="cursorline_hide_inactive_buffer",
-  callback = function() vim.opt_local.cursorline = true end
-})
-
----large files disable cmp
-vauto({ "BufEnter", "BufWinEnter" }, {
-  callback = function(args)
-    if api.nvim_buf_line_count(args.buf) > MaxLinesCMP then
-      vim.treesitter.stop()
-      require('cmp').setup.buffer( { enabled = false } )
-    end
+---handles setting bulk autocommands
+local function handle_auto_commands(autocommands)
+  for group_pattern, value in pairs(autocommands) do
+    local group, pattern = unpack(group_pattern)
+    if pattern then value["pattern"] = pattern end
+    api.nvim_create_autocmd(group, value)
   end
-})
+end
 
----check file updates
-vauto({ "FocusGained", "CursorHold", "CursorHoldI" }, {
-  pattern = { "*" },
-  callback = function() cmd("silent! checktime") end
-})
+handle_auto_commands(MyAutoCommands)
+set_templates(template_extensions)
+set_buffer_autocommands(special_settings)
 
----preserve clipboard when exiting
-vauto({ "VimLeave" }, {
-  pattern = "*",
-  callback = function() ClipBoardExit() end
-})
 
----TermOpen
-vauto({ "TermOpen" }, {
-  pattern = "*",
-  callback = function() cmd("setlocal statusline=%{b:term_title}") end
-})
-
----FileType_Formatting
-vauto({ "FileType" }, {
-  pattern = "*",
-  callback = function() cmd("setlocal formatoptions-=c formatoptions-=r formatoptions-=o") end
-})
-vauto({"FileType"}, {
-  pattern = "help",
-  command = "wincmd L",
-})
-
----highlight text yank
-vauto({ "TextYankPost" }, {
-  pattern = "*",
-  callback = function()
-    vim.hl.on_yank( { higroup="Visual", timeout=300 } )
-    -- MapCommandsToReg(vim.v.event)
-  end
-})
-
----for Makefiles
-vauto({"BufNewFile", "Filetype" }, {
-  pattern = "Makefile",
-  callback = function(args)
-    local template_file = TemplateDir .. "/template." .. "makefile"
-    ReadInFile(template_file, args.match)
-  end
-})
-
----special settings based on filepath/filename 
-local globcomms = {
-  [ "*.page"                                 ] = function() dofile( LanguageSpecificDir .. "/gitit.lua" ) end,
-  [ "~/.bashrc"                              ] = function() dofile( LanguageSpecificDir .. "/bashrc.lua" ) end,
-  [ "~/.config/joplin-desktop/userstyle.css" ] = function() cmd.source( LanguageSpecificDir .. "/joplin_userstyle.vim" ) end,
-  [ "~/TEST/QUICK/*.cpp"                     ] = function() cmd.source( LanguageSpecificDir .. "/quick_cpp.vim"        ) end,
-  [ "*.asd"                                  ] = function() vim.bo.filetype="commonlisp" ; vim.bo.syntax="commonlisp" end,
-}
-
----sets templates for extension. on new file with extension will read in template.
----options are passed to ReadInFile
-local exts = {
-  ["page"]     = { }, -- gitit
-  ["md"]       = { },
-  ["lisp"]     = { },
-  ["nvim.lua"] = { }, -- this sets project settings for a directory (must trust if want to use)
-  ["html"]     = { },
-
-  -- these files will have a shebang to allow executing
-  ["sh"]     = { chmod = "700" },
-  ["py"]     = { chmod = "700" },
-  ["kalker"] = { chmod = "700" },
-  ["exs"]    = { chmod = "700" },
-  ["ex"]     = { chmod = "700" },
-  ["cpp"]    = { chmod = "700" },
-  ["hs"]     = { chmod = "700" },
-  ["tcl"]    = { chmod = "700" },
-  ["tex"]    = { chmod = "700" }, -- maybe
-}
-
-set_templates(exts)
-set_buffer_autocommands(globcomms)
-
--- {{{
+-- {{{ commented out
 -- vauto({ "BufNewFile", "BufRead" }, {
 --   pattern = "*.page",
 --   callback = function()

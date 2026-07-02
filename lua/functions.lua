@@ -1,17 +1,16 @@
-
 -- local api = vim.api.nvim_create_autocmd
 -- local autocmd = vim.api.nvim_create_autocmd
 -- local cmd     = vim.cmd
 -- local fn      = vim.fn
 
 require("helper_functions")
-local home   = vim.env.HOME
-local api    = vim.api
-local cmd    = vim.cmd
-local fn     = vim.fn
+local home = vim.env.HOME
+local api = vim.api
+local cmd = vim.cmd
+local fn = vim.fn
 -- local fs     = vim.fs
 local printf = vim.fn.printf
-local ts     = vim.treesitter
+local ts = vim.treesitter
 
 local original_floating_preview = vim.lsp.util.open_floating_preview
 function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
@@ -80,7 +79,7 @@ end
 ---toggle value is kept in vim.g.toggle_value__<highlight_group>
 function ToggleHighlight(highlights)
   local seton = IsEmpty(api.nvim_get_hl(0, { name = highlights[1] }))
-  for _,c in pairs(highlights) do
+  for _, c in pairs(highlights) do
     if seton then
       if fn.exists("g:toggle_value__" .. c) == 0 then
         vim.notify("Variable, toggle_value__" .. c .. ", doesn't exist.", "error", {
@@ -272,7 +271,7 @@ function ReadInFile(input_file, output_file, options)
     error("path: '" .. output_file .. "' is invalid.")
   else
     cmd(printf("keepalt %dread %s", opts.line, input_file))
-    cmd.write( { mods = { silent = true } })
+    cmd.write({ mods = { silent = true } })
     if opts.chmod then
       os.execute(printf("chmod %s %s", opts.chmod, output_file))
     end
@@ -280,8 +279,8 @@ function ReadInFile(input_file, output_file, options)
 end
 
 function LspStatus()
-  if #vim.lsp.get_clients({ bufnr = fn.bufnr()}) > 0 then
-    return require('lsp-status').status()
+  if #vim.lsp.get_clients({ bufnr = fn.bufnr() }) > 0 then
+    return require("lsp-status").status()
   else
     return ""
   end
@@ -294,10 +293,10 @@ end
 ---               }
 ---@return string
 function GetFile(options)
-  local opts = TableDifference({tilde_home = false, expand = "%"}, (options or {}), false)
+  local opts = TableDifference({ tilde_home = false, expand = "%" }, (options or {}), false)
   local file = fn.expand(opts.expand)
   if opts.tilde_home then
-    return fn.substitute(file, '\\V' .. home, "~", "")
+    return fn.substitute(file, "\\V" .. home, "~", "")
   else
     return file
   end
@@ -312,7 +311,7 @@ end
 function GetExtension(filename, options)
   local glob = options and options.glob
   if glob or not filename then
-    return vim.fn.expand( (filename or "%" ) .. ":e")
+    return vim.fn.expand((filename or "%") .. ":e")
   else
     return filename:match("([^.]+$)$")
   end
@@ -322,22 +321,21 @@ end
 ---@param file? string filename to output mappings to
 function GetMappings(file)
   local out_file = file or fn.tempname()
-  cmd.redir {"> ", out_file}
-  cmd.imap  {mods  = {silent  = true}}
-  cmd.tmap  {mods  = {silent  = true}}
-  cmd.nmap  {mods  = {silent  = true}}
-  cmd.vmap  {mods  = {silent  = true}}
-  cmd.redir {"end"}
-  cmd.edit  {out_file}
+  cmd.redir({ "> ", out_file })
+  cmd.imap({ mods = { silent = true } })
+  cmd.tmap({ mods = { silent = true } })
+  cmd.nmap({ mods = { silent = true } })
+  cmd.vmap({ mods = { silent = true } })
+  cmd.redir({ "end" })
+  cmd.edit({ out_file })
 end
-
 
 ---get visual selection when :'<,'> just won't cut it
 function GetVisualSelection()
-  vim.g.region_post = fn.getregionpos(fn.getpos('v'), fn.getpos('.'))
+  vim.g.region_post = fn.getregionpos(fn.getpos("v"), fn.getpos("."))
   local col = ""
-  for _,i in ipairs(vim.g.region_post) do
-    col = col .. table.concat(fn.getregion(i[1], i[2]), '\n') .. '\n'
+  for _, i in ipairs(vim.g.region_post) do
+    col = col .. table.concat(fn.getregion(i[1], i[2]), "\n") .. "\n"
   end
   return col
 end
@@ -348,7 +346,7 @@ end
 function MakeForRequire(table_or_string)
   ---@diagnostic disable-next-line: param-type-mismatch
   local string = type(table_or_string) == "string" and table_or_string or table.concat(table_or_string, "/")
-  local full_path  = string:gsub("[/]+", "/")
+  local full_path = string:gsub("[/]+", "/")
 
   -- return full_path:gsub("^(.*).lua$", "f")
   return full_path:gsub("^(.*).lua$", function(x)
@@ -361,7 +359,7 @@ end
 ---@param name string
 ---@return integer|nil @buffer number or nil if matching buffer not found
 function GetBufByName(name)
-  for _,i in ipairs(vim.api.nvim_list_bufs()) do
+  for _, i in ipairs(vim.api.nvim_list_bufs()) do
     if vim.api.nvim_buf_get_name(i) == name then
       return i
     end
@@ -375,14 +373,53 @@ end
 function FZFBuffersWithExtension(ext)
   local buffers = {}
   ---@diagnostic disable-next-line: redefined-local
-  local ext = ext or GetExtension("%", {glob=true})
-  for _,bufnr in ipairs(vim.api.nvim_list_bufs()) do
+  local ext = ext or GetExtension("%", { glob = true })
+  for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
     if vim.api.nvim_buf_is_valid(bufnr) and vim.bo[bufnr].buflisted then
-      local buf_ext = GetExtension('#' .. bufnr, { glob=true })
-      if buf_ext == ext then table.insert(buffers, vim.api.nvim_buf_get_name(bufnr)) end
+      local buf_ext = GetExtension("#" .. bufnr, { glob = true })
+      if buf_ext == ext then
+        table.insert(buffers, vim.api.nvim_buf_get_name(bufnr))
+      end
     end
   end
-  vim.fn['fzf#vim#buffers']("", buffers, vim.fn['fzf#vim#with_preview']())
+  -- vim.fn['fzf#vim#buffers']("", buffers, vim.fn['fzf#vim#with_preview']())
+end
+
+function IsFloating(win_id)
+  return vim.api.nvim_win_get_config(win_id or 0).zindex
+end
+
+---View or Hide floating window by buffer number or buffer name
+---@param buf integer|string
+---@param enter? boolean
+---@param options? table
+function FloatingWindowToggle(buf, enter, options)
+  local buffer = (type(buf) == "string" and fn.bufnr(buf)) or buf
+  if buffer == nil then
+    vim.print("Couldn't find buffer matching: " .. string)
+    return nil
+  end
+
+  for _,v in pairs(vim.fn.win_findbuf(buffer)) do
+    if IsFloating(v) then
+      return vim.api.nvim_win_hide(v)
+    end
+  end
+  -- vim.api.nvim_win_hide(
+  local window_width = api.nvim_win_get_width(0)
+  local width = math.floor(window_width / 3)
+  local height = math.floor(api.nvim_win_get_height(0) / 1.5)
+  local default_opts = {
+    anchor = "NE",
+    relative = "editor",
+    col = window_width - 1,
+    row = 1,
+    width = width,
+    height = height,
+    border = { "╔", "═", "╗", "║", "╝", "═", "╚", "║" },
+  }
+  local opts = TableDifference(default_opts, options or {}, false)
+  return api.nvim_open_win(buffer or 0, enter or true, opts)
 end
 --
 --
