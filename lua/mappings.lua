@@ -1,6 +1,6 @@
 #!/usr/bin/lua
 
-vim.g.mapping_file = vim.fn.expand('%:p')
+vim.g.mapping_file = vim.fs.joinpath(vim.g.dir_config .. "lua/mappings.lua")
 local function my_buffers()
   require("telescope.builtin").buffers({ignore_current_buffer=true, disable_coordinates = true, sort_mru=true})
 end
