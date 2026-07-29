@@ -26,11 +26,12 @@ local M = {
   comment_nodes = { "comment", "comment_content" },
   comment_block_nodes = { "block_comment" },
   function_nodes = TableSetDefault({
-    ["lua"]        = "((function_declaration) @func_decl)",
-    ["lisp"]       = "((defun) @func_decl)",
+    ["lua"] = "((function_declaration) @func_decl)",
+    ["lisp"] = "((defun) @func_decl)",
     ["commonlisp"] = "((defun) @func_decl)",
     --- just because i like navigating tags
-    ["html"]       = "((start_tag) @func_decl)",
+    ["html"] = "((start_tag) @func_decl)",
+    ["htmldjango"] = "((start_tag) @func_decl)",
   }, "((function_definition)  @func_decl)"),
   auto_fold_augroup = nil,
   -- hle = vim.treesitter.highlighter
@@ -141,12 +142,12 @@ function M.update_comments(buffer_number)
   for line_nr = 1, vim.fn.line("$") + 1 do
     local node = M.FirstNode(line_nr)
     if M.check_node_type(node, M.comment_block_nodes) then
-      local _,_,node_end_row,_ = node:range()
+      local _, _, node_end_row, _ = node:range()
       while line_nr <= (node_end_row + 1) do
         state.comments[buffer_number][line_nr] = 2
         line_nr = line_nr + 1
       end
-    elseif  M.check_node_type(node, M.comment_nodes) then
+    elseif M.check_node_type(node, M.comment_nodes) then
       state.comments[buffer_number][line_nr] = 1
     else
       state.comments[buffer_number][line_nr] = 0
@@ -157,11 +158,11 @@ end
 function M.fold_comments_multi()
   local line = vim.v.lnum
   local buf = vim.fn.bufnr()
-  if state.comments[buf][line] ~= 0 and (state.comments[buf][line - 1] ~= 0 or state.comments[buf][line + 1] ~= 0) then
+  if state.comments[buf][line] ~= 0
+    and ( state.comments[buf][line - 1] ~= 0 or state.comments[buf][line + 1] ~= 0) then
     return 1
-  else
-    return 0
   end
+  return 0
 end
 
 function M.fold_comments_block()
@@ -202,7 +203,7 @@ function M.auto_fold_comments(args)
   local opts = ArrayToTable(args, {})
   local on_off = opts.off ~= "off"
   local buf = vim.fn.bufnr()
-  local autocmd_id   = state.auto_fold[buf].id
+  local autocmd_id = state.auto_fold[buf].id
   -- local autocmd_type = state.auto_fold[buf].type
   local type = opts.single or opts.multi or opts.block or nil
   vim.notify("AutoFoldComments turned " .. (on_off and "on" or "off"))
@@ -214,15 +215,14 @@ function M.auto_fold_comments(args)
     M.fold_comments({ "off" })
   elseif type then
     M.fold_comments({ type })
-    state.auto_fold[buf] = {type = type}
-    state.auto_fold[buf].id = vim.api.nvim_create_autocmd(
-      { "BufWrite" }, {
-        buffer = buf,
-        group = M.auto_fold_augroup,
-        callback = function()
-          M.fold_comments({ type })
-        end,
-      })
+    state.auto_fold[buf] = { type = type }
+    state.auto_fold[buf].id = vim.api.nvim_create_autocmd({ "BufWrite" }, {
+      buffer = buf,
+      group = M.auto_fold_augroup,
+      callback = function()
+        M.fold_comments({ type })
+      end,
+    })
   end
 end
 
@@ -231,7 +231,8 @@ end
 |--------------- Commands --------------------|
 |---------------------------------------------|
 --]]
-function M.create_commands()
+---create commands for navigating between functions
+function M.create_function_navigation_commands()
   api.nvim_create_user_command(
     "GotoNextFunctionStart",
     M.GoToFunction,
@@ -249,27 +250,39 @@ function M.create_commands()
   api.nvim_create_user_command("GotoInnerFunctionEnd", function()
     M.GoToFunction({ inner = true, goto_end = true })
   end, { desc = "Go to the end of function cursor is currently inside", nargs = 0 })
+end
+---create commands for folding on comments
+function M.create_folding_comments_commands()
   api.nvim_create_user_command("AutoFoldComments", function(opts)
     M.auto_fold_comments(MapSplit(opts.fargs[1], " ", { remove_empty = true }))
   end, {
-    desc = "Auto fold comments",
-    nargs = 1,
-    complete = function(_, _, _)
-      return { "off", "single", "multi", "block" }
-    end,
-  })
-  api.nvim_create_user_command("FoldComments", function(opts)
-    M.fold_comments(MapSplit(opts.fargs[1], " ", { remove_empty = true }))
-  end, {
-    desc = "Fold comments automatically with expr.",
-    nargs = "?",
-    complete = function(_, cmdline, _) -- (ArgLead, CmdLine, CursorPos)
-      return string.match(cmdline, "%s+off%s+$")
-          and { "marker", "marker", "manual", "expr", "indent", "syntax", "diff" }
-        or { "single", "block", "multi", "off" }
-    end,
-  })
+  desc = "Auto fold comments",
+  nargs = 1,
+  complete = function(_, _, _)
+    return { "off", "single", "multi", "block" }
+  end,
+})
+api.nvim_create_user_command("FoldComments", function(opts)
+  M.fold_comments(MapSplit(opts.fargs[1], " ", { remove_empty = true }))
+end, {
+desc = "Fold comments automatically with expr.",
+nargs = "?",
+complete = function(_, cmdline, _) -- (ArgLead, CmdLine, CursorPos)
+  return string.match(cmdline, "%s+off%s+$")
+  and { "marker", "marker", "manual", "expr", "indent", "syntax", "diff" }
+  or { "single", "block", "multi", "off" }
+end,
+})
+end
+---create all commands
+function M.create_commands()
+  M.create_folding_comments_commands()
+  M.create_function_navigation_commands()
+  --- generic for navigating treesitter
+  api.nvim_create_user_command("GoToQuery", function(opts)
+    M.update()
+    M.GoToQuery(opts.fargs[1], opts.fargs[2] or {})
+  end, { desc = "go to treesitter query", nargs = "?" })
 end
 
 return M
-

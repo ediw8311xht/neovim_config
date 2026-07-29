@@ -40,7 +40,7 @@ vim.g.my_highlight = {
   },
   Window = {
     Active   = { guibg = "NONE" },
-    Inactive = { gui = "NONE", guibg = "#090909" },
+    Inactive = { gui = "NONE", guibg = "#111111" },
   },
   StatusLine = {
     [""]          = { gui = "BOLD,reverse",  guibg = "NONE", guifg = "#555555", },

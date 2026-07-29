@@ -48,8 +48,19 @@ lspconfig('lua_ls', {
   capabilities = cmp_capabilities,
   settings = {
     Lua = {
+      runtime = { version = "LuaJIT" },
+      workspace = {
+        library = { vim.env.VIMRUNTIME },
+        checkThirdParty = false,
+      },
       diagnostics = {
-        globals = { 'vim' }
+        enable = true,
+        disable = {},
+        globals = { 'vim' },
+        type = {
+          checkTableIndex = true,
+          paramTypeMismatch = true,
+        },
       }
     }
   }

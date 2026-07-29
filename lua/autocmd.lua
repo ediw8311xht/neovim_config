@@ -23,12 +23,12 @@ local special_settings = {
 ---sets templates for extension. on new file with extension will read in template.
 ---options are passed to ReadInFile
 local template_extensions = {
-  page     = { }, -- gitit
-  md       = { },
-  lisp     = { },
-  html     = { },
-  Makefile = { exact_match = true },
-  ["nvim.lua"] = { }, -- this sets project settings for a directory (must trust if want to use)
+  ["nvim.lua"] = nil, -- this sets project settings for a directory (must trust if want to use)
+  Makefile     = { exact_match = true },
+  html         = nil,
+  lisp         = nil,
+  md           = nil,
+  page         = nil, -- gitit
   -- executable
   sh     = { chmod = "700" },
   py     = { chmod = "700" },
@@ -62,7 +62,7 @@ MyAutoCommands = {
   ---check file updates
   [ { "FocusGained", "CursorHold", "CursorHoldI" } ] = { callback = function() cmd("silent! checktime") end },
   ---preserve clipboard when exiting
-[ { "VimLeave" } ] = { callback = function() ClipBoardExit() end },
+  [ { "VimLeave" } ] = { callback = function() ClipBoardExit() end },
   ---set status line to terminal title
   [ { "TermOpen" } ] = { callback = function() cmd("setlocal statusline=%{b:term_title}") end },
   ---filetype formatting
@@ -85,7 +85,8 @@ end
 
 ---set templates to use when creating newfile with certain extension
 local function set_templates(exts)
-  for ext, options in pairs(exts) do
+  for ext, opts in pairs(exts) do
+    local options = opts or {}
     local ext_pattern = (options.exact_match and ext or ("*." .. ext))
     vauto({ "BufNewFile" }, {
       pattern = ext_pattern,

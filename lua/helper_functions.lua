@@ -1,4 +1,3 @@
-
 ---@diagnostic disable: deprecated
 function IsEmpty(tbl)
   return next(tbl) == nil
@@ -13,7 +12,7 @@ function DeepCopy(var)
     return var
   else
     local deep_copy = {}
-    for k,v in pairs(var) do
+    for k, v in pairs(var) do
       deep_copy[DeepCopy(k)] = DeepCopy(v)
     end
     return deep_copy
@@ -28,7 +27,7 @@ end
 function TableDifference(table_a, table_b, in_place)
   -- allow editing in place or passing new table
   local output = (in_place ~= nil) and table_a or DeepCopy(table_a)
-  for i,j in pairs(table_b) do
+  for i, j in pairs(table_b) do
     output[i] = j
   end
   return output
@@ -36,7 +35,7 @@ end
 
 function EnvVarCheck(var)
   local e = os.getenv(var)
-  if e == nil or e == '' then
+  if e == nil or e == "" then
     return false
   else
     return e
@@ -44,8 +43,10 @@ function EnvVarCheck(var)
 end
 
 function Contains(t, check_value, callback)
-  callback = callback or (function(a,b) return a == b end)
-  for _,v in ipairs(t) do
+  callback = callback or function(a, b)
+    return a == b
+  end
+  for _, v in ipairs(t) do
     if callback(v, check_value) then
       return true
     end
@@ -65,19 +66,24 @@ end
 ---       default: `false`
 function MapSplit(s, f, opts)
   opts = opts or {}
-  if     s == nil then return {}
-  elseif s == ""  then return opts.remove_empty and {} or { "" } end
-  local output_data  = opts.output_data   or {}
-  local callback     = opts.callback      or function(m, t) table.insert(t, m) end
-  local remove_empty = opts.remove_empty  or false
+  if s == nil then
+    return {}
+  elseif s == "" then
+    return opts.remove_empty and {} or { "" }
+  end
+  local output_data = opts.output_data or {}
+  local callback = opts.callback or function(m, t)
+    table.insert(t, m)
+  end
+  local remove_empty = opts.remove_empty or false
 
   repeat
-    local match, _, rest = string.match(s, '^(.-)(' .. f .. ')(.*)$')
+    local match, _, rest = string.match(s, "^(.-)(" .. f .. ")(.*)$")
     if not remove_empty or match ~= "" then
       callback(match or s, output_data)
     end
     s = rest
-  until (not s or s == "")
+  until not s or s == ""
   return output_data
 end
 
@@ -89,9 +95,9 @@ function Split(s, f)
 end
 
 ---@param tbl table
----@param func function<any, any> @func(value, key)
+---@param func fun(value : any, key : any) : any
 function ForEach(tbl, func)
-  for k,v in pairs(tbl) do
+  for k, v in pairs(tbl) do
     func(v, k)
   end
 end
@@ -100,7 +106,7 @@ end
 ---@param func fun(value, key): new_value: any, new_key: any
 function Map(tbl, func)
   local new_tbl = {}
-  for k,v in pairs(tbl) do
+  for k, v in pairs(tbl) do
     local nv, nk = func(v, k)
     if nk == nil then
       table.insert(new_tbl, nv)
@@ -117,14 +123,18 @@ end
 ---@return any @accumulation
 function Reduce(tbl, func, initial)
   local accum = initial
-  for k,v in pairs(tbl) do
+  for k, v in pairs(tbl) do
     accum = func(accum, v, k)
   end
   return accum
 end
 
 function TableSetDefault(tbl, default)
-  return setmetatable(tbl, { __index = function() return default end })
+  return setmetatable(tbl, {
+    __index = function()
+      return default
+    end,
+  })
 end
 
 function Printf(s, ...)
@@ -141,7 +151,7 @@ function SourceIf(file)
   end
 end
 
----if test then call func(args) end
+---If test then call func(args) end
 ---@param test     function|any @func or variable to test to
 ---@param if_func  function     @func to call if test()/test
 ---@param options? {
@@ -154,8 +164,7 @@ end
 function IfCall(test, if_func, options)
   local opts = options or {}
   if type(test) == "function" then
-    return    test(unpack(opts.test_args))
-       and if_func(unpack(opts.if_args or {}))
+    return test(unpack(opts.test_args)) and if_func(unpack(opts.if_args or {}))
   else
     if test then
       if_func(unpack(opts.if_args or {}))
@@ -165,7 +174,6 @@ function IfCall(test, if_func, options)
   end
 end
 ---Catches error and runs option callback on success/error
----f
 ---@param func function
 ---@param options? {
 ---                   args: table,
@@ -178,9 +186,32 @@ function CatchError(func, options)
   local opts = options or {}
   local success, output = pcall(func, opts.args)
   if not success then
-    IfCall(vim.notify, vim.fn.printf, {"\nError: \n'%s'\n", success})
+    IfCall(vim.notify, vim.fn.printf, { "\nError: \n'%s'\n", success })
     IfCall(opts.on_success ~= nil, opts.on_success, opts.args)
   end
-  return {success=success, output=output}
+  return { success = success, output = output }
 end
 
+---Unpack one or multiple tables
+---@vararg any[]
+---@return any ...
+function Unpack(...)
+  local res = {}
+  for _, tbl in ipairs({ ... }) do
+    for _, v in ipairs(tbl) do
+      table.insert(res, v)
+    end
+  end
+  return unpack(res)
+end
+---Creates lambda with bound arguments
+---@param  func fun(...: any) : any
+---@vararg any
+---@return fun(...: any) : any
+function Bind(func, ...)
+  local bound_args = { ... }
+  return function(...)
+    local runtime_args = { ... }
+    return func(Unpack(bound_args, runtime_args))
+  end
+end

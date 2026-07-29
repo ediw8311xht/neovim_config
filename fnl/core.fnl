@@ -19,11 +19,12 @@
   (var key (or (and with_leader (.. "," key)) key))
   (var value value)
   (case (string.lower typet)
-    :cmd          (set value (vim.fn.printf "<CMD>%s<CR>"   value))
-    :vim_command  (set value (vim.fn.printf ":%s<CR>"       value))
-    :vim_function (set value (vim.fn.printf ":call %s<CR>"  value))
-    :echo         (set value (vim.fn.printf ":echo %s<CR>"  value))
-    :lua          (set value (vim.fn.printf ":lua %s<CR>"   value))
+    :cmd          (set value (vim.fn.printf "<CMD>%s<CR>"     value))
+    :vim_command  (set value (vim.fn.printf ":%s<CR>"         value))
+    :vim_function (set value (vim.fn.printf ":call %s<CR>"    value))
+    :echo         (set value (vim.fn.printf ":echo %s<CR>"    value))
+    :lua          (set value (vim.fn.printf ":lua %s<CR>"     value))
+    :cmd_lua      (set value (vim.fn.printf "<CMD>lua %s<CR>" value))
     :normal nil)
   (vim.keymap.set mode key value {: desc : remap : expr})
   (when (and which_key with_which_key)
@@ -61,8 +62,8 @@
 }
 :n {
   "`"         { :desc :fold                         :value "@=(foldlevel('.')?'za':\"<Space>\")<CR>"   }
-  "{"         { :desc "prev function start"         :value :GotoPrevFunctionStart   :typet :vim_command }
-  "}"         { :desc "next function start"         :value :GotoNextFunctionStart   :typet :vim_command }
+  ; "{"         { :desc "prev function start"         :value :GotoPrevFunctionStart   :typet :vim_command }
+  ; "}"         { :desc "next function start"         :value :GotoNextFunctionStart   :typet :vim_command }
   :/          { :desc "search vmagic"               :value "/\\v\\c"                                   }
   :<C-S-E>    { :desc "end of previous word"        :value :ge                                         }
   :<C-S-H>    { :desc "left pane"                   :value :<C-w>h                                     }
@@ -123,6 +124,10 @@
   :<C-7> { :desc "go to tab 7"    :value :7gt           }
   :<C-8> { :desc "go to tab 8"    :value :8gt           }
   :<C-9> { :desc "go to last tab" :value :tablast :typet :vim_command  }
+}
+[ :n :x :o ] {
+  "{"   { :desc "prev function start" :value "require('nvim-treesitter-textobjects.move').goto_previous_start('@fn_decl.outer', 'textobjects')" :typet :cmd_lua }
+  "}"   { :desc "next function start" :value "require('nvim-treesitter-textobjects.move').goto_next_start('@fn_decl.outer', 'textobjects')"     :typet :cmd_lua }
 }
 })
 

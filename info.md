@@ -1,5 +1,5 @@
 ---
-categories: nvim editor vimscript lua
+categories: nvim editor vimscript lua luals luacats
 format: markdown
 title: nvim info
 toc: true
@@ -9,7 +9,13 @@ toc: true
 
 # syntax highlighting
 
-## treesitter
+# lua
+
+## [luals](https://luals.github.io/)
+
+- annotation with [LuaCATS](https://luals.github.io/wiki/annotations/)
+
+# treesitter
 
 - regex syntax (default vim syntax) is disabled when calling `vim.treesitter.start()`{.lua}
   - ``` vimdoc
@@ -28,6 +34,19 @@ toc: true
         })
     <
     ```
+
+## querying
+
+| syntax                      | description                                             | example                                                                   |
+|-----------------------------|---------------------------------------------------------|---------------------------------------------------------------------------|
+| `(node)`                    | matches a named ast node                                | `(element)`                                                               |
+| `"text"`                    | matches an anonymous literal string/symbol              | `"="`                                                                     |
+| `@label`                    | captures the matched node                               | `(tag_name) @tag`                                                         |
+| `field:`                    | target a named child field                              | `name: (attribute_name)`                                                  |
+| `(#eq? @cap "val")`         | filter where node text equals `"val"`                   | `(#eq? @tag "script")`                                                    |
+| `(#match? @cap "reg")`      | filter using regex                                      | `(#match? @attr "^on")`                                                   |
+| `[ (node_1) (node_2) ... ]` | any that matches on at least one of the pattern in `[]` | `[ (paired_statement) (unpaired_statement) ] @htmldjango_statement.outer` |
+
 
 # reset option back to default
 

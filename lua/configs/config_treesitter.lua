@@ -1,26 +1,7 @@
 
---[[
-DisabledLangs = { "txt", "help", "vimdoc", "vim", "doc", "man", "plantuml", "latex" }
-DisabledLangs = {}
---]]
-
-
---[[
-disable = function(lang, buf)
-  if Contains(DisabledLangs, lang) then
-    return true
-  end
-  local max_filesize = 500 * 1024
-  local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-  if ok and stats and stats.size > max_filesize then
-    return true
-  end
-  return false
-end,
---]]
-
 local treesitter = require('nvim-treesitter')
-treesitter.setup {
+-- local treesitter_textobjs = require('nvim-treesitter-textobjects')
+treesitter.setup ({
   -- A list of parser names, or "all" (the five listed parsers should always be installed)
   ensure_installed = {},
 
@@ -50,21 +31,7 @@ treesitter.setup {
   (see -> Advanced Setup) parser_install_dir = "/some/path/to/store/parsers",
   Remember to run vim.opt.runtimepath:append("/some/path/to/store/parsers")!
   --]]
-  textobjects = {
-    lsp_interop = {
-      enable = true
-    },
-    move = {
-      enable = true
-    },
-    select = {
-      enable = true
-    },
-    swap = {
-      enable = true
-    },
-  },
-}
+})
 vim.api.nvim_create_autocmd('FileType', {
   pattern = { "*" },
 
@@ -77,18 +44,3 @@ vim.api.nvim_create_autocmd('FileType', {
     end
   end,
 })
---
---[[
-local my_installed_langs = {
-  'bash',
-  'commonlisp',
-  'doc',
-  'lua',
-  'man',
-  'plantuml',
-  'python',
-  'vim',
-  'vimdoc',
-  'zathurarc',
-}
---]]

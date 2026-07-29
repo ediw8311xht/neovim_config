@@ -46,7 +46,7 @@ vim.g.my_floating_preview_options = {
 function StatusGit() return vim.g.gitsigns_head or "" end
 
 -- local sl_lsp_status = "" .. "%{LspStatus()}" .. "%*"
-local sl_file       = "%#StatusLine_File#" .. " %t %r" .. "%*"
+local sl_file       = "%#StatusLine_File#" .. " %{expand('%:p:h:t')}/%t %r" .. "%*"
 local sl_git_branch = "%#StatusLine_Git#" .. " %{v:lua.StatusGit()} " .. "%*"
 local sl_session    = "%#StatusLine_Session#" .. " %{v:lua.require('auto-session.lib').current_session_name()} " .. "%*"
 local sl_lsp_status = "%#StatusLine_Lsp#" .. " %{v:lua.LspStatus()} " .. "%*"
@@ -97,26 +97,3 @@ vim.g.fzf_colors = {
 vim.g.fzf_layout = {
   [ 'window' ] = { width = 0.9, height = 0.9, border = "sharp" } --, border = 'no' }
 }
-
--- command! -bang -nargs=? -complete=dir Files
---     \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
--- vim.api.nvim_create_user_command("GotoPrevFunctionStart", function()
---   M.GoToFunction({ reverse = true })
--- end, { desc = "Go to previous function start", nargs = 0 })
-
--- {{{
--- `Colors`   |  `fzf#vim#colors([spec dict], [fullscreen bool])`
--- vim.g.fzf_vim.colors_options = {'--style', 'full', '--border-label', ' Open Buffers ', '--preview'}
--- }}}
--- {{{
--- vim.g.status_line_lists = {
---   [ 'default' ] = { "%t %r" , sl_session, "%m%=" ,    sl_lsp_status, sl_filepath },
---   [ 'small'   ] = { "%t %r" , "%m", sl_lsp_status },
---   [ 'large'   ] = { "%t %r" , sl_session , "%m%=" ,    sl_lsp_status, sl_filepath, "[%l,%c,%p%%]" },
--- }
--- { 'default' , "%t %r %m%=" .. lsp_status, filepath, ""             },
--- { 'small'   , '%t %r %m'   .. "[%#HLspStatus#%{LspStatus()} %*]"                 },
--- { 'large'   , "%t %r %m%=" .. lsp_status, filepath, "[%l,%c,%p%%]" },
--- { 'large'  , '%t %r %m' .. '[%#HLspStatus#%{LspStatus()} %*][%l %c%V% %P]'  },
--- '[%{LspStatus()}]\\ [%f] [%h%w%m%r%=%-14.(%l,%c%V%)\\ %P]',
--- }}}

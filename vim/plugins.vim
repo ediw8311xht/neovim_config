@@ -24,8 +24,8 @@ let g:my_plugins['nfnl (fennel)']       = [ 'Olical',           'nfnl']
 "-- Scheme
 let g:my_plugins['conjure']             = [ 'Olical',           'conjure' ]
 "-- Lisp
-let g:my_plugins['slimv']               = [ 'kovisoft',         'slimv',  { 'for': [ 'lisp', 'commonlisp' ] } ]
-let g:my_plugins['cl-lsp']              = [ 'cxxxr',            'cl-lsp', { 'for': [ 'lisp', 'commonlisp' ] } ]
+let g:my_plugins['slimv']               = [ 'ediw8311xht',      'slimv-neovim',  { 'for': [ 'lisp', 'commonlisp' ] } ]
+"let g:my_plugins['cl-lsp']              = [ 'cxxxr',            'cl-lsp', { 'for': [ 'lisp', 'commonlisp' ] } ]
 "-- Elixir
 let g:my_plugins['elixir']              = [ 'elixir-tools',     'elixir-tools.nvim'             ]
 let g:my_plugins['elixirfiledetect']    = [ 'elixir-editors',   'vim-elixir'                    ]

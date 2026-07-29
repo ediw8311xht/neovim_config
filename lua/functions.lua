@@ -273,7 +273,7 @@ function ReadInFile(input_file, output_file, options)
     cmd(printf("keepalt %dread %s", opts.line, input_file))
     cmd.write({ mods = { silent = true } })
     if opts.chmod then
-      os.execute(printf("chmod %s %s", opts.chmod, output_file))
+      os.execute(printf("chmod %s '%s'", opts.chmod, output_file))
     end
   end
 end
@@ -394,18 +394,29 @@ end
 ---@param enter? boolean
 ---@param options? table
 function FloatingWindowToggle(buf, enter, options)
-  local buffer = (type(buf) == "string" and fn.bufnr(buf)) or buf
-  if buffer == nil then
-    vim.print("Couldn't find buffer matching: " .. string)
-    return nil
+  local buffer
+  if (type(buf) == "string") then
+    buffer = fn.bufnr(buf)
+    if not buffer then
+      vim.print("Couldn't find buffer matching: " .. string)
+      return nil
+    end
+  else
+    buffer = buf
   end
 
+  --[[
+        HIDE
+  --]]
   for _,v in pairs(vim.fn.win_findbuf(buffer)) do
     if IsFloating(v) then
       return vim.api.nvim_win_hide(v)
     end
   end
-  -- vim.api.nvim_win_hide(
+
+  --[[ 
+        SHOW
+  --]]
   local window_width = api.nvim_win_get_width(0)
   local width = math.floor(window_width / 3)
   local height = math.floor(api.nvim_win_get_height(0) / 1.5)
@@ -419,7 +430,10 @@ function FloatingWindowToggle(buf, enter, options)
     border = { "╔", "═", "╗", "║", "╝", "═", "╚", "║" },
   }
   local opts = TableDifference(default_opts, options or {}, false)
-  return api.nvim_open_win(buffer or 0, enter, opts)
+  local out_window = api.nvim_open_win(buffer or 0, enter, opts)
+  -- prevents buffer from changing in floating window (very annoying)
+  -- vim.api.nvim_win_set_option(out_window, 'winfixbuf', true)
+  return out_window
 end
 --
 --

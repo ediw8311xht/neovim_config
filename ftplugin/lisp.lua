@@ -8,7 +8,7 @@ vim.bo.tabstop        = 2
 vim.bo.shiftwidth     = 2
 vim.bo.softtabstop    = 4
 vim.bo.expandtab      = true
-vim.bo.syntax         = "commonlisp"
+vim.bo.syntax         = "lisp"
 vim.bo.filetype       = "lisp" -- ensure for slimv
 
 ---Add list of forms to history for repl
@@ -138,7 +138,7 @@ local commonlisp_leader_mappings = {
     Aes = { desc='repl eval from saved forms', default=LispEvalSavedForms },
     AeS = { desc="eval startup forms",         default=LispEvalStartupForms },
 
-    Al  = { desc='load system',                vim_call='SlimvEvalForm("(asdf:load-system :" .. g:lisp_session_system .. ")")' },
+    Al  = { desc='load system',                default=function() LispLoadSystem(vim.g.lisp_session_system) end },
     Ar  = { desc='reload slimv',               default='\\Q\\c' },
     As  = { desc='lisp setup',                 default=LispQuickSetup },
     At  = { desc='test system',                vim_call='SlimvEvalForm("(asdf:test-system :" .. g:lisp_session_system .. ")")' },
@@ -158,3 +158,8 @@ local commonlisp_leader_mappings = {
 KeyMapSetter2(commonlisp_mappings,        '', true, true)
 KeyMapSetter2(commonlisp_leader_mappings, '<leader>', true, true)
 
+vim.cmd([[
+    augroup SlimvReplAutoCmd
+        au!
+    augroup END
+    ]])

@@ -1,6 +1,10 @@
 #!/usr/bin/lua
 
-vim.g.mapping_file = vim.fs.joinpath(vim.g.dir_config .. "lua/mappings.lua")
+--[[
+---@diagnostic disable: unused-local, unused-function
+--]]
+
+vim.g.mapping_file = vim.fs.joinpath(vim.g.dir_config .. "/lua/mappings.lua")
 local function my_buffers()
   require("telescope.builtin").buffers({ignore_current_buffer=true, disable_coordinates = true, sort_mru=true})
 end
@@ -9,6 +13,13 @@ local function my_live_grep()
   require("telescope.builtin").live_grep({grep_open_files = true, disable_coordinates = true})
 end
 
+function SubAllBuffers(x, y)
+  local repl = vim.fn.printf(':%%s/\\v\\c%s/%s', x, y)
+  vim.cmd.bufdo(
+    repl
+  )
+end
+-- sub_all_buffers(3, 3)
 -- Leader Mappings {{{
 ---------- Remember -----------
 -- innoremap <expr> key command
@@ -17,10 +28,11 @@ LEADER_MAPPINGS = {
   n = {
     ---[misc]
     U     = { desc='[run] lf cd',               cmd='Lfcd'},
-    W     = { desc='[buffer] write',            default=':w<ESC>'},
+    W     = { desc='[buffer] write',            cmd='silent write | echom printf("file: \'%s\' - written: %s", expand("%:p"), strftime("%r"))'},
     b     = { desc='[switch] buffer',           default=my_buffers},
     df    = { desc='[search] space eol',        cmd='%s/\\s\\+\\ze$//gc'},
     grg   = { desc='[search] all buffers',      default=my_live_grep},
+    -- grr   = { desc='[sub] all buffers',         default=":lua SubAllBuffers(" },
     i     = { desc='[show] diagnostics',        lua_call='vim.diagnostic.open_float(nil, {focus=T, scope="cursor"})'},
     s     = { desc='switch pane',               default='<C-w><C-p>'},
     u     = { desc='[run] lf',                  cmd='Lf'},

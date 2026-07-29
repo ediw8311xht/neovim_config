@@ -12,7 +12,7 @@ function LispConnectSwank()
       '--keep-focus',
       vim.fn.printf('--cwd="%s"', dir),
     'sbcl',
-      '--load', '"${XDG_DATA_HOME}/nvim/plugged/slimv/slime/start-swank.lisp"',
+      '--load', '"${XDG_DATA_HOME}/nvim/plugged/slimv-neovim/slime/start-swank.lisp"',
     '&'
   }
 end
