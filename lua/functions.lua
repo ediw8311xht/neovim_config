@@ -404,8 +404,7 @@ function FloatingWindowToggle(buf, enter, options)
   else
     buffer = buf
   end
-
-  --[[
+  --[[ 
         HIDE
   --]]
   for _,v in pairs(vim.fn.win_findbuf(buffer)) do
@@ -413,7 +412,6 @@ function FloatingWindowToggle(buf, enter, options)
       return vim.api.nvim_win_hide(v)
     end
   end
-
   --[[ 
         SHOW
   --]]
@@ -435,15 +433,28 @@ function FloatingWindowToggle(buf, enter, options)
   -- vim.api.nvim_win_set_option(out_window, 'winfixbuf', true)
   return out_window
 end
---
---
---
--- vim.api.nvim_create_user_command("BuffersWithExtension", function(opts)
---   return FZFBuffersWithExtension()
--- end, { desc = "Browse open buffers with specific extension (default current extension)", nargs = "?" })
 
--- command! -bang -nargs=? -complete=dir Files
---     \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+-- local sl_filepath   = " %F "
+local sl_file       = "%#StatusLine_File#" .. " %{expand('%:p:h:t')}/%t %r" .. "%*"
+local sl_git_status = "%#StatusLine_Git#" .. " %{get(b:, 'gitsigns_status', '')} " .. "%*"
+local sl_session    = "%#StatusLine_Session#" .. " %{v:lua.AutoSessionGetCurrentName()} " .. "%*"
+local sl_lsp_status = "%#StatusLine_Lsp#" .. " %{v:lua.LspStatus()} " .. "%*"
+function StatusLineFunc()
+  if vim.g.statusline_winid == vim.fn.win_getid() then
+    return vim.fn.printf("%s%s%s%s%s", sl_file, sl_git_status, sl_session, "%m%=", sl_lsp_status)
+  else
+    return vim.fn.printf("%s[%s][%s]%s%s", sl_file, sl_git_status, sl_session, "%m%=", sl_lsp_status)
+  end
+end
+
+function TitleStringFunc()
+  local session_name = AutoSessionGetCurrentName()
+  if session_name ~= "" then
+    return "[session] " .. session_name
+  else
+    return "[nvim] " .. vim.fn.expand("%f")
+  end
+end
 
 ---do later---------------------------------------------------{{{
 -- function GutterSign()
@@ -489,4 +500,10 @@ end
 --     end
 --   end
 -- end
+--
+-- vim.api.nvim_create_user_command("BuffersWithExtension", function(opts)
+--   return FZFBuffersWithExtension()
+-- end, { desc = "Browse open buffers with specific extension (default current extension)", nargs = "?" })
+-- command! -bang -nargs=? -complete=dir Files
+--     \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
 -- }}}

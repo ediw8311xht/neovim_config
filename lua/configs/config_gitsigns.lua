@@ -25,7 +25,15 @@ require('gitsigns').setup({
   },
   sign_priority = 6,
   update_debounce = 100,
-  status_formatter = nil, -- Use default
+  status_formatter = function(status)
+    local head = status.head
+    if head then
+      return vim.fn.printf("%s +%s ~%s -%s", head, status.added or 0, status.changed or 0, status.removed or 0)
+    else
+      return ""
+    end
+  end,
+  -- Use default
   max_file_length = 40000, -- Disable if file is longer than this (in lines)
   -- config_preview = {
   --   -- Options passed to nvim_open_win

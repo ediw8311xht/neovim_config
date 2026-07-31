@@ -10,7 +10,7 @@ vim.opt.rtp:append({
   vim.g.dir_config .. "/lua/compiled",
 })
 local import_files = {
-  { "functions", "mappings", "textobjects", "my_treesitter_module" },
+  { "mappings", "textobjects", "my_treesitter_module" },
   config_files,
   compiled_files,
 }

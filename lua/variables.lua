@@ -2,10 +2,10 @@
 -- vim.api.nvim_set_hl
 -- vim.highlight.create
 -- }}}
+
 vim.g.treesitter_disable = { tex = true }
 vim.g.treesitter_with_vim_regex_highlighting = { lua = true }
 vim.g.python3_host_prog="/usr/bin/python"
-
 vim.g.MyDefaultScheme = { 'pop-punk', 'lua CorrectColors()' }
 vim.g.MySchemes = {
     vim.g.MyDefaultScheme ,
@@ -43,31 +43,17 @@ vim.g.my_floating_preview_options = {
   offset_x = 20,
 }
 
-function StatusGit() return vim.g.gitsigns_head or "" end
-
 -- local sl_lsp_status = "" .. "%{LspStatus()}" .. "%*"
-local sl_file       = "%#StatusLine_File#" .. " %{expand('%:p:h:t')}/%t %r" .. "%*"
-local sl_git_branch = "%#StatusLine_Git#" .. " %{v:lua.StatusGit()} " .. "%*"
-local sl_session    = "%#StatusLine_Session#" .. " %{v:lua.require('auto-session.lib').current_session_name()} " .. "%*"
-local sl_lsp_status = "%#StatusLine_Lsp#" .. " %{v:lua.LspStatus()} " .. "%*"
-local sl_filepath   = " %F "
-
-function StatusLineFunc()
-  if vim.g.statusline_winid == vim.fn.win_getid() then
-    return vim.fn.printf("%s %s %s %s%s", sl_file, sl_git_branch, sl_session, "%m%=", sl_lsp_status)
-  else
-    return vim.fn.printf("%s[%s][%s]%s%s", sl_file, sl_git_branch, sl_session, "%m%=", sl_lsp_status)
-  end
-end
 
 vim.g.my_statuslines = {
   { 'default' , "%!v:lua.StatusLineFunc()"},
   -- { 'medium'  , sl_file .. sl_git_branch .. sl_session .. "%m%=" .. sl_lsp_status .. sl_filepath },
-  { 'large'   , sl_file .. sl_git_branch .. sl_session .. "%m%=" .. sl_lsp_status .. "[%l,%c,%p%%]" .. sl_filepath },
+  -- { 'large'   , sl_file .. sl_git_status .. sl_session .. "%m%=" .. sl_lsp_status .. "[%l,%c,%p%%]" .. sl_filepath },
 }
 
 vim.g.my_titlestring = {
-  [ 'default' ]   = "%f",
+  -- default = "%f",
+  default = "%{v:lua.TitleStringFunc()}",
 }
 ----------------------------------------------------------
 ---------------------- FZF SETTINGS ----------------------
@@ -86,14 +72,12 @@ vim.g.fzf_vim = {
   [ 'preview_window' ] = {
     'right,50%,<70(up,40%)', 'ctrl-/'
   }
-
 }
-
 vim.g.fzf_colors = {
-  [ 'hl'     ] = { 'bg', 'Search' },
-  [ 'hl+'    ] = { 'bg', 'Search' },
+  hl      = { 'bg', 'Search' },
+  ['hl+'] = { 'bg', 'Search' },
   -- [ 'border' ] = { 'bg', 'Ignore' },
 }
 vim.g.fzf_layout = {
-  [ 'window' ] = { width = 0.9, height = 0.9, border = "sharp" } --, border = 'no' }
+  window  = { width = 0.9, height = 0.9, border = "sharp" } --, border = 'no' }
 }

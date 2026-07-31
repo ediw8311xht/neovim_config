@@ -14,6 +14,7 @@
      <==============================================================================> --]]
 
 require("helper_functions")
+require("functions")
 vim.g.dir_config     = vim.fn.stdpath("config")
 vim.g.dir_scripts    = vim.fs.joinpath(vim.g.dir_config, "scripts")
 vim.g.dir_config_vim = vim.fs.joinpath(vim.g.dir_config, "vim")
