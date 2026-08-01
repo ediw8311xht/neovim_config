@@ -155,19 +155,23 @@ function KeyMapSetter2(map, pre, buffer_only, with_which_key)
         which_key.add({ pre .. key, group = tbl.group, mode = mode })
         goto continue
       end
-      local remap = tbl.remap
-      local desc = tbl.desc
       local command = handle_command(tbl, key)
-      local expr = tbl.expr
+      local desc    = tbl.desc
+      local expr    = tbl.expr
+      local nowait  = tbl.nowait
+      local remap   = tbl.remap
+      local silent  = tbl.silent
       if with_which_key then
         which_key.add({ pre .. key, desc = desc, mode = mode })
       end
       -- local keymap_cmd = (tbl.cmd and "<CMD>" .. command .. "<CR>") or command
       vim.keymap.set(mode, pre .. key, command, {
-        remap = remap,
-        desc = desc,
         buffer = buffer_only,
-        expr = expr,
+        desc   = desc,
+        expr   = expr,
+        nowait = nowait,
+        remap  = remap,
+        silent = silent,
       })
       ::continue::
     end
@@ -404,7 +408,7 @@ function FloatingWindowToggle(buf, enter, options)
   else
     buffer = buf
   end
-  --[[ 
+  --[[
         HIDE
   --]]
   for _,v in pairs(vim.fn.win_findbuf(buffer)) do
@@ -412,7 +416,7 @@ function FloatingWindowToggle(buf, enter, options)
       return vim.api.nvim_win_hide(v)
     end
   end
-  --[[ 
+  --[[
         SHOW
   --]]
   local window_width = api.nvim_win_get_width(0)

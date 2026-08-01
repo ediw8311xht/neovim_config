@@ -107,8 +107,8 @@ LEADER_MAPPINGS = {
     ---[group] open
     O     = { group="open"},
     Ob    = { desc='[open] buffers with extension', default=FZFBuffersWithExtension },
-    OBb   = { desc='[open] w/ $BROWSER',        cmd='silent !"${BROWSER:-"brave"}"  %:p'},
-    OBq   = { desc='[open] w/ qutebrowser',     cmd='silent !"qutebrowser" %:p'},
+    OBb   = { desc='[open] w/ $BROWSER',        cmd='!"${BROWSER:-"brave"}"  %:p', silent=true},
+    OBq   = { desc='[open] w/ qutebrowser',     cmd='!"qutebrowser" %:p', silent=true},
     ONb   = { desc='[open-new] buffer',         cmd='enew'},
     ONf   = { desc="[open] file",               cmd="Telescope find_files" },
     ONn   = { desc='[open-new] file',           cmd='enew'},
