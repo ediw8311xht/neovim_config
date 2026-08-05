@@ -1,1 +1,1 @@
-/home/maceurt/.config/nvim/after/queries/lisp/textobjects.scm
+/home/maceurt/.config/nvim/queries/lisp/textobjects.scm

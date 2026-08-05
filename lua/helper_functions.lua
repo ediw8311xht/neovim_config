@@ -129,6 +129,17 @@ function Reduce(tbl, func, initial)
   return accum
 end
 
+---@param tbl  table
+---@param test_eql fun(value, key): boolean
+function Find(tbl, test_eql)
+  for k, v in pairs(tbl) do
+    local out = test_eql(k, v)
+    if out then
+      return out, k, v
+    end
+  end
+end
+
 function TableSetDefault(tbl, default)
   return setmetatable(tbl, {
     __index = function()
@@ -141,6 +152,8 @@ function Printf(s, ...)
   vim.print(vim.fn.printf(s, ...))
 end
 
+--- source if file exists
+---@param file string expanded with vim.fn.expand before 
 function SourceIf(file)
   local expand_file = vim.fn.expand(file)
   if vim.fn.filereadable(expand_file) then

@@ -1,0 +1,41 @@
+;; [nfnl-macro] 
+
+;; .nfnl.fnl config so you don't need to prefix globals like _G.vim.*
+;; {:compiler-options {:compilerEnv _G}}
+
+(fn register_binding [{: mode : key}
+                          {: typet
+                           : val
+                           : desc
+                           : remap
+                           : expr
+                           : with_which_key
+                           : with_leader
+                           }]
+  (local with_leader (= with_leader true))
+  (local remap  (= remap true))
+  (var typet (or typet :normal))
+  (var key (if with_leader (.. "," key) key))
+  (var val val)
+  (case (string.lower typet)
+    :cmd          (set val (.. "<CMD>" val "<CR>"     ))
+    :vim_command  (set val (.. ":" val "<CR>"         ))
+    :vim_function (set val (.. ":call " val "<CR>"    ))
+    :echo         (set val (.. ":echo " val "<CR>"    ))
+    :lua          (set val (.. ":lua " val "<CR>"     ))
+    :cmd_lua      (set val (.. "<CMD>lua " val "<CR>" ))
+    :normal nil)
+  `(vim.keymap.set ,mode ,key ,val {:desc ,desc :remap ,remap :expr ,expr})
+  ; (when (and which_key with_which_key)
+  ;   (which_key.add {1 key : desc : mode}))
+  )
+
+(fn register_binding_multiple [base_table]
+  (local result `(do))
+  (each [mode sub_table (pairs base_table)]
+    (each [key mapping (pairs sub_table)]
+      (table.insert result (register_binding {: key : mode} mapping))))
+  result)
+
+{: register_binding : register_binding_multiple}
+; {: register_binding }

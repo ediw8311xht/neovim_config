@@ -7,13 +7,22 @@ local lang_servers      = { 'cssls', 'html', 'jsonls', 'ts_ls', 'vimls', 'eslint
 
 actions_preview.setup({})
 
-lspconfig('cssls',   { capabilities = cmp_capabilities })
 lspconfig('html',    { capabilities = cmp_capabilities })
 lspconfig('jsonls',  { capabilities = cmp_capabilities })
 lspconfig('ts_ls',   { capabilities = cmp_capabilities })
 lspconfig('vimls',   { capabilities = cmp_capabilities })
 lspconfig('eslint',  { } )
 
+lspconfig('cssls', {
+  capabilities = cmp_capabilities,
+  settings = {
+    css = {
+      lint = {
+        emptyRules = "ignore",
+      },
+    },
+  },
+})
 lspconfig('pyright', {
   on_attach = lsp_status.on_attach,
   capabilities = cmp_capabilities,

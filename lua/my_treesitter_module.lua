@@ -158,8 +158,7 @@ end
 function M.fold_comments_multi()
   local line = vim.v.lnum
   local buf = vim.fn.bufnr()
-  if state.comments[buf][line] ~= 0
-    and ( state.comments[buf][line - 1] ~= 0 or state.comments[buf][line + 1] ~= 0) then
+  if state.comments[buf][line] ~= 0 and (state.comments[buf][line - 1] ~= 0 or state.comments[buf][line + 1] ~= 0) then
     return 1
   end
   return 0
@@ -238,41 +237,49 @@ function M.create_function_navigation_commands()
     M.GoToFunction,
     { desc = "Go to start of next function", nargs = 0 }
   )
-  api.nvim_create_user_command("GotoPrevFunctionStart", function()
-    M.GoToFunction({ reverse = true })
-  end, { desc = "Go to previous function start", nargs = 0 })
-  api.nvim_create_user_command("GotoNextFunctionEnd", function()
-    M.GoToFunction({ goto_end = true })
-  end, { desc = "Go to end of next function", nargs = 0 })
-  api.nvim_create_user_command("GotoInnerFunctionStart", function()
-    M.GoToFunction({ inner = true })
-  end, { desc = "Go to the start of function cursor is currently inside", nargs = 0 })
-  api.nvim_create_user_command("GotoInnerFunctionEnd", function()
-    M.GoToFunction({ inner = true, goto_end = true })
-  end, { desc = "Go to the end of function cursor is currently inside", nargs = 0 })
+  api.nvim_create_user_command(
+    "GotoPrevFunctionStart",
+    Bind(M.GoToFunction, { reverse = true }),
+    { desc = "Go to previous function start", nargs = 0 }
+  )
+  api.nvim_create_user_command(
+    "GotoNextFunctionEnd",
+    Bind(M.GoToFunction, { goto_end = true }),
+    { desc = "Go to end of next function", nargs = 0 }
+  )
+  api.nvim_create_user_command(
+    "GotoInnerFunctionStart",
+    Bind(M.GoToFunction, { inner = true }),
+    { desc = "Go to the start of function cursor is currently inside", nargs = 0 }
+  )
+  api.nvim_create_user_command(
+    "GotoInnerFunctionEnd",
+    Bind(M.GoToFunction, { inner = true, goto_end = true }),
+    { desc = "Go to the end of function cursor is currently inside", nargs = 0 }
+  )
 end
 ---create commands for folding on comments
 function M.create_folding_comments_commands()
   api.nvim_create_user_command("AutoFoldComments", function(opts)
     M.auto_fold_comments(MapSplit(opts.fargs[1], " ", { remove_empty = true }))
   end, {
-  desc = "Auto fold comments",
-  nargs = 1,
-  complete = function(_, _, _)
-    return { "off", "single", "multi", "block" }
-  end,
-})
-api.nvim_create_user_command("FoldComments", function(opts)
-  M.fold_comments(MapSplit(opts.fargs[1], " ", { remove_empty = true }))
-end, {
-desc = "Fold comments automatically with expr.",
-nargs = "?",
-complete = function(_, cmdline, _) -- (ArgLead, CmdLine, CursorPos)
-  return string.match(cmdline, "%s+off%s+$")
-  and { "marker", "marker", "manual", "expr", "indent", "syntax", "diff" }
-  or { "single", "block", "multi", "off" }
-end,
-})
+    desc = "Auto fold comments",
+    nargs = 1,
+    complete = function(_, _, _)
+      return { "off", "single", "multi", "block" }
+    end,
+  })
+  api.nvim_create_user_command("FoldComments", function(opts)
+    M.fold_comments(MapSplit(opts.fargs[1], " ", { remove_empty = true }))
+  end, {
+    desc = "Fold comments automatically with expr.",
+    nargs = "?",
+    complete = function(_, cmdline, _) -- (ArgLead, CmdLine, CursorPos)
+      return string.match(cmdline, "%s+off%s+$")
+          and { "marker", "marker", "manual", "expr", "indent", "syntax", "diff" }
+        or { "single", "block", "multi", "off" }
+    end,
+  })
 end
 ---create all commands
 function M.create_commands()

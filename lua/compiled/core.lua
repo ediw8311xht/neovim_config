@@ -3,54 +3,71 @@ local _local_1_ = require("nfnl.module")
 local autoload = _local_1_.autoload
 local which_key = require("which-key")
 local mod = {}
-mod.register_binding = function(_2_, _3_)
-  local mode = _2_.mode
-  local key = _2_.key
-  local typet = _3_.typet
-  local value = _3_.value
-  local desc = _3_.desc
-  local remap = _3_.remap
-  local expr = _3_.expr
-  local with_which_key = _3_.with_which_key
-  local with_leader = _3_.with_leader
-  local with_leader0 = (with_leader == true)
-  local remap0 = (remap == true)
-  local typet0 = (typet or "normal")
-  local key0 = ((with_leader0 and ("," .. key)) or key)
-  local value0 = value
-  do
-    local case_4_ = string.lower(typet0)
-    if (case_4_ == "cmd") then
-      value0 = vim.fn.printf("<CMD>%s<CR>", value0)
-    elseif (case_4_ == "vim_command") then
-      value0 = vim.fn.printf(":%s<CR>", value0)
-    elseif (case_4_ == "vim_function") then
-      value0 = vim.fn.printf(":call %s<CR>", value0)
-    elseif (case_4_ == "echo") then
-      value0 = vim.fn.printf(":echo %s<CR>", value0)
-    elseif (case_4_ == "lua") then
-      value0 = vim.fn.printf(":lua %s<CR>", value0)
-    elseif (case_4_ == "cmd_lua") then
-      value0 = vim.fn.printf("<CMD>lua %s<CR>", value0)
-    elseif (case_4_ == "normal") then
-    else
-    end
-  end
-  vim.keymap.set(mode, key0, value0, {desc = desc, remap = remap0, expr = expr})
-  if (which_key and with_which_key) then
-    return which_key.add({key0, desc = desc, mode = mode})
-  else
-    return nil
-  end
+do
+  vim.keymap.set("", "+", "g_", {desc = "End of line", remap = true})
+  vim.keymap.set("", ",", "<leader>", {desc = "<leader>", remap = true})
+  vim.keymap.set("", ",;", ",", {desc = "", remap = false})
+  vim.keymap.set("", "<enter>", ",", {desc = "", remap = false})
+  vim.keymap.set("", "x", "\"xx", {desc = "", remap = false})
+  vim.keymap.set("c", "<C-S-k>", "<C-c>D<C-c>", {desc = "", remap = false})
+  vim.keymap.set("i", "<C-S-b>", "<C-o>B", {desc = "backward whole word", remap = false})
+  vim.keymap.set("i", "<C-S-f>", "<C-o>W", {desc = "forward whole word", remap = false})
+  vim.keymap.set("i", "<C-S-g>", "<C-g>u", {desc = "new undo point", remap = false})
+  vim.keymap.set("i", "<C-S-k>", "<C-g>u<C-o>D", {desc = "delete to end of line", remap = false})
+  vim.keymap.set("i", "<C-S-t>", "<C-d>", {desc = "remove indent", remap = false})
+  vim.keymap.set("i", "<C-S-u>a", "<C-g>u", {desc = "new undo point", remap = false})
+  vim.keymap.set("i", "<C-S-u>r", "<C-o><C-r>", {desc = "redo", remap = false})
+  vim.keymap.set("i", "<C-S-u>u", "<C-o>u", {desc = "undo", remap = false})
+  vim.keymap.set("i", "<C-u>", "<C-g>u<C-u>", {desc = "del entered chars b4 curs", remap = false})
+  vim.keymap.set("i", "jk", "<ESC>", {desc = "exit Insert[m ]", remap = false})
+  vim.keymap.set("n", "`", "@=(foldlevel('.')?'za':\"<Space>\")<CR>", {desc = "fold", remap = false})
+  vim.keymap.set("n", "/", "/\\v\\c", {desc = "search vmagic", remap = false})
+  vim.keymap.set("n", "<C-S-E>", "ge", {desc = "end of previous word", remap = false})
+  vim.keymap.set("n", "<C-S-H>", "<C-w>h", {desc = "left pane", remap = false})
+  vim.keymap.set("n", "<C-S-J>", "<C-w>j", {desc = "down pane", remap = false})
+  vim.keymap.set("n", "<C-S-K>", "<C-w>k", {desc = "up Pane", remap = false})
+  vim.keymap.set("n", "<C-S-L>", "<C-w>l", {desc = "right pane", remap = false})
+  vim.keymap.set("n", "<C-S-Tab>", ":tabprevious<CR>", {desc = "previous tab", remap = false})
+  vim.keymap.set("n", "<C-S-g>", ":FloatermToggle<CR>", {desc = "[!]float term", remap = false})
+  vim.keymap.set("n", "<C-S-s>", ":%s/\\v", {desc = "substitute +char +vmagic", remap = false})
+  vim.keymap.set("n", "<C-Tab>", ":tabnext<CR>", {desc = "next tab", remap = false})
+  vim.keymap.set("n", "<C-n>", ":NERDTreeToggle<CR>", {desc = "[!]NerdTree", remap = false})
+  vim.keymap.set("n", "<C-s>", ":%s/\\v\\c", {desc = "substitute i", remap = false})
+  vim.keymap.set("n", "<C-w>n", ":new<ESC><C-w>L", {desc = "new buffer right", remap = false})
+  vim.keymap.set("n", "<ESC>", ":noh<ESC>:echon \"\"<enter>", {desc = "clear", remap = false})
+  vim.keymap.set("n", "?", "?\\v\\c", {desc = "search +back +vmagic", remap = false})
+  vim.keymap.set("n", "ZC", ":bd<CR>", {desc = "delete buffer", remap = false})
+  vim.keymap.set("n", "ZG", ":wqall<CR>", {desc = "write quit all", remap = false})
+  vim.keymap.set("n", "ZQ", ":q!<CR>", {desc = "!quit all", remap = false})
+  vim.keymap.set("n", "gne", ":GotoNextFunctionEnd<CR>", {desc = "next function end", remap = false})
+  vim.keymap.set("n", "|", "/\\V\\c", {desc = "search nomagic", remap = false})
+  vim.keymap.set("t", "<C-S-g>", "<C-w>:FloatermToggle<ESC>", {desc = "[!]Float Term", remap = true})
+  vim.keymap.set("t", "<C-w>", "<C-\\><C-n>", {desc = "normal mode", remap = true})
+  vim.keymap.set("v", "<C-S-s>", ":s/\\%V\\v", {desc = "sub +vmagic", remap = false})
+  vim.keymap.set("v", "<C-s>", ":s/\\%V\\v\\c", {desc = "sub +i +vmagic", remap = false})
+  vim.keymap.set("v", "`", "zf", {desc = "", remap = false})
+  vim.keymap.set({"n", "v"}, "](", ":call search('(', 'W')<CR>", {desc = "previous (", remap = false})
+  vim.keymap.set({"n", "v"}, "])", ":call search(')', 'W')<CR>", {desc = "previous )", remap = false})
+  vim.keymap.set({"n", "v"}, "[(", ":call search('(', 'bW')<CR>", {desc = "next (", remap = false})
+  vim.keymap.set({"n", "v"}, "[)", ":call search(')', 'bW')<CR>", {desc = "next )", remap = false})
+  vim.keymap.set({"x", "n"}, "ga", "<Plug>(EasyAlign)", {desc = "easy align", remap = false})
+  vim.keymap.set({"c", "i"}, "<C-a>", "<home>", {desc = "start of line", remap = false})
+  vim.keymap.set({"c", "i"}, "<C-b>", "<left>", {desc = "backward char", remap = false})
+  vim.keymap.set({"c", "i"}, "<C-e>", "<end>", {desc = "end of line", remap = false})
+  vim.keymap.set({"c", "i"}, "<C-f>", "<right>", {desc = "forward char", remap = false})
+  vim.keymap.set({"c", "i"}, "<C-w>", "<S-right>", {desc = "forward word", remap = false})
+  vim.keymap.set({"c", "i"}, "<C-S-w>", "<S-left>", {desc = "backward word", remap = false})
+  vim.keymap.set({"c", "i"}, "<C-BS>", "<C-w>", {desc = "delete word backwards", remap = false})
+  vim.keymap.set({"n", "v", "t", "i"}, "<C-1>", "1gt", {desc = "go to tab 1", remap = false})
+  vim.keymap.set({"n", "v", "t", "i"}, "<C-2>", "2gt", {desc = "go to tab 2", remap = false})
+  vim.keymap.set({"n", "v", "t", "i"}, "<C-3>", "3gt", {desc = "go to tab 3", remap = false})
+  vim.keymap.set({"n", "v", "t", "i"}, "<C-4>", "4gt", {desc = "go to tab 4", remap = false})
+  vim.keymap.set({"n", "v", "t", "i"}, "<C-5>", "5gt", {desc = "go to tab 5", remap = false})
+  vim.keymap.set({"n", "v", "t", "i"}, "<C-6>", "6gt", {desc = "go to tab 6", remap = false})
+  vim.keymap.set({"n", "v", "t", "i"}, "<C-7>", "7gt", {desc = "go to tab 7", remap = false})
+  vim.keymap.set({"n", "v", "t", "i"}, "<C-8>", "8gt", {desc = "go to tab 8", remap = false})
+  vim.keymap.set({"n", "v", "t", "i"}, "<C-9>", ":tablast<CR>", {desc = "go to last tab", remap = false})
+  vim.keymap.set({"n", "x", "o"}, "{", "<CMD>lua require('nvim-treesitter-textobjects.move').goto_previous_start('@fn_decl.outer', 'textobjects')<CR>", {desc = "prev function start", remap = false})
+  mod.f = vim.keymap.set({"n", "x", "o"}, "}", "<CMD>lua require('nvim-treesitter-textobjects.move').goto_next_start('@fn_decl.outer', 'textobjects')<CR>", {desc = "next function start", remap = false})
 end
-mod.register_binding_multiple = function(base_table)
-  for mode, sub_table in pairs(base_table) do
-    for key, mapping in pairs(sub_table) do
-      mod.register_binding({key = key, mode = mode}, mapping)
-    end
-  end
-  return nil
-end
-REGULAR_MAPPINGS = {[""] = {["+"] = {desc = "End of line", value = "g_", remap = true}, [","] = {desc = "<leader>", value = "<leader>", remap = true}, [",;"] = {desc = "", value = ","}, ["<enter>"] = {desc = "", value = ","}, x = {desc = "", value = "\"xx"}}, c = {["<C-S-k>"] = {desc = "", value = "<C-c>D<C-c>"}}, i = {["<C-S-b>"] = {desc = "backward whole word", value = "<C-o>B"}, ["<C-S-f>"] = {desc = "forward whole word", value = "<C-o>W"}, ["<C-S-g>"] = {desc = "new undo point", value = "<C-g>u"}, ["<C-S-k>"] = {desc = "delete to end of line", value = "<C-g>u<C-o>D"}, ["<C-S-t>"] = {desc = "remove indent", value = "<C-d>"}, ["<C-S-u>a"] = {desc = "new undo point", value = "<C-g>u"}, ["<C-S-u>r"] = {desc = "redo", value = "<C-o><C-r>"}, ["<C-S-u>u"] = {desc = "undo", value = "<C-o>u"}, ["<C-u>"] = {desc = "del entered chars b4 curs", value = "<C-g>u<C-u>"}, jk = {desc = "exit Insert[m ]", value = "<ESC>"}}, n = {["`"] = {desc = "fold", value = "@=(foldlevel('.')?'za':\"<Space>\")<CR>"}, ["/"] = {desc = "search vmagic", value = "/\\v\\c"}, ["<C-S-E>"] = {desc = "end of previous word", value = "ge"}, ["<C-S-H>"] = {desc = "left pane", value = "<C-w>h"}, ["<C-S-J>"] = {desc = "down pane", value = "<C-w>j"}, ["<C-S-K>"] = {desc = "up Pane", value = "<C-w>k"}, ["<C-S-L>"] = {desc = "right pane", value = "<C-w>l"}, ["<C-S-Tab>"] = {desc = "previous tab", value = "tabprevious", typet = "vim_command"}, ["<C-S-g>"] = {desc = "[!]float term", value = "FloatermToggle", typet = "vim_command"}, ["<C-S-s>"] = {desc = "substitute +char +vmagic", value = ":%s/\\v"}, ["<C-Tab>"] = {desc = "next tab", value = "tabnext", typet = "vim_command"}, ["<C-n>"] = {desc = "[!]NerdTree", value = "NERDTreeToggle", typet = "vim_command"}, ["<C-s>"] = {desc = "substitute i", value = ":%s/\\v\\c"}, ["<C-w>n"] = {desc = "new buffer right", value = ":new<ESC><C-w>L"}, ["<ESC>"] = {desc = "clear", value = ":noh<ESC>:echon \"\"<enter>"}, ["?"] = {desc = "search +back +vmagic", value = "?\\v\\c"}, ZC = {desc = "delete buffer", value = "bd", typet = "vim_command"}, ZG = {desc = "write quit all", value = "wqall", typet = "vim_command"}, ZQ = {desc = "!quit all", value = "q!", typet = "vim_command"}, gne = {desc = "next function end", value = "GotoNextFunctionEnd", typet = "vim_command"}, ["|"] = {desc = "search nomagic", value = "/\\V\\c"}}, t = {["<C-S-g>"] = {desc = "[!]Float Term", value = "<C-w>:FloatermToggle<ESC>", remap = true}, ["<C-w>"] = {desc = "normal mode", value = "<C-\\><C-n>", remap = true}}, v = {["<C-S-s>"] = {desc = "sub +vmagic", value = ":s/\\%V\\v"}, ["<C-s>"] = {desc = "sub +i +vmagic", value = ":s/\\%V\\v\\c"}, ["`"] = {desc = "", value = "zf"}}, [{"n", "v"}] = {["]("] = {desc = "previous (", value = "search('(', 'W')", typet = "vim_function"}, ["])"] = {desc = "previous )", value = "search(')', 'W')", typet = "vim_function"}, ["[("] = {desc = "next (", value = "search('(', 'bW')", typet = "vim_function"}, ["[)"] = {desc = "next )", value = "search(')', 'bW')", typet = "vim_function"}}, [{"x", "n"}] = {ga = {desc = "easy align", value = "<Plug>(EasyAlign)"}}, [{"c", "i"}] = {["<C-a>"] = {desc = "start of line", value = "<home>"}, ["<C-b>"] = {desc = "backward char", value = "<left>"}, ["<C-e>"] = {desc = "end of line", value = "<end>"}, ["<C-f>"] = {desc = "forward char", value = "<right>"}, ["<C-w>"] = {desc = "forward word", value = "<S-right>"}, ["<C-S-w>"] = {desc = "backward word", value = "<S-left>"}, ["<C-BS>"] = {desc = "delete word backwards", value = "<C-w>"}}, [{"n", "v", "t", "i"}] = {["<C-1>"] = {desc = "go to tab 1", value = "1gt"}, ["<C-2>"] = {desc = "go to tab 2", value = "2gt"}, ["<C-3>"] = {desc = "go to tab 3", value = "3gt"}, ["<C-4>"] = {desc = "go to tab 4", value = "4gt"}, ["<C-5>"] = {desc = "go to tab 5", value = "5gt"}, ["<C-6>"] = {desc = "go to tab 6", value = "6gt"}, ["<C-7>"] = {desc = "go to tab 7", value = "7gt"}, ["<C-8>"] = {desc = "go to tab 8", value = "8gt"}, ["<C-9>"] = {desc = "go to last tab", value = "tablast", typet = "vim_command"}}, [{"n", "x", "o"}] = {["{"] = {desc = "prev function start", value = "require('nvim-treesitter-textobjects.move').goto_previous_start('@fn_decl.outer', 'textobjects')", typet = "cmd_lua"}, ["}"] = {desc = "next function start", value = "require('nvim-treesitter-textobjects.move').goto_next_start('@fn_decl.outer', 'textobjects')", typet = "cmd_lua"}}}
-mod.register_binding_multiple(REGULAR_MAPPINGS)
 return mod

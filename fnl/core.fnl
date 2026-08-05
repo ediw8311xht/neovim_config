@@ -1,140 +1,116 @@
 (local {: autoload} (require :nfnl.module))
 
+(import-macros { : register_binding : register_binding_multiple } :macros)
+
 (local which_key (require :which-key))
 
 (local mod {})
 
-(fn mod.register_binding [{: mode : key}
-                          {: typet
-                           : value
-                           : desc
-                           : remap
-                           : expr
-                           : with_which_key
-                           : with_leader
-                           }]
-  (local with_leader (= with_leader true))
-  (local remap  (= remap true))
-  (var typet (or typet :normal))
-  (var key (or (and with_leader (.. "," key)) key))
-  (var value value)
-  (case (string.lower typet)
-    :cmd          (set value (vim.fn.printf "<CMD>%s<CR>"     value))
-    :vim_command  (set value (vim.fn.printf ":%s<CR>"         value))
-    :vim_function (set value (vim.fn.printf ":call %s<CR>"    value))
-    :echo         (set value (vim.fn.printf ":echo %s<CR>"    value))
-    :lua          (set value (vim.fn.printf ":lua %s<CR>"     value))
-    :cmd_lua      (set value (vim.fn.printf "<CMD>lua %s<CR>" value))
-    :normal nil)
-  (vim.keymap.set mode key value {: desc : remap : expr})
-  (when (and which_key with_which_key)
-    (which_key.add {1 key : desc : mode})))
 
-(fn mod.register_binding_multiple [base_table]
-  (each [mode sub_table (pairs base_table)]
-    (each [key mapping (pairs sub_table)]
-      (mod.register_binding {: key : mode} mapping))))
-
-(global REGULAR_MAPPINGS {; {{{
+; (global REGULAR_MAPPINGS {
+(set mod.f (register_binding_multiple {
 "" {
-  :+          { :desc "End of line"                 :value :g_
+  :+          { :desc "End of line"                 :val :g_
                 :remap true }
-  ","         { :desc :<leader>                     :value :<leader>
+  ","         { :desc :<leader>                     :val :<leader>
                 :remap true }
-  ",;"        { :desc ""                            :value ","                                         }
-  "<enter>"   { :desc ""                            :value ","                                         }
-  :x          { :desc ""                            :value "\"xx"                                      }
+  ",;"        { :desc ""                            :val ","                                         }
+  "<enter>"   { :desc ""                            :val ","                                         }
+  :x          { :desc ""                            :val "\"xx"                                      }
 }
 :c {
-  :<C-S-k>    { :desc ""                            :value :<C-c>D<C-c>                                }
+  :<C-S-k>    { :desc ""                            :val :<C-c>D<C-c>                                }
 }
 :i {
-  :<C-S-b>    { :desc "backward whole word"         :value :<C-o>B                                     }
-  :<C-S-f>    { :desc "forward whole word"          :value :<C-o>W                                     }
-  :<C-S-g>    { :desc "new undo point"              :value :<C-g>u                                     }
-  :<C-S-k>    { :desc "delete to end of line"       :value :<C-g>u<C-o>D                               }
-  :<C-S-t>    { :desc "remove indent"               :value :<C-d>                                      }
-  :<C-S-u>a   { :desc "new undo point"              :value :<C-g>u                                     }
-  :<C-S-u>r   { :desc :redo                         :value :<C-o><C-r>                                 }
-  :<C-S-u>u   { :desc :undo                         :value :<C-o>u                                     }
-  :<C-u>      { :desc "del entered chars b4 curs"   :value :<C-g>u<C-u>                                }
-  :jk         { :desc "exit Insert[m ]"             :value :<ESC>                                      }
+  :<C-S-b>    { :desc "backward whole word"         :val :<C-o>B                                     }
+  :<C-S-f>    { :desc "forward whole word"          :val :<C-o>W                                     }
+  :<C-S-g>    { :desc "new undo point"              :val :<C-g>u                                     }
+  :<C-S-k>    { :desc "delete to end of line"       :val :<C-g>u<C-o>D                               }
+  :<C-S-t>    { :desc "remove indent"               :val :<C-d>                                      }
+  :<C-S-u>a   { :desc "new undo point"              :val :<C-g>u                                     }
+  :<C-S-u>r   { :desc :redo                         :val :<C-o><C-r>                                 }
+  :<C-S-u>u   { :desc :undo                         :val :<C-o>u                                     }
+  :<C-u>      { :desc "del entered chars b4 curs"   :val :<C-g>u<C-u>                                }
+  :jk         { :desc "exit Insert[m ]"             :val :<ESC>                                      }
 }
 :n {
-  "`"         { :desc :fold                         :value "@=(foldlevel('.')?'za':\"<Space>\")<CR>"   }
-  ; "{"         { :desc "prev function start"         :value :GotoPrevFunctionStart   :typet :vim_command }
-  ; "}"         { :desc "next function start"         :value :GotoNextFunctionStart   :typet :vim_command }
-  :/          { :desc "search vmagic"               :value "/\\v\\c"                                   }
-  :<C-S-E>    { :desc "end of previous word"        :value :ge                                         }
-  :<C-S-H>    { :desc "left pane"                   :value :<C-w>h                                     }
-  :<C-S-J>    { :desc "down pane"                   :value :<C-w>j                                     }
-  :<C-S-K>    { :desc "up Pane"                     :value :<C-w>k                                     }
-  :<C-S-L>    { :desc "right pane"                  :value :<C-w>l                                     }
-  :<C-S-Tab>  { :desc "previous tab"                :value :tabprevious :typet :vim_command }
-  :<C-S-g>    { :desc "[!]float term"               :value "FloatermToggle" :typet :vim_command }
-  :<C-S-s>    { :desc "substitute +char +vmagic"    :value ":%s/\\v"                                   }
-  :<C-Tab>    { :desc "next tab"                    :value :tabnext :typet :vim_command }
-  :<C-n>      { :desc "[!]NerdTree"                 :value :NERDTreeToggle :typet :vim_command }
-  :<C-s>      { :desc "substitute i"                :value ":%s/\\v\\c"                                }
-  :<C-w>n     { :desc "new buffer right"            :value ":new<ESC><C-w>L"                           }
-  :<ESC>      { :desc :clear                        :value ":noh<ESC>:echon \"\"<enter>"               }
-  :?          { :desc "search +back +vmagic"        :value "?\\v\\c"                                   }
-  :ZC         { :desc "delete buffer"               :value :bd :typet :vim_command }
-  :ZG         { :desc "write quit all"              :value :wqall                   :typet :vim_command }
-  :ZQ         { :desc "!quit all"                   :value :q!                      :typet :vim_command }
-  :gne        { :desc "next function end"           :value :GotoNextFunctionEnd     :typet :vim_command }
-  :|          { :desc "search nomagic"              :value "/\\V\\c"                                   }
+  "`"         { :desc :fold                         :val "@=(foldlevel('.')?'za':\"<Space>\")<CR>"   }
+  ; "{"         { :desc "prev function start"         :val :GotoPrevFunctionStart   :typet :vim_command }
+  ; "}"         { :desc "next function start"         :val :GotoNextFunctionStart   :typet :vim_command }
+  :/          { :desc "search vmagic"               :val "/\\v\\c"                                   }
+  :<C-S-E>    { :desc "end of previous word"        :val :ge                                         }
+  :<C-S-H>    { :desc "left pane"                   :val :<C-w>h                                     }
+  :<C-S-J>    { :desc "down pane"                   :val :<C-w>j                                     }
+  :<C-S-K>    { :desc "up Pane"                     :val :<C-w>k                                     }
+  :<C-S-L>    { :desc "right pane"                  :val :<C-w>l                                     }
+  :<C-S-Tab>  { :desc "previous tab"                :val :tabprevious :typet :vim_command }
+  :<C-S-g>    { :desc "[!]float term"               :val "FloatermToggle" :typet :vim_command }
+  :<C-S-s>    { :desc "substitute +char +vmagic"    :val ":%s/\\v"                                   }
+  :<C-Tab>    { :desc "next tab"                    :val :tabnext :typet :vim_command }
+  :<C-n>      { :desc "[!]NerdTree"                 :val :NERDTreeToggle :typet :vim_command }
+  :<C-s>      { :desc "substitute i"                :val ":%s/\\v\\c"                                }
+  :<C-w>n     { :desc "new buffer right"            :val ":new<ESC><C-w>L"                           }
+  :<ESC>      { :desc :clear                        :val ":noh<ESC>:echon \"\"<enter>"               }
+  :?          { :desc "search +back +vmagic"        :val "?\\v\\c"                                   }
+  :ZC         { :desc "delete buffer"               :val :bd :typet :vim_command }
+  :ZG         { :desc "write quit all"              :val :wqall                   :typet :vim_command }
+  :ZQ         { :desc "!quit all"                   :val :q!                      :typet :vim_command }
+  :gne        { :desc "next function end"           :val :GotoNextFunctionEnd     :typet :vim_command }
+  :|          { :desc "search nomagic"              :val "/\\V\\c"                                   }
 }
 :t {
-  :<C-S-g>    { :desc "[!]Float Term"               :value  "<C-w>:FloatermToggle<ESC>"
+  :<C-S-g>    { :desc "[!]Float Term"               :val  "<C-w>:FloatermToggle<ESC>"
                 :remap true }
-  :<C-w>      { :desc "normal mode"                 :value "<C-\\><C-n>"
+  :<C-w>      { :desc "normal mode"                 :val "<C-\\><C-n>"
                 :remap true }
 }
 :v {
-  :<C-S-s>    { :desc "sub +vmagic"                 :value ":s/\\%V\\v"                                }
-  :<C-s>      { :desc "sub +i +vmagic"              :value ":s/\\%V\\v\\c"                             }
-  "`"         { :desc ""                            :value :zf                                         }
+  :<C-S-s>    { :desc "sub +vmagic"                 :val ":s/\\%V\\v"                                }
+  :<C-s>      { :desc "sub +i +vmagic"              :val ":s/\\%V\\v\\c"                             }
+  "`"         { :desc ""                            :val :zf                                         }
 }
 [:n :v] {
-  "](" { :desc "previous ("  :value "search('(', 'W')" :typet :vim_function }
-  "])" { :desc "previous )"  :value "search(')', 'W')" :typet :vim_function }
-  "[(" { :desc "next ("      :value "search('(', 'bW')" :typet :vim_function }
-  "[)" { :desc "next )"      :value "search(')', 'bW')" :typet :vim_function }
+  "](" { :desc "previous ("  :val "search('(', 'W')" :typet :vim_function }
+  "])" { :desc "previous )"  :val "search(')', 'W')" :typet :vim_function }
+  "[(" { :desc "next ("      :val "search('(', 'bW')" :typet :vim_function }
+  "[)" { :desc "next )"      :val "search(')', 'bW')" :typet :vim_function }
 }
 [:x :n] {
-  :ga       { :desc "easy align" :value "<Plug>(EasyAlign)" }
+  :ga       { :desc "easy align" :val "<Plug>(EasyAlign)" }
 }
 [:c :i] {
-  :<C-a>    { :desc "start of line"          :value :<home>     }
-  :<C-b>    { :desc "backward char"          :value :<left>     }
-  :<C-e>    { :desc "end of line"            :value :<end>      }
-  :<C-f>    { :desc "forward char"           :value :<right>    }
-  :<C-w>    { :desc "forward word"           :value :<S-right>  }
-  :<C-S-w>  { :desc "backward word"          :value :<S-left>   }
-  :<C-BS>   { :desc "delete word backwards"  :value :<C-w>      }
+  :<C-a>    { :desc "start of line"          :val :<home>     }
+  :<C-b>    { :desc "backward char"          :val :<left>     }
+  :<C-e>    { :desc "end of line"            :val :<end>      }
+  :<C-f>    { :desc "forward char"           :val :<right>    }
+  :<C-w>    { :desc "forward word"           :val :<S-right>  }
+  :<C-S-w>  { :desc "backward word"          :val :<S-left>   }
+  :<C-BS>   { :desc "delete word backwards"  :val :<C-w>      }
 }
 [ :n :v :t :i ] {
-  :<C-1> { :desc "go to tab 1"    :value :1gt           }
-  :<C-2> { :desc "go to tab 2"    :value :2gt           }
-  :<C-3> { :desc "go to tab 3"    :value :3gt           }
-  :<C-4> { :desc "go to tab 4"    :value :4gt           }
-  :<C-5> { :desc "go to tab 5"    :value :5gt           }
-  :<C-6> { :desc "go to tab 6"    :value :6gt           }
-  :<C-7> { :desc "go to tab 7"    :value :7gt           }
-  :<C-8> { :desc "go to tab 8"    :value :8gt           }
-  :<C-9> { :desc "go to last tab" :value :tablast :typet :vim_command  }
+  :<C-1> { :desc "go to tab 1"    :val :1gt           }
+  :<C-2> { :desc "go to tab 2"    :val :2gt           }
+  :<C-3> { :desc "go to tab 3"    :val :3gt           }
+  :<C-4> { :desc "go to tab 4"    :val :4gt           }
+  :<C-5> { :desc "go to tab 5"    :val :5gt           }
+  :<C-6> { :desc "go to tab 6"    :val :6gt           }
+  :<C-7> { :desc "go to tab 7"    :val :7gt           }
+  :<C-8> { :desc "go to tab 8"    :val :8gt           }
+  :<C-9> { :desc "go to last tab" :val :tablast :typet :vim_command  }
 }
 [ :n :x :o ] {
-  "{"   { :desc "prev function start" :value "require('nvim-treesitter-textobjects.move').goto_previous_start('@fn_decl.outer', 'textobjects')" :typet :cmd_lua }
-  "}"   { :desc "next function start" :value "require('nvim-treesitter-textobjects.move').goto_next_start('@fn_decl.outer', 'textobjects')"     :typet :cmd_lua }
+  "{"   { :desc "prev function start" :val "require('nvim-treesitter-textobjects.move').goto_previous_start('@fn_decl.outer', 'textobjects')" :typet :cmd_lua }
+  "}"   { :desc "next function start" :val "require('nvim-treesitter-textobjects.move').goto_next_start('@fn_decl.outer', 'textobjects')"     :typet :cmd_lua }
 }
-})
+}))
 
-(mod.register_binding_multiple REGULAR_MAPPINGS)
-mod; }}}
+mod
 
-; (fn mod.read_in_file [file]
+; (register_binding_multiple REGULAR_MAPPINGS)
+; mod
+
+
+; (fn mod.read_in_file [file] {{{
 ;   (var lines {})
 ;   (each [l (io.lines file)]
 ;     (table.insert lines l))
@@ -154,4 +130,4 @@ mod; }}}
 ;
 ; (-> "mappings.md"
 ;  (mod.read_in_file)
-;  (mod.bindit))
+;  (mod.bindit)) }}}

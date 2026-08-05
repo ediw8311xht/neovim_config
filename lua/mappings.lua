@@ -59,7 +59,7 @@ LEADER_MAPPINGS = {
     A     = { group="filetype-specific" },
     ---[group] buffer
     B     = { group="buffer"},
-    Bc    = { desc='[clip] buffer',             default='gg"+yG<c-o>'},
+    By    = { desc='[clip] buffer',             default='gg"+yG<c-o>'},
     Bd    = { desc='[-] buffer',                cmd='bd'},
     E     = { desc='cwd edit',                  lua_call='vim.fn.feedkeys(":e " .. GetFile({tilde_home=true, expand="%:p:h"}) .. "/")'},
     ---[group] AutoSession

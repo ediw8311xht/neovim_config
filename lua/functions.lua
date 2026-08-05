@@ -402,37 +402,35 @@ function FloatingWindowToggle(buf, enter, options)
   if (type(buf) == "string") then
     buffer = fn.bufnr(buf)
     if not buffer then
-      vim.print("Couldn't find buffer matching: " .. string)
+      Printf("Couldn't find buffer matching: '%s'", string)
       return nil
     end
   else
     buffer = buf
   end
-  --[[
-        HIDE
-  --]]
+  --[[ HIDE --]]
   for _,v in pairs(vim.fn.win_findbuf(buffer)) do
     if IsFloating(v) then
       return vim.api.nvim_win_hide(v)
     end
   end
-  --[[
-        SHOW
-  --]]
+  --[[ SHOW --]]
   local window_width = api.nvim_win_get_width(0)
   local width = math.floor(window_width / 3)
   local height = math.floor(api.nvim_win_get_height(0) / 1.5)
   local default_opts = {
     anchor = "NE",
     relative = "editor",
+    border = { "╔", "═", "╗", "║", "╝", "═", "╚", "║" },
+    -- position
     col = window_width - 1,
     row = 1,
+    -- size
     width = width,
     height = height,
-    border = { "╔", "═", "╗", "║", "╝", "═", "╚", "║" },
   }
   local opts = TableDifference(default_opts, options or {}, false)
-  local out_window = api.nvim_open_win(buffer or 0, enter, opts)
+  local out_window = api.nvim_open_win(buffer or 0, enter or false, opts)
   -- prevents buffer from changing in floating window (very annoying)
   -- vim.api.nvim_win_set_option(out_window, 'winfixbuf', true)
   return out_window
