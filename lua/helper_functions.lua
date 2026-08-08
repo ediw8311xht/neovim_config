@@ -1,3 +1,5 @@
+--{{{ GENERAL
+
 ---@diagnostic disable: deprecated
 function IsEmpty(tbl)
   return next(tbl) == nil
@@ -148,22 +150,6 @@ function TableSetDefault(tbl, default)
   })
 end
 
-function Printf(s, ...)
-  vim.print(vim.fn.printf(s, ...))
-end
-
---- source if file exists
----@param file string expanded with vim.fn.expand before 
-function SourceIf(file)
-  local expand_file = vim.fn.expand(file)
-  if vim.fn.filereadable(expand_file) then
-    vim.cmd.source(expand_file)
-    return true
-  else
-    Printf("File: '%s' not found", expand_file)
-  end
-end
-
 ---If test then call func(args) end
 ---@param test     function|any @func or variable to test to
 ---@param if_func  function     @func to call if test()/test
@@ -185,24 +171,6 @@ function IfCall(test, if_func, options)
       opts.else_func(opts.else_args or {})
     end
   end
-end
----Catches error and runs option callback on success/error
----@param func function
----@param options? {
----                   args: table,
----                   notify: boolean,
----                   on_success: function,
----                   on_error:  function,
----                }
----@return { success: boolean, output: any }
-function CatchError(func, options)
-  local opts = options or {}
-  local success, output = pcall(func, opts.args)
-  if not success then
-    IfCall(vim.notify, vim.fn.printf, { "\nError: \n'%s'\n", success })
-    IfCall(opts.on_success ~= nil, opts.on_success, opts.args)
-  end
-  return { success = success, output = output }
 end
 
 ---Unpack one or multiple tables
@@ -228,3 +196,54 @@ function Bind(func, ...)
     return func(Unpack(bound_args, runtime_args))
   end
 end
+--}}}
+
+--{{{ VIM SPECIFIC
+
+--- interpolate string
+--- @param s string
+--- @vararg any
+--- @return string
+function Printf(s, ...)
+  return vim.fn.printf(s, ...)
+end
+
+--- print interpolated string
+--- @param s string
+--- @vararg any
+--- @return string
+function PrintPrintf(s, ...)
+  return vim.print(Printf(s, ...))
+end
+
+--- source if file exists
+---@param file string expanded with vim.fn.expand before
+function SourceIf(file)
+  local expand_file = vim.fn.expand(file)
+  if vim.fn.filereadable(expand_file) then
+    vim.cmd.source(expand_file)
+    return true
+  else
+    PrintPrintf("File: '%s' not found", expand_file)
+  end
+end
+
+---Catches error and runs option callback on success/error
+---@param func function
+---@param options? {
+---                   args: table,
+---                   notify: boolean,
+---                   on_success: function,
+---                   on_error:  function,
+---                }
+---@return { success: boolean, output: any }
+function CatchError(func, options)
+  local opts = options or {}
+  local success, output = pcall(func, opts.args)
+  if not success then
+    IfCall(vim.notify, vim.fn.printf, { "\nError: \n'%s'\n", success })
+    IfCall(opts.on_success ~= nil, opts.on_success, opts.args)
+  end
+  return { success = success, output = output }
+end
+-- }}}

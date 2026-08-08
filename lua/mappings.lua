@@ -1,6 +1,6 @@
 #!/usr/bin/lua
 
---[[
+--[[{{{
 ---@diagnostic disable: unused-local, unused-function
 --]]
 
@@ -18,12 +18,10 @@ function SubAllBuffers(x, y)
   vim.cmd.bufdo(
     repl
   )
-end
--- sub_all_buffers(3, 3)
--- Leader Mappings {{{
----------- Remember -----------
+end-- }}}
+
+-- Remember:
 -- innoremap <expr> key command
--------------------------------
 LEADER_MAPPINGS = {
   n = {
     ---[misc]
@@ -77,14 +75,14 @@ LEADER_MAPPINGS = {
     Gu    = { desc='get undo list',             cmd='undolist'},
     ---[group] help
     H     = { group="help"},
-    Hg    = { desc='helpgrep',                  default=':vert helpgrep '},
-    Hh    = { desc='[show] highlight',          default=GetHL },
-    Hk    = { desc='vim help tags',             cmd='Telescope help_tags'},
-    Hme   = { desc='[open] mappings file',      cmd='edit ' .. vim.g.mapping_file},
-    Hmp   = { desc='[print] all mappings',      default=GetMappings },
-    Ho    = { desc='[vim] options',             cmd='Telescope vim_options'},
-    Ht    = { desc='[vim] commands',            cmd='Telescope commands'},
-    Hs    = { desc='[show-buffer] syntax items', cmd='syntax'},
+    Hg    = { desc='helpgrep',                    default=':vert helpgrep '},
+    Hh    = { desc='[show] highlight',            default=GetHL },
+    Hme   = { desc='[open] mappings file',        cmd='edit ' .. vim.g.mapping_file},
+    Hmp   = { desc='[print] all mappings',        default=GetMappings },
+    Ho    = { desc='[vim] options',               cmd='Telescope vim_options'},
+    Hs    = { desc='[show-buffer] syntax items',  cmd='syntax'},
+    Ht    = { desc='[vim] commands',              cmd='Telescope commands'},
+    Hv    = { desc='[vim] help tags',             cmd='Telescope help_tags'},
     ---[group] lsp
     I     = { group="lsp"},
     IA    = { desc='[-] lsp',                   cmd='lsp stop'},
@@ -158,7 +156,7 @@ LEADER_MAPPINGS = {
     -- vx     = { desc='execute selection',      'lua
   },
   [ { "v", "n" } ] = { }
-} --}}}
+} --
 KeyMapSetter2(LEADER_MAPPINGS, "<leader>", false,true)
 
 --[[ info {{{

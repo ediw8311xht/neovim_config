@@ -402,7 +402,7 @@ function FloatingWindowToggle(buf, enter, options)
   if (type(buf) == "string") then
     buffer = fn.bufnr(buf)
     if not buffer then
-      Printf("Couldn't find buffer matching: '%s'", string)
+      PrintPrintf("Couldn't find buffer matching: '%s'", buffer)
       return nil
     end
   else

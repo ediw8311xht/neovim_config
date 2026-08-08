@@ -1,4 +1,3 @@
-
 local paredit = require("nvim-paredit")
 paredit.setup({
   filetypes = { "clojure", "fennel", "scheme" },
@@ -9,7 +8,18 @@ paredit.setup({
     ["[j"] = { paredit.api.slurp_backwards, "Slurp backwards" },
     ["[k"] = { paredit.api.barf_backwards, "Barf backwards" },
 
-    ["[W"] = { function() paredit.api.wrap_element_under_cursor('(', ')') end, "Wrap form" },
+    ["[w"] = {
+      function()
+        paredit.api.wrap_element_under_cursor("(", ")")
+      end,
+      "wrap element",
+    },
+    ["[W"] = {
+      function()
+        paredit.api.wrap_enclosing_form_under_cursor("(", ")")
+      end,
+      "[paredit] wrap form",
+    },
     ["[S"] = { paredit.api.unwrap_form_under_cursor, "Splice form" },
     ["[O"] = { paredit.api.raise_form, "Raise form" },
   },
