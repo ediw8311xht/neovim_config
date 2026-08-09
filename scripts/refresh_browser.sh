@@ -1,0 +1,1 @@
+/home/maceurt/bin/refresh_browser.sh

@@ -277,7 +277,8 @@ function ReadInFile(input_file, output_file, options)
     cmd(printf("keepalt %dread %s", opts.line, input_file))
     cmd.write({ mods = { silent = true } })
     if opts.chmod then
-      os.execute(printf("chmod %s '%s'", opts.chmod, output_file))
+      vim.cmd["!"]("chmod", opts.chmod, output_file)
+      -- os.execute(printf("chmod %s '%s'", opts.chmod, output_file))
     end
   end
 end
@@ -458,6 +459,26 @@ function TitleStringFunc()
   end
 end
 
+--- @param script string
+--- @param opts   nil|{
+---                   path: string
+---                   }
+--- @vararg any
+function ExecuteScript(script, opts, ...)
+  local options = opts or {}
+  local path = options.path or vim.g.dir_scripts
+  if not path and not vim.fn.isdirectory(path) then
+    error(Printf("vim.g._dir_scripts isn't set or couldn't be found. value: '%s' ", path))
+  end
+
+  local fullpath = vim.fs.joinpath(path or vim.fn.expand("%:p:h"), script)
+  vim.print(vim.fn.filereadable(fullpath))
+  if vim.fn.filereadable(fullpath) ~= 1 then
+    error(Printf("File '%s' not found", fullpath))
+  end
+
+  return vim.cmd["!"](".", fullpath, unpack({...}))
+end
 ---do later---------------------------------------------------{{{
 -- function GutterSign()
 --   print("h")

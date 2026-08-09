@@ -36,8 +36,8 @@ function TableDifference(table_a, table_b, in_place)
 end
 
 function EnvVarCheck(var)
-  local e = os.getenv(var)
-  if e == nil or e == "" then
+  local e = vim.fn.getenv(var)
+  if e == vim.NIL or e == "" then
     return false
   else
     return e
@@ -220,7 +220,7 @@ end
 ---@param file string expanded with vim.fn.expand before
 function SourceIf(file)
   local expand_file = vim.fn.expand(file)
-  if vim.fn.filereadable(expand_file) then
+  if vim.fn.filereadable(expand_file) == 1 then
     vim.cmd.source(expand_file)
     return true
   else

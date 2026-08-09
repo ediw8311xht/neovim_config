@@ -85,6 +85,10 @@ cmp.setup({
   }),
 })
 
+cmp.setup.filetype({ "fennel" }, {
+  sources = { "nfnl" },
+})
+
 cmp.setup.filetype({ "lisp", "commonlisp" }, {
   sources = {
     { name = "omni" },
@@ -130,7 +134,7 @@ cmp_dict.setup({
   document = {
     enable = true,
     command = {
-      vim.fs.joinpath(vim.g.my_scripts_dir, "definition_search.sh"),
+      vim.fs.joinpath(vim.g.dir_scripts, "definition_search.sh"),
       "${label}",
     },
   },
