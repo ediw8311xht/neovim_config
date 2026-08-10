@@ -22,8 +22,8 @@ local page_keymap_leader = {
     Ax = {
       desc = "update gitit",
       default = function()
-        ExecuteScript( "commit_push.sh", { path = vim.fn.getenv("MY_WIKI"), quiet=true }, "--quick" )
-        ExecuteScript("refresh_browser.sh")
+        ExecuteScript( "commit_push.sh", { path = vim.fn.getenv("MY_WIKI"), silent=true }, "--quick" )
+        ExecuteScript( "refresh_browser.sh", { silent = true })
       end,
     }, -- cmd='!$MY_WIKI/commit_push.sh --quick' },
     Aj  = { group = "journal" },
