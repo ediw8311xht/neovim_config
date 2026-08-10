@@ -1,4 +1,5 @@
 
+---@alias EvalOptions { add_to_history: boolean }
 
 vim.g.paredit_help   = "$MY_INFORMATION/lisp/paredit.md"
 vim.g.vlime_help     = "$MY_INFORMATION/lisp/vlime.md"
@@ -22,9 +23,7 @@ function LispAddToHistory(forms)
 end
 ---evaluates form in lisp repl, defaults to slimv
 ---@param form string|any[] @string of form or list of values to be computed with vim.fn.printf
----@param options? {
----                  add_to_history: boolean,
----                }
+---@param options? EvalOptions
 ---@return nil|0 @return 0 when vim.fn.SlimvEvalForm is successful
 function LispEvalForm(form, options)
   ---@diagnostic disable-next-line: deprecated, param-type-mismatch
@@ -85,21 +84,23 @@ function LispGetReplBuf()
   return (vim.g.slimv_loaded == 1 and GetBufByName(vim.g.slimv_repl_name)) or nil
 end
 
-function LispEvalFZF(coms, options)
+function LispEvalFZF(coms, options, ...)
+  local opts = options or {}
   if type(coms) == "table" and coms[1] then
     vim.call("fzf#run", {
       source = coms,
-      sink = function(x) LispEvalForm(x, options) end,
-      options = { '--no-preview' }
+      sink = function(x) LispEvalForm(x, opts) end,
+      options = { '--no-preview', ... }
     })
   else
-    vim.print(options.error or "No commands found in passed datastructure")
+    vim.print(opts.error or "No commands found in passed datastructure")
   end
 end
 
+---@param options EvalOptions|table
 function LispEvalInput(options)
   local opts           = options or {}
-  local prompt         = opts.prompt or "Expr: "
+  local prompt         = opts.prompt or "expr: "
   local printf         = opts.printf
   local fn
   if printf then
@@ -110,10 +111,10 @@ function LispEvalInput(options)
   vim.ui.input({prompt=prompt}, fn)
 end
 
-function LispEvalFromHistory()  LispEvalFZF(vim.g.slimv_cmdhistory, {error="No command history found."}) end
+function LispEvalFromHistory()  LispEvalFZF(vim.fn.reverse(vim.g.slimv_cmdhistory), {error="No command history found."}) end
 function LispEvalSavedForms()   LispEvalFZF(vim.g.lisp_saved_forms, {error="No command history found."}) end
 function LispEvalStartupForms() LispEvalForms(vim.g.lisp_startup_forms) end
-function LispQlQuickload()      LispEvalInput({prompt="quickload package: ", printf='(ql:quickload "%s")', add_to_history=nil }) end
+function LispQlQuickload()      LispEvalInput({prompt="quickload package: ", printf='(ql:quickload "%s")', add_to_history=false }) end
 
 
 -- function CreateToggle(options: { namespace: string, scope: string, description: string, command_name: string, var: string, on: function, off: function })
@@ -129,14 +130,16 @@ local commonlisp_leader_mappings = {
     X   = { desc='execute [sbcl] w/ args',     default=':!sbcl --script "%" ' },
     cf  = { desc='format',                     cmd='Autoformat | silent! %s/([ ]\\+/(/g' },
 
-    A   = { group="lisp"                       },
+    A   = { group="lisp" },
     Ac  = { desc='complete lisp functions',    vim_call='feedkeys(":lua Lisp\\t", "t")' },
 
-    Ae  = { group="lisp eval"                  },
-    Aee = { desc="slimv eval put into 'e",     default='"e\\e' },
-    Aeh = { desc='repl eval from history',     default=LispEvalFromHistory },
-    Aes = { desc='repl eval from saved forms', default=LispEvalSavedForms },
+    Ae  = { group="lisp eval" },
     AeS = { desc="eval startup forms",         default=LispEvalStartupForms },
+    Aee = { desc="slimv eval put into 'e",     default='"e\\e', remap=true },
+    Aeh = { desc='repl eval from history',     default=LispEvalFromHistory },
+    Aer = { desc="slimv eval 'e",              default='"e\\r', remap=true },
+    Aes = { desc='repl eval from saved forms', default=LispEvalSavedForms },
+    Aef = { desc="eval input",                 default=Bind(LispEvalInput, {add_to_history=true} ) },
 
     Al  = { desc='load system',                default=function() LispLoadSystem(vim.g.lisp_session_system) end },
     Ar  = { desc='reload slimv',               default='\\Q\\c' },
@@ -158,8 +161,8 @@ local commonlisp_leader_mappings = {
 KeyMapSetter2(commonlisp_mappings,        '', true, true)
 KeyMapSetter2(commonlisp_leader_mappings, '<leader>', true, true)
 
-vim.cmd([[
-    augroup SlimvReplAutoCmd
-        au!
-    augroup END
-    ]])
+-- vim.cmd([[
+--     augroup SlimvReplAutoCmd
+--         au!
+--     augroup END
+--     ]])

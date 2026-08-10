@@ -462,12 +462,12 @@ function TitleStringFunc()
 end
 
 --- @param script string
---- @param opts? { path: string,  silent: boolean }
+--- @param opts? { path: string, after: function }
 --- @vararg any
 function ExecuteScript(script, opts, ...)
   local options = opts or {}
+  local after = options.after or vim.print
   local path = options.path or vim.g.dir_scripts
-  local silent = options.silent
   if not path and not vim.fn.isdirectory(path) then
     error(Printf("vim.g._dir_scripts isn't set or couldn't be found. value: '%s' ", path))
   end
@@ -478,10 +478,7 @@ function ExecuteScript(script, opts, ...)
     error(Printf("File '%s' not found", fullpath))
   end
 
-  return vim.cmd["!"]({
-    args = { ".", fullpath, ... },
-    mods = { silent = silent },
-  })
+  return vim.system({ fullpath, ... }, after)
 end
 
 function SubAllBuffers(x, y)

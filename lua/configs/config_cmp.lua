@@ -37,6 +37,7 @@ cmp.setup({
     completion = {
       winhighlight = "FloatBorder:CmpBorder,Normal:NormalFloat",
       border = { "┌", "─", "┐", "│", "┘", "─", "└", "│" },
+      scrolloff = 10,
     },
     documentation = {
       winhighlight = "FloatBorder:CmpBorder,Normal:NormalFloat",
@@ -45,6 +46,7 @@ cmp.setup({
       min_height = 30,
       max_width = nil,
       max_height = nil,
+      scrolloff = 10,
     },
     MaxLinesCMP,
   },
@@ -85,9 +87,9 @@ cmp.setup({
   }),
 })
 
-cmp.setup.filetype({ "fennel" }, {
-  sources = { "nfnl" },
-})
+-- cmp.setup.filetype({ "fennel" }, {
+--   sources = { "cmp-conjure" },
+-- })
 
 cmp.setup.filetype({ "lisp", "commonlisp" }, {
   sources = {

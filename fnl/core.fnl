@@ -34,10 +34,6 @@
   "`"         { :desc :fold                         :val "@=(foldlevel('.')?'za':\"<Space>\")<CR>"  }
   :/          { :desc "search vmagic"               :val "/\\v\\c"  }
   :<C-S-E>    { :desc "end of previous word"        :val :ge  }
-  :<C-S-H>    { :desc "left pane"                   :val :<C-w>h  }
-  :<C-S-J>    { :desc "down pane"                   :val :<C-w>j  }
-  :<C-S-K>    { :desc "up Pane"                     :val :<C-w>k  }
-  :<C-S-L>    { :desc "right pane"                  :val :<C-w>l  }
   :<C-S-Tab>  { :desc "previous tab"                :val :tabprevious :typet :vim_command  }
   :<C-S-g>    { :desc "[!]float term"               :val "FloatermToggle" :typet :vim_command  }
   :<C-S-s>    { :desc "substitute +char +vmagic"    :val ":%s/\\v"  }
@@ -84,15 +80,19 @@
   :<C-BS>   { :desc "delete word backwards"  :val :<C-w>  }
 }
 [ :n :v :t :i ] {
-  :<C-1> { :desc "go to tab 1"    :val :1gt  }
-  :<C-2> { :desc "go to tab 2"    :val :2gt  }
-  :<C-3> { :desc "go to tab 3"    :val :3gt  }
-  :<C-4> { :desc "go to tab 4"    :val :4gt  }
-  :<C-5> { :desc "go to tab 5"    :val :5gt  }
-  :<C-6> { :desc "go to tab 6"    :val :6gt  }
-  :<C-7> { :desc "go to tab 7"    :val :7gt  }
-  :<C-8> { :desc "go to tab 8"    :val :8gt  }
-  :<C-9> { :desc "go to last tab" :val :tablast :typet :vim_command }
+  :<C-1>      { :desc "go to tab 1"    :val :1gt  }
+  :<C-2>      { :desc "go to tab 2"    :val :2gt  }
+  :<C-3>      { :desc "go to tab 3"    :val :3gt  }
+  :<C-4>      { :desc "go to tab 4"    :val :4gt  }
+  :<C-5>      { :desc "go to tab 5"    :val :5gt  }
+  :<C-6>      { :desc "go to tab 6"    :val :6gt  }
+  :<C-7>      { :desc "go to tab 7"    :val :7gt  }
+  :<C-8>      { :desc "go to tab 8"    :val :8gt  }
+  :<C-9>      { :desc "go to last tab" :val :tablast :typet :vim_command }
+  :<C-S-H>    { :desc "left pane"                   :val :<C-w>h  }
+  :<C-S-J>    { :desc "down pane"                   :val :<C-w>j  }
+  :<C-S-K>    { :desc "up Pane"                     :val :<C-w>k  }
+  :<C-S-L>    { :desc "right pane"                  :val :<C-w>l  }
 }
 [ :n :x :o ] {
   "{"   { :desc "prev function start" :val "require('nvim-treesitter-textobjects.move').goto_previous_start('@fn_decl.outer', 'textobjects')" :typet :cmd_lua  }

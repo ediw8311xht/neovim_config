@@ -4,7 +4,7 @@ vim.g.journal_template = vim.fn.expand("$MY_JOURNAL/template.page")
 function JournalFindCreateToday()
   local date = os.date("%Y_%m_%d")
   local relative_file = date .. ".page"
-  local fullpath_file = vim.fn.printf("%s/%s", vim.g.journal_dir, relative_file)
+  local fullpath_file = Printf("%s/%s", vim.g.journal_dir, relative_file)
   vim.print(fullpath_file)
   if vim.fn.filereadable(fullpath_file) ~= 1 then
     vim.cmd["!"]("cp", vim.g.journal_template, fullpath_file)
@@ -22,11 +22,15 @@ local page_keymap_leader = {
     Ax = {
       desc = "update gitit",
       default = function()
-        ExecuteScript( "commit_push.sh", { path = vim.fn.getenv("MY_WIKI"), silent=true }, "--quick" )
-        ExecuteScript( "refresh_browser.sh", { silent = true })
+        ExecuteScript("commit_push.sh", {
+          path = vim.fn.getenv("MY_WIKI"),
+          after = function(f)
+            ExecuteScript("refresh_browser.sh", { after = Bind(vim.print, f) })
+          end,
+        }, "--quick")
       end,
     }, -- cmd='!$MY_WIKI/commit_push.sh --quick' },
-    Aj  = { group = "journal" },
+    Aj = { group = "journal" },
     Ajs = { desc = "find journal", default = JournalFind },
     Ajj = { desc = "open today's journal", default = JournalFindCreateToday },
   },
