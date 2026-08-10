@@ -47,8 +47,8 @@ function LispEvalForms(forms, options)
   for _,f in ipairs(forms) do
     local form, lopts = nil, options
     if type(f) == table then
-      form = f[0]
-      lopts = f[1]
+      form = f[1]
+      lopts = f[2]
     else
       form = f
     end

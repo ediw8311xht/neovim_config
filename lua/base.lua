@@ -33,24 +33,8 @@ for _, i in ipairs(import_files) do
 end
 
 MyImportedModules["my_treesitter_module"].create_commands()
-local fullscreen_window_toggle = {
-  command_name = "ToggleFullscreen",
-  namespace = "fullscreen",
-  scope = "t",
-  var = "on",
-  on = function()
-    vim.t.fullscreen_state = vim.fn.winrestcmd()
-    vim.cmd([[
-        vertical resize
-        horizontal resize
-    ]])
-  end,
-  off = function()
-    vim.cmd.execute("t:fullscreen_state")
-  end,
-}
 
 vim.api.nvim_set_option_value("statusline", vim.g.my_statuslines[1][2], {})
 vim.api.nvim_set_option_value("titlestring", vim.g.my_titlestring.default, {})
-CreateToggle(fullscreen_window_toggle)
+CreateToggle(vim.g.fullscreen_window_toggle)
 

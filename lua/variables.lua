@@ -81,3 +81,22 @@ vim.g.fzf_colors = {
 vim.g.fzf_layout = {
   window  = { width = 0.9, height = 0.9, border = "sharp" } --, border = 'no' }
 }
+
+vim.g.fullscreen_window_toggle = {
+  command_name = "ToggleFullscreen",
+  namespace = "fullscreen",
+  scope = "t",
+  var = "is_fullscreen",
+  on = function()
+    vim.t.fullscreen_state = vim.fn.winrestcmd()
+    vim.cmd([[
+        vertical resize
+        horizontal resize
+    ]])
+    return "fullscreen"
+  end,
+  off = function()
+    vim.cmd.execute("t:fullscreen_state")
+    return "normal"
+  end,
+}

@@ -1,4 +1,3 @@
-local home              = vim.env.HOME
 local lsp_status        = require('lsp-status')
 local lspconfig         = vim.lsp.config
 local cmp_capabilities  = require('cmp_nvim_lsp').default_capabilities()
@@ -81,7 +80,7 @@ lspconfig('bashls', {
   filetypes = { "bash" },
   settings = {
     bashIde = {
-      shellcheckArguments = '--rcfile='..home..'/.shellcheckrc'
+      shellcheckArguments = Printf("--rcfile='%s'", vim.fs.joinpath(vim.env.HOME, ".config/", "shellcheckrc"))
     }
   }
 })

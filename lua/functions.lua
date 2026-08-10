@@ -193,33 +193,36 @@ function LspDocumentHighlight()
 end
 
 ---Create toggle command
----@param options {
----                 namespace:    string,
----                 scope:        string,
----                 description:  string,
----                 command_name: string,
----                 var:          string,
----                 on:           function,
----                 off:          function,
----               }
----
+---@param options { namespace    : string,
+---                 scope        : string,
+---                 description  : string,
+---                 command_name : string,
+---                 var?         : string|(fun(): boolean),
+---                 on           : function,
+---                 off          : function  }
 ---@return function|nil
 function CreateToggle(options)
-  local namespace = options.namespace or "CreateToggle__"
-  local scope = options.scope or "g"
-  local description = options.description or ""
-  local command_name = options.command_name
-  local var = namespace .. (options.var or command_name or "temp")
-  local on_function = options.on
-  local off_function = options.off
+  local namespace         = options.namespace or "CreateToggle__"
+  local scope             = options.scope or "g"
+  local description       = options.description or ""
+  local command_name      = options.command_name
+  local var               = options.var or command_name
+  local on_function       = options.on
+  local off_function      = options.off
+  if type(var) ~= "function" then
+    local cvar = namespace .. (options.var or command_name or "temp")
+    vim[scope][cvar] = false
+    var = function()
+      vim[scope][cvar] = not vim[scope][cvar]
+      return vim[scope][cvar]
+    end
+  end
+
   local callback_function = function()
-    print(vim[scope][var])
-    if not vim[scope][var] then
-      vim[scope][var] = true
-      on_function()
+    if var() then
+      print(on_function())
     else
-      vim[scope][var] = false
-      off_function()
+      print(off_function())
     end
   end
   if command_name then
@@ -481,6 +484,12 @@ function ExecuteScript(script, opts, ...)
   })
 end
 
+function SubAllBuffers(x, y)
+  local repl = Printf(':%%s/\\v\\c%s/%s', x, y)
+  vim.cmd.bufdo(
+    repl
+  )
+end
 ---do later---------------------------------------------------{{{
 -- function GutterSign()
 --   print("h")

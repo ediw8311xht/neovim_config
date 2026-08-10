@@ -4,7 +4,7 @@
 ---@diagnostic disable: unused-local, unused-function
 --]]
 
-vim.g.mapping_file = vim.fs.joinpath(vim.g.dir_config .. "/lua/mappings.lua")
+vim.g.mapping_file = vim.fs.joinpath(vim.g.dir_config, "lua/mappings.lua")
 local function my_buffers()
   require("telescope.builtin").buffers({ignore_current_buffer=true, disable_coordinates = true, sort_mru=true})
 end
@@ -12,13 +12,7 @@ end
 local function my_live_grep()
   require("telescope.builtin").live_grep({grep_open_files = true, disable_coordinates = true})
 end
-
-function SubAllBuffers(x, y)
-  local repl = Printf(':%%s/\\v\\c%s/%s', x, y)
-  vim.cmd.bufdo(
-    repl
-  )
-end-- }}}
+-- }}}
 
 -- Remember:
 -- innoremap <expr> key command
