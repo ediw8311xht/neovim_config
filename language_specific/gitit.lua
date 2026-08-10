@@ -1,4 +1,3 @@
-
 vim.g.journal_dir = vim.fn.expand("$MY_JOURNAL")
 vim.g.journal_template = vim.fn.expand("$MY_JOURNAL/template.page")
 
@@ -20,10 +19,16 @@ end
 
 local page_keymap_leader = {
   n = {
-    Ax  = { desc="update gitit",         cmd='!$MY_WIKI/commit_push.sh --quick' },
-    Aj  = { group="journal" },
-    Ajs = { desc="find journal",         default=JournalFind },
-    Ajj = { desc="open today's journal", default=JournalFindCreateToday },
-  }
+    Ax = {
+      desc = "update gitit",
+      default = function()
+        ExecuteScript( "commit_push.sh", { path = vim.fn.getenv("MY_WIKI"), quiet=true }, "--quick" )
+        ExecuteScript("refresh_browser.sh")
+      end,
+    }, -- cmd='!$MY_WIKI/commit_push.sh --quick' },
+    Aj  = { group = "journal" },
+    Ajs = { desc = "find journal", default = JournalFind },
+    Ajj = { desc = "open today's journal", default = JournalFindCreateToday },
+  },
 }
 KeyMapSetter2(page_keymap_leader, "<leader>", true, true)

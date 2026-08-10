@@ -14,7 +14,7 @@ local function my_live_grep()
 end
 
 function SubAllBuffers(x, y)
-  local repl = vim.fn.printf(':%%s/\\v\\c%s/%s', x, y)
+  local repl = Printf(':%%s/\\v\\c%s/%s', x, y)
   vim.cmd.bufdo(
     repl
   )

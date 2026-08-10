@@ -103,7 +103,7 @@ function LispEvalInput(options)
   local printf         = opts.printf
   local fn
   if printf then
-    fn = function(x) LispEvalForm(vim.fn.printf(printf, x), opts) end
+    fn = function(x) LispEvalForm(Printf(printf, x), opts) end
   else
     fn = opts.fn or function(x) LispEvalForm(x, opts) end
   end

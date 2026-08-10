@@ -28,7 +28,7 @@ require('gitsigns').setup({
   status_formatter = function(status)
     local head = status.head
     if head then
-      return vim.fn.printf("%s +%s ~%s -%s", head, status.added or 0, status.changed or 0, status.removed or 0)
+      return Printf("%s +%s ~%s -%s", head, status.added or 0, status.changed or 0, status.removed or 0)
     else
       return ""
     end

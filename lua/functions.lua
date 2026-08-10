@@ -9,7 +9,6 @@ local api = vim.api
 local cmd = vim.cmd
 local fn = vim.fn
 -- local fs     = vim.fs
-local printf = vim.fn.printf
 local ts = vim.treesitter
 
 local original_floating_preview = vim.lsp.util.open_floating_preview
@@ -33,7 +32,7 @@ function ClipBoardExit()
 end
 
 function Cycle(check_var, list, func)
-  local o = api.nvim_get_option(check_var)
+  local o = api.nvim_get_option_value(check_var, {})
   func = func or function(l)
     api.nvim_set_option_value(check_var, l[2], { scope = "global" })
     return l[1]
@@ -145,7 +144,7 @@ function KeyMapSetter2(map, pre, buffer_only, with_which_key)
     elseif tbl.default then
       return tbl.default
     else
-      error(fn.printf("command not set on table: %s = %s", (key or ""), tbl))
+      error(Printf("command not set on table: %s = %s", (key or ""), tbl))
     end
   end
   local which_key = require("which-key")
@@ -156,21 +155,21 @@ function KeyMapSetter2(map, pre, buffer_only, with_which_key)
         goto continue
       end
       local command = handle_command(tbl, key)
-      local desc    = tbl.desc
-      local expr    = tbl.expr
-      local nowait  = tbl.nowait
-      local remap   = tbl.remap
-      local silent  = tbl.silent
+      local desc = tbl.desc
+      local expr = tbl.expr
+      local nowait = tbl.nowait
+      local remap = tbl.remap
+      local silent = tbl.silent
       if with_which_key then
         which_key.add({ pre .. key, desc = desc, mode = mode })
       end
       -- local keymap_cmd = (tbl.cmd and "<CMD>" .. command .. "<CR>") or command
       vim.keymap.set(mode, pre .. key, command, {
         buffer = buffer_only,
-        desc   = desc,
-        expr   = expr,
+        desc = desc,
+        expr = expr,
         nowait = nowait,
-        remap  = remap,
+        remap = remap,
         silent = silent,
       })
       ::continue::
@@ -255,7 +254,7 @@ function GetHL()
     if synid ~= 0 then
       print(fn.synIDattr(fn.synIDtrans(synid), "name"))
     else
-      pcall(cmd, ":Inspect")
+      pcall(vim.cmd.Inspect)
     end
   end
 end
@@ -274,7 +273,7 @@ function ReadInFile(input_file, output_file, options)
   if not PathValid(output_file) then
     error("path: '" .. output_file .. "' is invalid.")
   else
-    cmd(printf("keepalt %dread %s", opts.line, input_file))
+    cmd(Printf("keepalt %dread %s", opts.line, input_file))
     cmd.write({ mods = { silent = true } })
     if opts.chmod then
       vim.cmd["!"]("chmod", opts.chmod, output_file)
@@ -400,7 +399,7 @@ end
 ---@param options? table
 function FloatingWindowToggle(buf, enter, options)
   local buffer
-  if (type(buf) == "string") then
+  if type(buf) == "string" then
     buffer = fn.bufnr(buf)
     if not buffer then
       PrintPrintf("Couldn't find buffer matching: '%s'", buffer)
@@ -410,7 +409,7 @@ function FloatingWindowToggle(buf, enter, options)
     buffer = buf
   end
   --[[ HIDE --]]
-  for _,v in pairs(vim.fn.win_findbuf(buffer)) do
+  for _, v in pairs(vim.fn.win_findbuf(buffer)) do
     if IsFloating(v) then
       return vim.api.nvim_win_hide(v)
     end
@@ -438,15 +437,15 @@ function FloatingWindowToggle(buf, enter, options)
 end
 
 -- local sl_filepath   = " %F "
-local sl_file       = "%#StatusLine_File#" .. " %{expand('%:p:h:t')}/%t %r" .. "%*"
+local sl_file = "%#StatusLine_File#" .. " %{expand('%:p:h:t')}/%t %r" .. "%*"
 local sl_git_status = "%#StatusLine_Git#" .. " %{get(b:, 'gitsigns_status', '')} " .. "%*"
-local sl_session    = "%#StatusLine_Session#" .. " %{v:lua.AutoSessionGetCurrentName()} " .. "%*"
+local sl_session = "%#StatusLine_Session#" .. " %{v:lua.AutoSessionGetCurrentName()} " .. "%*"
 local sl_lsp_status = "%#StatusLine_Lsp#" .. " %{v:lua.LspStatus()} " .. "%*"
 function StatusLineFunc()
   if vim.g.statusline_winid == vim.fn.win_getid() then
-    return vim.fn.printf("%s%s%s%s%s", sl_file, sl_git_status, sl_session, "%m%=", sl_lsp_status)
+    return Printf("%s%s%s%s%s", sl_file, sl_git_status, sl_session, "%m%=", sl_lsp_status)
   else
-    return vim.fn.printf("%s[%s][%s]%s%s", sl_file, sl_git_status, sl_session, "%m%=", sl_lsp_status)
+    return Printf("%s[%s][%s]%s%s", sl_file, sl_git_status, sl_session, "%m%=", sl_lsp_status)
   end
 end
 
@@ -460,13 +459,12 @@ function TitleStringFunc()
 end
 
 --- @param script string
---- @param opts   nil|{
----                   path: string
----                   }
+--- @param opts? { path: string,  silent: boolean }
 --- @vararg any
 function ExecuteScript(script, opts, ...)
   local options = opts or {}
   local path = options.path or vim.g.dir_scripts
+  local silent = options.silent
   if not path and not vim.fn.isdirectory(path) then
     error(Printf("vim.g._dir_scripts isn't set or couldn't be found. value: '%s' ", path))
   end
@@ -477,8 +475,12 @@ function ExecuteScript(script, opts, ...)
     error(Printf("File '%s' not found", fullpath))
   end
 
-  return vim.cmd["!"](".", fullpath, unpack({...}))
+  return vim.cmd["!"]({
+    args = { ".", fullpath, ... },
+    mods = { silent = silent },
+  })
 end
+
 ---do later---------------------------------------------------{{{
 -- function GutterSign()
 --   print("h")
