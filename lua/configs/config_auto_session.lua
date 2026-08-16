@@ -22,7 +22,7 @@ require("auto-session").setup({
     -- picker_opts = nil, -- Table passed to Telescope / Snacks / Fzf-Lua to configure the picker. See below for more information
 
     picker_opts = {
-      border = true,
+      border = false,
       defaults = {
         preview = true,
       },

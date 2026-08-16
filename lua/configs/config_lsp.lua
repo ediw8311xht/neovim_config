@@ -40,16 +40,16 @@ lspconfig('pyright', {
 })
 
 lspconfig('tailwindcss', {
-  filetype = {},
-  filetypes = { "html-eex", "heex"},
+  -- filetype = {},
+  -- filetypes = { "heex", "eex"},
   capabilities = cmp_capabilities,
-  init_options = {
-    userLanguages = {
-      elixir = "html-eex",
-      eelixir = "html-eex",
-      heex = "html-eex"
-    }
-  }
+  -- init_options = {
+  --   userLanguages = {
+  --     elixir = "html-eex",
+  --     eelixir = "html-eex",
+  --     heex = "html-eex"
+  --   }
+  -- }
 })
 
 lspconfig('lua_ls', {
@@ -80,7 +80,7 @@ lspconfig('bashls', {
   filetypes = { "bash" },
   settings = {
     bashIde = {
-      shellcheckArguments = Printf("--rcfile='%s'", vim.fs.joinpath(vim.env.HOME, ".config/", "shellcheckrc"))
+      shellcheckArguments = Printf("--rcfile %s", vim.fs.joinpath(vim.env.HOME, ".config/", "shellcheckrc"))
     }
   }
 })

@@ -7,4 +7,4 @@ MAN_MAPPINGS = {
   },
 }
 
-KeyMapSetter2(MAN_MAPPINGS, "", false, true)
+KeyMapSetter2(MAN_MAPPINGS, "", true, true)

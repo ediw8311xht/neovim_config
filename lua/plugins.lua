@@ -44,7 +44,6 @@ vim.g.my_plugins =  {
   file_explorer       =  {  user='preservim',        repo='nerdtree'  },
   neoterm             =  {  user='kassio',           repo='neoterm'  },
   markdown_preview    =  {  user='iamcco',           repo='markdown-preview.nvim', args={ ['do']='cd app && yarn install'  }  },
-  luarocks            =  {  user='theHamsta',        repo='nvim_rocks', args={ ['do']='pipx install hererocks && python3 -mhererocks . -j2.1.0-beta3 -r3.0.0 && cp nvim_rocks.lua lua'}  },
   fzf                 =  {  user='junegunn',         repo='fzf.vim'  },
   easy_align          =  {  user='junegunn',         repo='vim-easy-align'  },
   -- Lf File Manager
@@ -80,7 +79,7 @@ vim.g.my_plugins =  {
   cmp_treesitter      =  {  user='ray-x',            repo='cmp-treesitter'  },
   cmp_conjure         =  {  user='PaterJason',       repo='cmp-conjure'  },
   latex_snips_vimtex  =  {  user='micangl',          repo='cmp-vimtex'  },
-  luasnip             =  {  user='L3MON4D3',         repo='LuaSnip'  },
+  luasnip             =  {  user='L3MON4D3',         repo='LuaSnip', args={ run="make install_jsregexp" } },
 }
 
 local function install_plugins()

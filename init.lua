@@ -13,6 +13,12 @@
      <==============================================================================>
      <==============================================================================> --]]
 
+CMD  = vim.cmd
+API  = vim.api
+FN   = vim.fn
+HOME = vim.env.HOME
+FS   = vim.fs
+TS   = vim.treesitter
 require("helper_functions")
 require("functions")
 vim.g.dir_config     = vim.fn.stdpath("config")

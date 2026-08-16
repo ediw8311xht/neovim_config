@@ -90,7 +90,7 @@ let g:formatterpath = [ '/usr/bin/' ]
 let g:formatters_bash = [ 'shfmt' ]
 let g:formatdef_fnlfmt = "'fnlfmt -'"
 let g:formatters_fennel = [ 'fnlfmt' ]
-let g:formatdef_pandoc_format = printf("'%s/scripts/pandoc_format.sh'", g:dir_config)
+let g:formatdef_pandoc_format = g:dir_config .. '/scripts/pandoc_format.sh'
 let g:formatters_markdown = [ 'pandoc_format' ]
 
 "--------------------------------------------LF

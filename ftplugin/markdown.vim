@@ -32,7 +32,6 @@ fu! PreviewMarkdown(flag = "")
 endfu
 
 "colorscheme cyberpunk-neon
-"call CorrectColors()
 "set formatexpr=1
 "set textwidth=80
 "set wrap

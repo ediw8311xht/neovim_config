@@ -8,19 +8,19 @@ vim.g.treesitter_with_vim_regex_highlighting = { lua = true }
 vim.g.python3_host_prog="/usr/bin/python"
 vim.g.MyDefaultScheme = { 'pop-punk', 'lua CorrectColors()' }
 vim.g.MySchemes = {
-    vim.g.MyDefaultScheme ,
-    { 'wildcharm'      ,   "."  },
-    { 'cyberpunk-neon' ,   "."  },
-    { 'eldar'          ,   "."  },
-    { 'elflord'        ,   "."  },
-    { 'delek'          ,   "."  },
-    { 'morning'        ,   "."  },
-    { 'blue'           ,   "."  },
-    { 'peachpuff'      ,   "."  },
-    { 'industry'       ,   "."  },
-    { 'murphy'         ,   "."  },
-    { 'vividchalk'     ,   "."  },
-    { 'everforest'     ,   "."  },
+  vim.g.MyDefaultScheme ,
+  { 'wildcharm'      ,   "."  },
+  { 'cyberpunk-neon' ,   "."  },
+  { 'eldar'          ,   "."  },
+  { 'elflord'        ,   "."  },
+  { 'delek'          ,   "."  },
+  { 'morning'        ,   "."  },
+  { 'blue'           ,   "."  },
+  { 'peachpuff'      ,   "."  },
+  { 'industry'       ,   "."  },
+  { 'murphy'         ,   "."  },
+  { 'vividchalk'     ,   "."  },
+  { 'everforest'     ,   "."  },
 }
 
 vim.g.MyColorTable = {

@@ -7,6 +7,7 @@ MyTelescopeOpts = {
     path_display = { "smart", "truncate" },
     multi_icon = "",
     layout_strategy = "horizontal",
+    border = false,
     layout_config = {
       width = 0.95,
     },

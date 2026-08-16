@@ -1,16 +1,9 @@
 -- local api = vim.api.nvim_create_autocmd
 -- local autocmd = vim.api.nvim_create_autocmd
--- local cmd     = vim.cmd
--- local fn      = vim.fn
+-- local cmd     = CMD
+-- local fn      = FN
 
 require("helper_functions")
-local home = vim.env.HOME
-local api = vim.api
-local cmd = vim.cmd
-local fn = vim.fn
--- local fs     = vim.fs
-local ts = vim.treesitter
-
 local original_floating_preview = vim.lsp.util.open_floating_preview
 function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
   local n_opts = TableDifference(vim.g.my_floating_preview_options, opts)
@@ -18,7 +11,7 @@ function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
 end
 
 function MyTreesitterStatus()
-  return ts.highlighter.active[fn.bufnr()] ~= nil
+  return TS.highlighter.active[FN.bufnr()] ~= nil
 end
 
 function AutoSessionGetCurrentName()
@@ -26,15 +19,15 @@ function AutoSessionGetCurrentName()
 end
 
 function ClipBoardExit()
-  if EnvVarCheck("DISPLAY") and fn.executable("xclip") then
-    fn.system("xclip -selection clipboard -i -r <<< ", fn.shellescape(fn.getreg("")))
+  if EnvVarCheck("DISPLAY") and FN.executable("xclip") then
+    FN.system("xclip -selection clipboard -i -r <<< ", FN.shellescape(FN.getreg("")))
   end
 end
 
 function Cycle(check_var, list, func)
-  local o = api.nvim_get_option_value(check_var, {})
+  local o = API.nvim_get_option_value(check_var, {})
   func = func or function(l)
-    api.nvim_set_option_value(check_var, l[2], { scope = "global" })
+    API.nvim_set_option_value(check_var, l[2], { scope = "global" })
     return l[1]
   end
   if #list <= 0 then
@@ -48,48 +41,56 @@ function Cycle(check_var, list, func)
   return func(list[1])
 end
 
-function SetHighlightFromTable(hl_group, hl_table)
-  local conc = "hi " .. hl_group
-  for c, v in pairs(hl_table) do
-    conc = conc .. " " .. c .. "=" .. v
-  end
-  cmd(conc)
-end
 
 ---custom highlighting settings
 ---runs highlight settings from vim.g.my_highlight with a few additional rules
 function CorrectColors()
-  local function Main(hl_group, hl_table)
+  local function set_highlight_from_table(hl_group, hl_table)
+    return CMD.highlight(
+      Reduce(
+        hl_table,
+        function(accum, v, k)
+          return accum .. " " .. k .. "=" .. v
+        end,
+        hl_group
+      )
+    )
+  end
+  local function recursion_set(hl_group, hl_table)
     local _, test_v = next(hl_table)
     if type(test_v) == "string" then
-      SetHighlightFromTable(hl_group, hl_table)
-    else
-      for c, v in pairs(hl_table) do
-        Main(hl_group .. c, v)
+      return set_highlight_from_table(hl_group, hl_table)
+    end
+
+    for c, v in pairs(hl_table) do
+      if type(v) == "string" then
+        CMD.highlight(Printf("%s%s %s", hl_group, c, v))
+      else
+        recursion_set(hl_group .. c, v)
       end
     end
   end
-  cmd("hi clear @lsp.mod")
-  api.nvim_set_option_value("winhighlight", "NormalNC:WindowInactive", { scope = "global" })
-  Main("", vim.g.my_highlight)
+  CMD("hi clear @lsp.mod")
+  API.nvim_set_option_value("winhighlight", "NormalNC:WindowInactive", { scope = "global" })
+  recursion_set("", vim.g.my_highlight)
 end
 
 ---toggle a highlight group
 ---toggle value is kept in vim.g.toggle_value__<highlight_group>
 function ToggleHighlight(highlights)
-  local seton = IsEmpty(api.nvim_get_hl(0, { name = highlights[1] }))
+  local seton = IsEmpty(API.nvim_get_hl(0, { name = highlights[1] }))
   for _, c in pairs(highlights) do
     if seton then
-      if fn.exists("g:toggle_value__" .. c) == 0 then
-        vim.notify("Variable, toggle_value__" .. c .. ", doesn't exist.", "error", {
+      if FN.exists("g:toggle_value__" .. c) == 0 then
+        vim.notify(Printf("Variable, toggle_value__%s, doesn't exist.", c), vim.log.levels.ERROR, {
           title = "ToggeHighlight(highlights)",
         })
       else
-        api.nvim_set_hl(0, c, vim.api.nvim_get_var("toggle_value__" .. c))
+        API.nvim_set_hl(0, c, API.nvim_get_var("toggle_value__" .. c))
       end
     else
-      api.nvim_set_var("toggle_value__" .. c, api.nvim_get_hl(0, { name = highlights[1] }))
-      api.nvim_set_hl(0, c, {})
+      API.nvim_set_var("toggle_value__" .. c, API.nvim_get_hl(0, { name = highlights[1] }))
+      API.nvim_set_hl(0, c, {})
     end
   end
 end
@@ -226,7 +227,7 @@ function CreateToggle(options)
     end
   end
   if command_name then
-    vim.api.nvim_create_user_command(command_name, callback_function, { nargs = 0, desc = description })
+    API.nvim_create_user_command(command_name, callback_function, { nargs = 0, desc = description })
     return nil
   else
     return callback_function
@@ -236,9 +237,9 @@ end
 ---Run function and keep cursor position
 ---@param func function Function to run
 function RunKeepCursorPosition(func)
-  local last_cursor_position = vim.api.nvim_win_get_cursor(0)
+  local last_cursor_position = API.nvim_win_get_cursor(0)
   func()
-  vim.api.nvim_win_set_cursor(0, last_cursor_position)
+  API.nvim_win_set_cursor(0, last_cursor_position)
 end
 
 ---Check if path to file exists and is writable
@@ -247,17 +248,17 @@ end
 function PathValid(path)
   local match = string.match(path, "^(.*[/])[^/]*$")
   print(match)
-  return fn.filewritable(match) == 2
+  return FN.filewritable(match) == 2
 end
 
 --Get highlight under cursor
 function GetHL()
   if not pcall(vim.show_pos) then
-    local synid = fn.synID(fn.line("."), fn.col("."), 1)
+    local synid = FN.synID(FN.line("."), FN.col("."), 1)
     if synid ~= 0 then
-      print(fn.synIDattr(fn.synIDtrans(synid), "name"))
+      print(FN.synIDattr(FN.synIDtrans(synid), "name"))
     else
-      pcall(vim.cmd.Inspect)
+      pcall(CMD.Inspect)
     end
   end
 end
@@ -276,17 +277,17 @@ function ReadInFile(input_file, output_file, options)
   if not PathValid(output_file) then
     error("path: '" .. output_file .. "' is invalid.")
   else
-    cmd(Printf("keepalt %dread %s", opts.line, input_file))
-    cmd.write({ mods = { silent = true } })
+    CMD(Printf("keepalt %dread %s", opts.line, input_file))
+    CMD.write({ mods = { silent = true } })
     if opts.chmod then
-      vim.cmd["!"]("chmod", opts.chmod, output_file)
+      CMD["!"]("chmod", opts.chmod, output_file)
       -- os.execute(printf("chmod %s '%s'", opts.chmod, output_file))
     end
   end
 end
 
 function LspStatus()
-  if #vim.lsp.get_clients({ bufnr = fn.bufnr() }) > 0 then
+  if #vim.lsp.get_clients({ bufnr = FN.bufnr() }) > 0 then
     return require("lsp-status").status()
   else
     return ""
@@ -301,9 +302,9 @@ end
 ---@return string
 function GetFile(options)
   local opts = TableDifference({ tilde_home = false, expand = "%" }, (options or {}), false)
-  local file = fn.expand(opts.expand)
+  local file = FN.expand(opts.expand)
   if opts.tilde_home then
-    return fn.substitute(file, "\\V" .. home, "~", "")
+    return FN.substitute(file, "\\V" .. HOME, "~", "")
   else
     return file
   end
@@ -318,7 +319,7 @@ end
 function GetExtension(filename, options)
   local glob = options and options.glob
   if glob or not filename then
-    return vim.fn.expand((filename or "%") .. ":e")
+    return FN.expand((filename or "%") .. ":e")
   else
     return filename:match("([^.]+$)$")
   end
@@ -327,22 +328,22 @@ end
 ---print all mappings
 ---@param file? string filename to output mappings to
 function GetMappings(file)
-  local out_file = file or fn.tempname()
-  cmd.redir({ "> ", out_file })
-  cmd.imap({ mods = { silent = true } })
-  cmd.tmap({ mods = { silent = true } })
-  cmd.nmap({ mods = { silent = true } })
-  cmd.vmap({ mods = { silent = true } })
-  cmd.redir({ "end" })
-  cmd.edit({ out_file })
+  local out_file = file or FN.tempname()
+  CMD.redir({ "> ", out_file })
+  CMD.imap({ mods = { silent = true } })
+  CMD.tmap({ mods = { silent = true } })
+  CMD.nmap({ mods = { silent = true } })
+  CMD.vmap({ mods = { silent = true } })
+  CMD.redir({ "end" })
+  CMD.edit({ out_file })
 end
 
 ---get visual selection when :'<,'> just won't cut it
 function GetVisualSelection()
-  vim.g.region_post = fn.getregionpos(fn.getpos("v"), fn.getpos("."))
+  vim.g.region_post = FN.getregionpos(FN.getpos("v"), FN.getpos("."))
   local col = ""
   for _, i in ipairs(vim.g.region_post) do
-    col = col .. table.concat(fn.getregion(i[1], i[2]), "\n") .. "\n"
+    col = col .. table.concat(FN.getregion(i[1], i[2]), "\n") .. "\n"
   end
   return col
 end
@@ -366,8 +367,8 @@ end
 ---@param name string
 ---@return integer|nil @buffer number or nil if matching buffer not found
 function GetBufByName(name)
-  for _, i in ipairs(vim.api.nvim_list_bufs()) do
-    if vim.api.nvim_buf_get_name(i) == name then
+  for _, i in ipairs(API.nvim_list_bufs()) do
+    if API.nvim_buf_get_name(i) == name then
       return i
     end
   end
@@ -381,19 +382,19 @@ function FZFBuffersWithExtension(ext)
   local buffers = {}
   ---@diagnostic disable-next-line: redefined-local
   local ext = ext or GetExtension("%", { glob = true })
-  for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
-    if vim.api.nvim_buf_is_valid(bufnr) and vim.bo[bufnr].buflisted then
+  for _, bufnr in ipairs(API.nvim_list_bufs()) do
+    if API.nvim_buf_is_valid(bufnr) and vim.bo[bufnr].buflisted then
       local buf_ext = GetExtension("#" .. bufnr, { glob = true })
       if buf_ext == ext then
-        table.insert(buffers, vim.api.nvim_buf_get_name(bufnr))
+        table.insert(buffers, API.nvim_buf_get_name(bufnr))
       end
     end
   end
-  -- vim.fn['fzf#vim#buffers']("", buffers, vim.fn['fzf#vim#with_preview']())
+  -- FN['fzf#vim#buffers']("", buffers, FN['fzf#vim#with_preview']())
 end
 
 function IsFloating(win_id)
-  return vim.api.nvim_win_get_config(win_id or 0).zindex
+  return API.nvim_win_get_config(win_id or 0).zindex
 end
 
 ---View or Hide floating window by buffer number or buffer name
@@ -403,7 +404,7 @@ end
 function FloatingWindowToggle(buf, enter, options)
   local buffer
   if type(buf) == "string" then
-    buffer = fn.bufnr(buf)
+    buffer = FN.bufnr(buf)
     if not buffer then
       PrintPrintf("Couldn't find buffer matching: '%s'", buffer)
       return nil
@@ -412,15 +413,15 @@ function FloatingWindowToggle(buf, enter, options)
     buffer = buf
   end
   --[[ HIDE --]]
-  for _, v in pairs(vim.fn.win_findbuf(buffer)) do
+  for _, v in pairs(FN.win_findbuf(buffer)) do
     if IsFloating(v) then
-      return vim.api.nvim_win_hide(v)
+      return API.nvim_win_hide(v)
     end
   end
   --[[ SHOW --]]
-  local window_width = api.nvim_win_get_width(0)
+  local window_width = API.nvim_win_get_width(0)
   local width = math.floor(window_width / 3)
-  local height = math.floor(api.nvim_win_get_height(0) / 1.5)
+  local height = math.floor(API.nvim_win_get_height(0) / 1.5)
   local default_opts = {
     anchor = "NE",
     relative = "editor",
@@ -433,9 +434,9 @@ function FloatingWindowToggle(buf, enter, options)
     height = height,
   }
   local opts = TableDifference(default_opts, options or {}, false)
-  local out_window = api.nvim_open_win(buffer or 0, enter or false, opts)
+  local out_window = API.nvim_open_win(buffer or 0, enter or false, opts)
   -- prevents buffer from changing in floating window (very annoying)
-  -- vim.api.nvim_win_set_option(out_window, 'winfixbuf', true)
+  -- API.nvim_win_set_option(out_window, 'winfixbuf', true)
   return out_window
 end
 
@@ -445,7 +446,7 @@ local sl_git_status = "%#StatusLine_Git#" .. " %{get(b:, 'gitsigns_status', '')}
 local sl_session = "%#StatusLine_Session#" .. " %{v:lua.AutoSessionGetCurrentName()} " .. "%*"
 local sl_lsp_status = "%#StatusLine_Lsp#" .. " %{v:lua.LspStatus()} " .. "%*"
 function StatusLineFunc()
-  if vim.g.statusline_winid == vim.fn.win_getid() then
+  if vim.g.statusline_winid == FN.win_getid() then
     return Printf("%s%s%s%s%s", sl_file, sl_git_status, sl_session, "%m%=", sl_lsp_status)
   else
     return Printf("%s[%s][%s]%s%s", sl_file, sl_git_status, sl_session, "%m%=", sl_lsp_status)
@@ -457,7 +458,7 @@ function TitleStringFunc()
   if session_name ~= "" then
     return "[session] " .. session_name
   else
-    return "[nvim] " .. vim.fn.expand("%f")
+    return "[nvim] " .. FN.expand("%f")
   end
 end
 
@@ -468,13 +469,13 @@ function ExecuteScript(script, opts, ...)
   local options = opts or {}
   local after = options.after or vim.print
   local path = options.path or vim.g.dir_scripts
-  if not path and not vim.fn.isdirectory(path) then
+  if not path and not FN.isdirectory(path) then
     error(Printf("vim.g._dir_scripts isn't set or couldn't be found. value: '%s' ", path))
   end
 
-  local fullpath = vim.fs.joinpath(path or vim.fn.expand("%:p:h"), script)
-  vim.print(vim.fn.filereadable(fullpath))
-  if vim.fn.filereadable(fullpath) ~= 1 then
+  local fullpath = vim.fs.joinpath(path or FN.expand("%:p:h"), script)
+  vim.print(FN.filereadable(fullpath))
+  if FN.filereadable(fullpath) ~= 1 then
     error(Printf("File '%s' not found", fullpath))
   end
 
@@ -483,7 +484,7 @@ end
 
 function SubAllBuffers(x, y)
   local repl = Printf(':%%s/\\v\\c%s/%s', x, y)
-  vim.cmd.bufdo(
+  CMD.bufdo(
     repl
   )
 end
@@ -532,7 +533,7 @@ end
 --   end
 -- end
 --
--- vim.api.nvim_create_user_command("BuffersWithExtension", function(opts)
+-- API.nvim_create_user_command("BuffersWithExtension", function(opts)
 --   return FZFBuffersWithExtension()
 -- end, { desc = "Browse open buffers with specific extension (default current extension)", nargs = "?" })
 -- command! -bang -nargs=? -complete=dir Files
