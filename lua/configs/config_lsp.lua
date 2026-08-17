@@ -4,7 +4,11 @@ local cmp_capabilities  = require('cmp_nvim_lsp').default_capabilities()
 local actions_preview   = require('actions-preview')
 local lspsaga           = require('lspsaga')
 
+-- vim.diagnostic.config({ virtual_lines = true })
+
 actions_preview.setup({})
+lspsaga.setup({})
+
 
 lspconfig('jsonls',  { capabilities = cmp_capabilities })
 lspconfig('ts_ls',   { capabilities = cmp_capabilities })
@@ -14,6 +18,7 @@ lspconfig('eslint',  { } )
 lspconfig('html', {
   capabilities = cmp_capabilities
 })
+
 lspconfig('cssls', {
   capabilities = cmp_capabilities,
   settings = {
@@ -105,6 +110,54 @@ lspconfig('hls', {
   filestypes = { "haskell", "lhaskell" },
   single_file_support = true,
 })
+
+-- harper {{{
+lspconfig("harper_ls", {
+  settings = {
+    ["harper-ls"] = {
+      userDictPath = vim.g.personal_dictionary,
+      workspaceDictPath = "",
+      fileDictPath = "",
+      linters = {
+        SpellCheck = true,
+        SpelledNumbers = false,
+        AnA = true,
+        SentenceCapitalization = true,
+        UnclosedQuotes = true,
+        WrongApostrophe = false,
+        LongSentences = true,
+        RepeatedWords = true,
+        Spaces = true,
+        CorrectNumberSuffix = true
+      },
+      codeActions = {
+        ForceStable = false
+      },
+      markdown = {
+        IgnoreLinkTitle = false
+      },
+      diagnosticSeverity = "hint",
+      isolateEnglish = false,
+      dialect = "American",
+      maxFileLength = 120000,
+      ignoredLintsPath = "",
+      excludePatterns = {}
+    }
+  }
+}) -- }}}
+--
+-- -- General LSP setup
+-- vim.lsp.config['*'] = {
+--     capabilities = { textDocument = { semanticTokens = { multilineTokenSupport = true } } },
+--     root_markers = { '.git' },
+-- }
+--
+-- -- Harper specific setup
+-- vim.lsp.config['harper'] = {
+--     cmd = { 'harper-ls', '--stdio' },
+--     filetypes = { 'markdown', 'text', 'tex', 'typst' }
+-- }
+-- vim.lsp.enable('harper')
 
 for _,v in ipairs(vim.g.lsp_lang_servers) do
   vim.lsp.enable(v)

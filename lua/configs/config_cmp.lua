@@ -130,7 +130,7 @@ cmp.setup.filetype({ "lua" }, {
 })
 
 cmp_dict.setup({
-  paths = { "$XDG_DATA_HOME/dict/en_words" },
+  paths = { vim.g.personal_dictionary },
   exact_length = 2,
   first_case_insensitive = true,
   document = {

@@ -1,5 +1,6 @@
 vim.g.mapleader      = " "
 vim.g.maplocalleader = ","
+vim.g.python3_host_prog="/usr/bin/python"
 
 vim.filetype.add({
   extension = {
@@ -50,3 +51,30 @@ vim.g.NERDTreeHijackNetrw        = 0 -- Add this line if you use NERDTree
 vim.g.lf_replace_netrw           = 1
 vim.g.loaded_netrw               = 1
 -- }}} 
+
+--[[ My Settings {{{
+--]]
+vim.g.lsp_lang_servers = {
+ 'cssls',
+ 'bashls',
+ 'clangd',
+ 'eslint',
+ 'hls',
+ 'html',
+ 'jsonls',
+ 'lua_ls',
+ 'pyright',
+ 'tailwindcss',
+ 'ts_ls',
+ 'vimls',
+ 'harper',
+ 'harper_ls',
+}
+vim.g.treesitter_disable = {
+  tex = true
+}
+vim.g.treesitter_with_vim_regex_highlighting = {
+  lua = true
+}
+vim.g.personal_dictionary = FS.joinpath(vim.env.XDG_DATA_HOME, "dict/en_words")
+-- }}}

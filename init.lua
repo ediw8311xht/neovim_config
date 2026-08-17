@@ -21,10 +21,11 @@ FS   = vim.fs
 TS   = vim.treesitter
 require("helper_functions")
 require("functions")
+require("settings")
 vim.g.dir_config     = vim.fn.stdpath("config")
 vim.g.dir_scripts    = vim.fs.joinpath(vim.g.dir_config, "scripts")
 vim.g.dir_config_vim = vim.fs.joinpath(vim.g.dir_config, "vim")
-local lua_files = { "autocmd", "variables", "my_highlight", "settings" }
+local lua_files = { "autocmd", "variables", "my_highlight" }
 local vim_files = { "settings.vim", "functions.vim" }
 
 -- source lua files
