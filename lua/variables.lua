@@ -3,6 +3,20 @@
 -- vim.highlight.create
 -- }}}
 
+vim.g.lsp_lang_servers = {
+ 'cssls',
+ 'bashls',
+ 'clangd',
+ 'eslint',
+ 'hls',
+ 'html',
+ 'jsonls',
+ 'lua_ls',
+ 'pyright',
+ 'tailwindcss',
+ 'ts_ls',
+ 'vimls',
+}
 vim.g.treesitter_disable = { tex = true }
 vim.g.treesitter_with_vim_regex_highlighting = { lua = true }
 vim.g.python3_host_prog="/usr/bin/python"

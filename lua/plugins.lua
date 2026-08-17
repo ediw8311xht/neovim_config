@@ -9,9 +9,8 @@ vim.g.my_plugins =  {
   -- Language Server
   lspconfig           =  {  user='neovim',           repo='nvim-lspconfig'  },
   lsp_lines           =  {  user='maan2003',         repo='lsp_lines.nvim'  },
-
-  lsp_saga            =  {  user='nvimdev',          repo='lspsaga.nvim'  },
   lsp_statusline      =  {  user='nvim-lua',         repo='lsp-status.nvim'  },
+  lsp_saga            =  {  user='nvimdev',          repo='lspsaga.nvim'  },
   code_action_preview =  {  user='aznhe21',          repo='actions-preview.nvim'  },
   -- Tcl
   nvim_lint           =  {  user='mfussenegger',     repo='nvim-lint'  },

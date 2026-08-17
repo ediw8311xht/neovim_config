@@ -129,7 +129,7 @@ LEADER_MAPPINGS = {
     cb    = { desc='[next] background',         vim_call='CyBack(+1)'},
     cc    = { desc='[!]line length indicator',  vim_call='TogColorColumn()'},
     ce    = { desc='[!]cursorcolumn',           cmd='set cuc!'},
-    cf    = { desc='format',                    cmd='lua RunKeepCursorPosition(function() vim.cmd(":Autoformat") end)'},
+    cf    = { desc='format',                    cmd='lua RunKeepCursorPosition( function() vim.cmd.Autoformat { mods={ verbose=1 } } end)', },
     cg    = { desc='[!]git signs',              cmd='Gitsigns toggle_linehl'},
     ch    = { desc='format2',                   default=vim.lsp.buf.format },
     cj    = { desc='[next] scheme',             vim_call='SetColScheme(+1)'},

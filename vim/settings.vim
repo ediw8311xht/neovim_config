@@ -90,7 +90,7 @@ let g:formatterpath = [ '/usr/bin/' ]
 let g:formatters_bash = [ 'shfmt' ]
 let g:formatdef_fnlfmt = "'fnlfmt -'"
 let g:formatters_fennel = [ 'fnlfmt' ]
-let g:formatdef_pandoc_format = g:dir_config .. '/scripts/pandoc_format.sh'
+let g:formatdef_pandoc_format = "'" .. g:dir_config .. '/scripts/pandoc_format.sh' .. "'"
 let g:formatters_markdown = [ 'pandoc_format' ]
 
 "--------------------------------------------LF
@@ -102,7 +102,4 @@ let g:lf_width    = 0.9
 let g:NERDTreeHijackNetrw = 0 " Add this line if you use NERDTree
 let g:lf_replace_netrw    = 1
 let g:loaded_netrw        = 1
-
-lua <<EOF
-EOF
 

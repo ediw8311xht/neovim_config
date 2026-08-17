@@ -2,16 +2,18 @@ local lsp_status        = require('lsp-status')
 local lspconfig         = vim.lsp.config
 local cmp_capabilities  = require('cmp_nvim_lsp').default_capabilities()
 local actions_preview   = require('actions-preview')
-local lang_servers      = { 'cssls', 'html', 'jsonls', 'ts_ls', 'vimls', 'eslint', 'pyright', 'tailwindcss', 'lua_ls', 'bashls', 'clangd', 'hls' }
+local lspsaga           = require('lspsaga')
 
 actions_preview.setup({})
 
-lspconfig('html',    { capabilities = cmp_capabilities })
 lspconfig('jsonls',  { capabilities = cmp_capabilities })
 lspconfig('ts_ls',   { capabilities = cmp_capabilities })
 lspconfig('vimls',   { capabilities = cmp_capabilities })
 lspconfig('eslint',  { } )
 
+lspconfig('html', {
+  capabilities = cmp_capabilities
+})
 lspconfig('cssls', {
   capabilities = cmp_capabilities,
   settings = {
@@ -104,7 +106,7 @@ lspconfig('hls', {
   single_file_support = true,
 })
 
-for _,v in ipairs(lang_servers) do
+for _,v in ipairs(vim.g.lsp_lang_servers) do
   vim.lsp.enable(v)
 end
 
