@@ -40,17 +40,16 @@ vim.g.my_floating_preview_options = {
   offset_x = 20,
 }
 
--- local sl_lsp_status = "" .. "%{LspStatus()}" .. "%*"
-
 vim.g.my_statuslines = {
-  { 'default' , "%!v:lua.StatusLineFunc()"},
-  -- { 'medium'  , sl_file .. sl_git_branch .. sl_session .. "%m%=" .. sl_lsp_status .. sl_filepath },
-  -- { 'large'   , sl_file .. sl_git_status .. sl_session .. "%m%=" .. sl_lsp_status .. "[%l,%c,%p%%]" .. sl_filepath },
+  default = "%!v:lua.StatusLineFunc()",
 }
 
 vim.g.my_titlestring = {
-  -- default = "%f",
   default = "%{v:lua.TitleStringFunc()}",
+}
+
+vim.g.my_tabline = {
+  default = "%!v:lua.TabLineFunc()",
 }
 ----------------------------------------------------------
 ---------------------- FZF SETTINGS ----------------------

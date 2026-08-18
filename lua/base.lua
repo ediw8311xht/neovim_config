@@ -34,7 +34,7 @@ end
 
 MyImportedModules["my_treesitter_module"].create_commands()
 
-vim.api.nvim_set_option_value("statusline", vim.g.my_statuslines[1][2], {})
-vim.api.nvim_set_option_value("titlestring", vim.g.my_titlestring.default, {})
+-- vim.api.nvim_set_option_value("statusline", vim.g.my_statuslines[1][2], {})
+-- vim.api.nvim_set_option_value("titlestring", vim.g.my_titlestring.default, {})
 CreateToggle(vim.g.fullscreen_window_toggle)
 

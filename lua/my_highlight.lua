@@ -86,7 +86,7 @@ vim.g.my_highlight = {
   WhichKey = {
       Title = { guibg = "#010101", guifg = "#774400" },
       [""] = { guibg = "#010101", guifg = "#229922" },
-      Normal = { guibg = "#010101", guifg = "#119911" },
+      Normal = { gui = "NONE", guibg = "#010101", guifg = "#119911" },
       Float = { guibg = "#010101" },
       Border = { guibg = "NONE", guifg = "#444444" },
       Group = { guibg = "#777777", guifg = "black" },

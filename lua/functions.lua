@@ -1,22 +1,77 @@
--- local api = vim.api.nvim_create_autocmd
--- local autocmd = vim.api.nvim_create_autocmd
--- local cmd     = CMD
--- local fn      = FN
 
 require("helper_functions")
+
+-- [[ gui funcs {{{ 
+--]]
+
 local original_floating_preview = vim.lsp.util.open_floating_preview
+--- floating preview
 function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
   local n_opts = TableDifference(vim.g.my_floating_preview_options, opts)
   return original_floating_preview(contents, syntax, n_opts, ...)
 end
 
+--- Treesitter status
 function MyTreesitterStatus()
   return TS.highlighter.active[FN.bufnr()] ~= nil
 end
 
+--- AutoSession status
 function AutoSessionGetCurrentName()
   return require("auto-session.lib").current_session_name(true)
 end
+
+-- local sl_filepath   = " %F "
+---Status line
+function StatusLineFunc()
+  local sl_file = "%#StatusLine_File#" .. " %{expand('%:p:h:t')}/%t %r" .. "%*"
+  local sl_git_status = "%#StatusLine_Git#" .. " %{get(b:, 'gitsigns_status', '')} " .. "%*"
+  local sl_session = "%#StatusLine_Session#" .. " %{v:lua.AutoSessionGetCurrentName()} " .. "%*"
+  local sl_lsp_status = "%#StatusLine_Lsp#" .. " %{v:lua.LspStatus()} " .. "%*"
+  if vim.g.statusline_winid == FN.win_getid() then
+    return Printf("%s%s%s%s%s", sl_file, sl_git_status, sl_session, "%m%=", sl_lsp_status)
+  else
+    return Printf("%s[%s][%s]%s%s", sl_file, sl_git_status, sl_session, "%m%=", sl_lsp_status)
+  end
+end
+
+---Title String
+function TitleStringFunc()
+  local session_name = AutoSessionGetCurrentName()
+  if session_name ~= "" then
+    return "[session] " .. session_name
+  else
+    return "[nvim] " .. FN.expand("%f")
+  end
+end
+
+---Tab Line
+function TabLineFunc()
+  local active_tab_page = API.nvim_tabpage_get_number(0)
+  local function tab_calc(accum, v)
+    if v == active_tab_page then
+      return table.concat( { accum,
+        '%#CursorLineNr#', '#',
+        '%#Normal#', v,
+        '%#CursorLineNr#', ' ',
+        '%', v, 'T', ' ',
+        '%#Keyword#', '    ', vim.fs.basename(TabBufName(v)),
+        '%#Comment#', '    ',
+      })
+    else
+      return table.concat( { accum,
+        '%#Special#', '#',
+        '%#Normal#', v,
+        '%#Special#', ' ',
+        '%', v, 'T', ' ',
+        '%#Normal#', '    ', vim.fs.basename(TabBufName(v)),
+        '%#Comment#', '    ',
+      })
+    end
+  end
+  return Reduce( FN.range(1, FN.tabpagenr('$')), tab_calc, "")
+end
+-- }}}
 
 function ClipBoardExit()
   if EnvVarCheck("DISPLAY") and FN.executable("xclip") then
@@ -440,28 +495,6 @@ function FloatingWindowToggle(buf, enter, options)
   return out_window
 end
 
--- local sl_filepath   = " %F "
-local sl_file = "%#StatusLine_File#" .. " %{expand('%:p:h:t')}/%t %r" .. "%*"
-local sl_git_status = "%#StatusLine_Git#" .. " %{get(b:, 'gitsigns_status', '')} " .. "%*"
-local sl_session = "%#StatusLine_Session#" .. " %{v:lua.AutoSessionGetCurrentName()} " .. "%*"
-local sl_lsp_status = "%#StatusLine_Lsp#" .. " %{v:lua.LspStatus()} " .. "%*"
-function StatusLineFunc()
-  if vim.g.statusline_winid == FN.win_getid() then
-    return Printf("%s%s%s%s%s", sl_file, sl_git_status, sl_session, "%m%=", sl_lsp_status)
-  else
-    return Printf("%s[%s][%s]%s%s", sl_file, sl_git_status, sl_session, "%m%=", sl_lsp_status)
-  end
-end
-
-function TitleStringFunc()
-  local session_name = AutoSessionGetCurrentName()
-  if session_name ~= "" then
-    return "[session] " .. session_name
-  else
-    return "[nvim] " .. FN.expand("%f")
-  end
-end
-
 --- @param script string
 --- @param opts? { path: string, after: function }
 --- @vararg any
@@ -488,7 +521,14 @@ function SubAllBuffers(x, y)
     repl
   )
 end
----do later---------------------------------------------------{{{
+
+function TabBufName(tab)
+  return API.nvim_buf_get_name(API.nvim_win_get_buf(API.nvim_tabpage_get_win(tab)))
+end
+
+
+-- [[ do later {{{
+--]]
 -- function GutterSign()
 --   print("h")
 -- end

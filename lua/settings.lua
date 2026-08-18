@@ -1,6 +1,9 @@
 vim.g.mapleader      = " "
 vim.g.maplocalleader = ","
 vim.g.python3_host_prog="/usr/bin/python"
+vim.api.nvim_set_option_value("statusline"  , vim.g.my_statuslines.default , {})
+vim.api.nvim_set_option_value("titlestring" , vim.g.my_titlestring.default , {})
+vim.api.nvim_set_option_value("tabline"     , vim.g.my_tabline.default     , {})
 
 vim.filetype.add({
   extension = {
@@ -34,8 +37,7 @@ vim.g.markdown_recommended_style = 0
 vim.g.vimwiki_global_ext         = 0 -- Prevent vimwiki from running on markdown not in ~/vimwiki dir.
 vim.g.neoterm_automap_keys       = ",Tt"
 
--- vim-autoformat
--- :Autoformat
+-- vim-autoformat (:Autoformat)
 vim.g.formatterpath              = { "/usr/bin/" }
 vim.g.formatters_bash            = { "shfmt" }
 vim.g.formatdef_fnlfmt           = "'fnlfmt -'"

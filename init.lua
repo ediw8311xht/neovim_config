@@ -13,30 +13,46 @@
      <==============================================================================>
      <==============================================================================> --]]
 
+--[[ neccessary for "Map" --]]
+require("helper_functions")
+
+--[[ global lua --]]
 CMD  = vim.cmd
 API  = vim.api
 FN   = vim.fn
 HOME = vim.env.HOME
 FS   = vim.fs
 TS   = vim.treesitter
-require("helper_functions")
-require("functions")
-require("settings")
+
+--[[ global --]]
 vim.g.dir_config     = vim.fn.stdpath("config")
 vim.g.dir_scripts    = vim.fs.joinpath(vim.g.dir_config, "scripts")
 vim.g.dir_config_vim = vim.fs.joinpath(vim.g.dir_config, "vim")
-local lua_files = { "autocmd", "variables", "my_highlight" }
-local vim_files = { "settings.vim", "functions.vim" }
 
--- source lua files
-Map(lua_files, require)
--- source vim files
-Map(vim_files, function(x) SourceIf(vim.fs.joinpath(vim.g.dir_config_vim, x)) end)
--- base setup
+--[[ config files to load --]]
+local lua_files = {
+  "functions",
+  "variables",
+  "settings",
+  "autocmd",
+  "my_highlight",
+}
+
+local vim_files = {
+  "settings.vim",
+  "functions.vim",
+}
+
+--[[ load config files --]]
+Map(lua_files, require) -- source lua files
+Map(vim_files, -- source vim files
+  function(x) SourceIf(vim.fs.joinpath(vim.g.dir_config_vim, x)) end)
+
+--[[ base setup --]]
 require('plugins')
 require('base')
 
--- color stuff
+--[[ set colorscheme and correct colors --]]
 vim.cmd.colorscheme("pop-punk")
 CorrectColors()
 
