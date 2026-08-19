@@ -1,9 +1,9 @@
 
 ---@diagnostic disable: deprecated
 -- lua configs for plugins
-local config_files   = vim.fn.globpath(vim.g.dir_config .. "/lua/configs/",  "*.lua", 0, 1)
+local config_files   = FN.globpath(vim.g.dir_config .. "/lua/configs/",  "*.lua", 0, 1)
 -- fennel
-local compiled_files = vim.fn.globpath(vim.g.dir_config .. "/lua/compiled/", "*.lua", 0, 1)
+local compiled_files = FN.globpath(vim.g.dir_config .. "/lua/compiled/", "*.lua", 0, 1)
 
 vim.opt.rtp:append({
   vim.g.dir_config .. "/lua/configs",
@@ -34,7 +34,5 @@ end
 
 MyImportedModules["my_treesitter_module"].create_commands()
 
--- vim.api.nvim_set_option_value("statusline", vim.g.my_statuslines[1][2], {})
--- vim.api.nvim_set_option_value("titlestring", vim.g.my_titlestring.default, {})
 CreateToggle(vim.g.fullscreen_window_toggle)
 

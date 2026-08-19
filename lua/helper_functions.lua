@@ -131,15 +131,19 @@ function Reduce(tbl, func, initial)
   return accum
 end
 
----@param tbl  table
----@param test_eql fun(value, key): boolean
+---@generic K, V
+---@param tbl  table<K, V>
+---@param test_eql fun(value: V, key: K): boolean
+---@return V|nil
+---@return K|nil
 function Find(tbl, test_eql)
   for k, v in pairs(tbl) do
-    local out = test_eql(k, v)
+    local out = test_eql(v, k)
     if out then
-      return out, k, v
+      return v, k
     end
   end
+  return nil
 end
 
 function TableSetDefault(tbl, default)

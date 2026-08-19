@@ -1,10 +1,8 @@
 #!/usr/bin/lua
 
---[[{{{
 ---@diagnostic disable: unused-local, unused-function
---]]
 
-vim.g.mapping_file = vim.fs.joinpath(vim.g.dir_config, "lua/mappings.lua")
+-- {{{
 local function my_buffers()
   require("telescope.builtin").buffers({ignore_current_buffer=true, disable_coordinates = true, sort_mru=true})
 end
@@ -120,19 +118,17 @@ LEADER_MAPPINGS = {
     ---[group] editor settings
     c     = { group="editor setting"},
     cA    = { desc='[off] autofold comments',   cmd='AutoFoldComments off'},
-    cB    = { desc='[prev] background',         vim_call='CyBack(-1)'},
     cC    = { desc='[!]folds in gutter',        vim_call='TogFoldColumn()'},
-    cJ    = { desc='[prev] scheme',             vim_call='SetColScheme(-1)'},
+    cJ    = { desc='[prev] scheme',             default=Bind(Cycle, "colors_name", vim.g.ColorSchemes, vim.cmd.colorscheme, {scope = "g", increment=-1}), },
     cL    = { desc='[next] statusline',         cmd='lua= Cycle("statusline", vim.g.my_statuslines)'},
     cS    = { desc='[!]spell',                  cmd='set spell!'},
     ca    = { desc='[on] autofold comments',    cmd='AutoFoldComments multi'},
-    cb    = { desc='[next] background',         vim_call='CyBack(+1)'},
     cc    = { desc='[!]line length indicator',  vim_call='TogColorColumn()'},
     ce    = { desc='[!]cursorcolumn',           cmd='set cuc!'},
     cf    = { desc='format',                    cmd='lua RunKeepCursorPosition( function() vim.cmd.Autoformat { mods={ verbose=1 } } end)', },
     cg    = { desc='[!]git signs',              cmd='Gitsigns toggle_linehl'},
     ch    = { desc='format2',                   default=vim.lsp.buf.format },
-    cj    = { desc='[next] scheme',             vim_call='SetColScheme(+1)'},
+    cj    = { desc='[next] scheme',             default=Bind(Cycle, "colors_name", vim.g.ColorSchemes, vim.cmd.colorscheme, {scope = "g"}), },
     ck    = { desc='correctcolors()',           cmd='lua CorrectColors()'},
     cl    = { desc='[!]cursorline',             cmd='lua ToggleHighlight({"CursorLine"})'},
     cr    = { desc='[!]rainbow',                vim_call='rainbow_delimiters#toggle(0)'},
@@ -152,170 +148,3 @@ LEADER_MAPPINGS = {
   [ { "v", "n" } ] = { }
 } --
 KeyMapSetter2(LEADER_MAPPINGS, "<leader>", false,true)
-
---[[ info {{{
- _____________________________________________________________________________
- ||                                                                         ||
- ||                                                         [*map-table*]   ||
- ||            Mode  | Norm | Ins | Cmd | Vis | Sel | Opr | Term | Lang |   ||
- ||   Command        +------+-----+-----+-----+-----+-----+------+------+   ||
- ||   [nore]map      | yes  |  -  |  -  | yes | yes | yes |  -   |  -   |   ||
- ||   n[nore]map     | yes  |  -  |  -  |  -  |  -  |  -  |  -   |  -   |   ||
- ||   [nore]map!     |  -   | yes | yes |  -  |  -  |  -  |  -   |  -   |   ||
- ||   i[nore]map     |  -   | yes |  -  |  -  |  -  |  -  |  -   |  -   |   ||
- ||   c[nore]map     |  -   |  -  | yes |  -  |  -  |  -  |  -   |  -   |   ||
- ||   v[nore]map     |  -   |  -  |  -  | yes | yes |  -  |  -   |  -   |   ||
- ||   x[nore]map     |  -   |  -  |  -  | yes |  -  |  -  |  -   |  -   |   ||
- ||   s[nore]map     |  -   |  -  |  -  |  -  | yes |  -  |  -   |  -   |   ||
- ||   o[nore]map     |  -   |  -  |  -  |  -  |  -  | yes |  -   |  -   |   ||
- ||   t[nore]map     |  -   |  -  |  -  |  -  |  -  |  -  | yes  |  -   |   ||
- ||   l[nore]map     |  -   | yes | yes |  -  |  -  |  -  |  -   | yes  |   ||
- ||_________________________________________________________________________||
- ||                                                                         ||
- ||   1.4 LISTING MAPPINGS                                [*map-listing*]   ||
- ||                                                                         ||
- ||   When listing mappings the characters in the first two columns are:    ||
- ||                                                                         ||
- ||    CHAR     MODE                                                        ||
- ||   <Space>   Normal, Visual, Select and Operator-pending                 ||
- ||      n      Normal                                                      ||
- ||      v      Visual and Select                                           ||
- ||      s      Select                                                      ||
- ||      x      Visual                                                      ||
- ||      o      Operator-pending                                            ||
- ||      !      Insert and Command-line                                     ||
- ||      i      Insert                                                      ||
- ||      l      ":lmap" mappings for Insert, Command-line and Lang-Arg      ||
- ||      c      Command-line                                                ||
- ||      t      Terminal-Job                                                ||
- ||-------------------------------------------------------------------------||
- || mode([{expr}])                                             [*mode()*]   ||
- ||_________________________________________________________________________||________
- ||    n         | Normal                                                           ||
- ||    no        | Op-pending                                                       ||
- ||    nov       | Op-pending (forced charwise |o_v|)                               ||
- ||    noV       | Op-pending (forced linewise |o_V|)                               ||
- ||    noCTRL-V  | Op-pending (forced blockwise |o_CTRL-V|) CTRL-V is one character ||
- ||    niI       | Normal using |i_CTRL-O| in |Insert-mode|                         ||
- ||    niR       | Normal using |i_CTRL-O| in |Replace-mode|                        ||
- ||    niV       | Normal using |i_CTRL-O| in |Virtual-Replace-mode|                ||
- ||    nt        | Normal in |terminal-emulator| (insert goes to Terminal mode)     ||
- ||    ntT       | Normal using |t_CTRL-\_CTRL-O| in |Terminal-mode|                ||
- ||    v         | Visual by character                                              ||
- ||    vs        | Visual by character using |v_CTRL-O| in Select mode              ||
- ||    V         | Visual by line                                                   ||
- ||    Vs        | Visual by line using |v_CTRL-O| in Select mode                   ||
- ||    CTRL-V    | Visual blockwise                                                 ||
- ||    CTRL-Vs   | Visual blockwise using |v_CTRL-O| in Select mode                 ||
- ||    s         | Select by character                                              ||
- ||    S         | Select by line                                                   ||
- ||    CTRL-S    | Select blockwise                                                 ||
- ||    i         | Insert                                                           ||
- ||    ic        | Insert mode completion |compl-generic|                           ||
- ||    ix        | Insert mode |i_CTRL-X| completion                                ||
- ||    R         | Replace |R|                                                      ||
- ||    Rc        | Replace mode completion |compl-generic|                          ||
- ||    Rx        | Replace mode |i_CTRL-X| completion                               ||
- ||    Rv        | Virtual Replace |gR|                                             ||
- ||    Rvc       | Virtual Replace mode completion |compl-generic|                  ||
- ||    Rvx       | Virtual Replace mode |i_CTRL-X| completion                       ||
- ||    c         | Command-line editing                                             ||
- ||    cr        | Command-line editing overstrike mode |c_<Insert>|                ||
- ||    cv        | Vim Ex mode |gQ|                                                 ||
- ||    cvr       | Vim Ex mode while in overstrike mode |c_<Insert>|                ||
- ||    r         | Hit-enter prompt                                                 ||
- ||    rm        | The -- more -- prompt                                            ||
- ||    r?        | A |:confirm| query of some sort                                  ||
- ||    !         | Shell or external command is executing                           ||
- ||    t         | Terminal mode: keys go to the job                                ||
- ||_________________________________________________________________________________||
-
-
-|-----------------------------------------------------------------------------------------------|
-| 2. Special special keys | :help ins-special-special                                           |
-|-----------------------------------------------------------------------------------------------|
-| The following keys are special.  They stop the current insert, do something,|
-| and then restart insertion.  This means you can do something without getting                  |
-| out of Insert mode.  This is very handy if you prefer to use the Insert mode                  |
-| all the time, just like editors that don't have a separate Normal mode. You                   |
-| can use CTRL-O if you want to map a function key to a command.                                |
-|                                                                                               |
-| The changes (inserted or deleted characters) before and after these keys can                  |
-| be undone separately.  Only the last change can be redone and always behaves                  |
-| like an "i" command.                                                                          |
-|-----------------------------------------------------------------------------------------------|
-
-| char                 | action                                       | help page               |
-| -------------------- | -------------------------------------------- | ----------------------- |
-| <Up>                 |  cursor one line up                          | i_<Up>                  |
-| <Down>               |  cursor one line down                        | i_<Down>                |
-| CTRL-G <Up>          |  cursor one line up, insert start column     | i_CTRL-G_<Up>           |
-| CTRL-G k             |  cursor one line up, insert start column     | i_CTRL-G_k              |
-| CTRL-G CTRL-K        |  cursor one line up, insert start column     | i_CTRL-G_CTRL-K         |
-| CTRL-G <Down>        |  cursor one line down, insert start column   | i_CTRL-G_<Down>         |
-| CTRL-G j             |  cursor one line down, insert start column   | i_CTRL-G_j              |
-| CTRL-G CTRL-J        |  cursor one line down, insert start column   | i_CTRL-G_CTRL-J         |
-| <Left>               |  cursor one character left                   | i_<Left>                |
-| <Right>              |  cursor one character right                  | i_<Right>               |
-| <S-Left>             |  cursor one word back (like "b" command)     | i_<S-Left>              |
-| <C-Left>             |  cursor one word back (like "b" command)     | i_<C-Left>              |
-| <S-Right>            |  cursor one word forward (like "w" command)  | i_<S-Right>             |
-| <C-Right>            |  cursor one word forward (like "w" command)  | i_<C-Right>             |
-| <Home>               |  cursor to first char in the line            | i_<Home>                |
-| <End>                |  cursor to after last char in the line       | i_<End>                 |
-| <C-Home>             |  cursor to first char in the file            | i_<C-Home>              |
-| <C-End>              |  cursor to after last char in the file       | i_<C-End>               |
-| <LeftMouse>          |  cursor to position of mouse click           | i_<LeftMouse>           |
-| <S-Up>               |  move window one page up                     | i_<S-Up>                |
-| <PageUp>             |  move window one page up                     | i_<PageUp>              |
-| <S-Down>             |  move window one page down                   | i_<S-Down>              |
-| <PageDown>           |  move window one page down                   | i_<PageDown>            |
-| <ScrollWheelDown>    |  move window three lines down                | i_<ScrollWheelDown>     |
-| <S-ScrollWheelDown>  |  move window one page down                   | i_<S-ScrollWheelDown>   |
-| <ScrollWheelUp>      |  move window three lines up                  | i_<ScrollWheelUp>       |
-| <S-ScrollWheelUp>    |  move window one page up                     | i_<S-ScrollWheelUp>     |
-| <ScrollWheelLeft>    |  move window six columns left                | i_<ScrollWheelLeft>     |
-| <S-ScrollWheelLeft>  |  move window one page left                   | i_<S-ScrollWheelLeft>   |
-| <ScrollWheelRight>   |  move window six columns right               | i_<ScrollWheelRight>    |
-| <S-ScrollWheelRight> |  move window one page right                  | i_<S-ScrollWheelRight>  |
-| CTRL-O               |  execute one command, return to Insert mode  | i_CTRL-O                |
-| CTRL-\ CTRL-O        |  like CTRL-O but don't move the cursor       | i_CTRL-\_CTRL-O         |
-| CTRL-G u             |  close undo sequence, start new change       | i_CTRL-G_u              |
-| CTRL-G U             |  don't start a new undo block with the next  | i_CTRL-G_U              |
-|                      |  left/right cursor movement, if the cursor   |                         |
-|                      |  stays within the same line                  |                         |
-
-}}} --]]
-
--- commented out {{{
--- [ '<C-S-e>'  ] = {F, '',                       '<C-e>'},
--- vim.keymap.set('n', 'gd', function() vim.lsp.buf.definition() end)
--- vim.keymap.set('n', 'grr', function() vim.lsp.buf.references() end)
--- vim.keymap.set('n', '<C-m>', function() vim.diagnostic.open_float() end)
--- local status1 = '%t %r%m%=[%v] (%L lines) (%{wordcount().words} words)%=%#HLspStatus#%{LspStatus()}%*[%{LspStatus()}] [%F]'
--- { n,    '<C-|>',    'Search icase exact',     '/\\V'},
--- { n,    '<C-_>',    '',                       '/\\v'},
--- { n,    '<Tab>',    '',                       ':earlier<CR>'},
--- { n,    '<S-Tab>',  '',                       ':later<CR>'},
--- { n,    '\\|',      '',                       '?\\V\\c'},
--- local _l = '<leader>'
--- { n, 'I'   ,  '+ lsp_lines',            ':lua require("lsp_lines").toggle()<CR>'},
--- [ '<C-p>'    ] = {F, 'Substitute',             '<C-i>'},
--- local l = 'l';
--- [ '<C-p>'    ] = {F, 'Substitute [All Buffs]', ':%s/\\v\\c'},
--- [ '<C-k>'    ] = {F, 'Delete to end of line',  '<C-g>u<C-o>D'},
--- CTRL-U   Delete all entered characters before the cursor in the current line.
--- [ '{'        ] = {F, 'Prev Function Start',    ':GotoPrevFunctionStart<CR>'},
--- [ '}'        ] = {F, 'Next Function Start',    ':GotoNextFunctionStart<CR>'},
--- [ 'S'       ] = { desc='Source vim config',      ':source ~/.config/nvim/init.vim<ESC>'},
--- [ 'cp'      ] = { desc='! Rainbow Parenth',      ':RainbowToggle<CR>'},
--- [ 'W'       ] = { desc='VimwikiIndex',           '<Plug>VimwikiIndex'},
--- Execute --
--- Session --
--- [ 'pP'      ] = { desc='Paste as line above',    'k:put="a'},
--- [ 'pp'      ] = { desc='Paste as line below',    ''},
--- [ '<C-h>'    ] = {F, 'Left Pane',              '<C-w>h'},
--- [ '<C-j>'    ] = {F, 'Down Pane',              '<C-w>j'},
--- [ '<C-k>'    ] = {F, 'Up Pane',                '<C-w>k'},
--- [ '<C-l>'    ] = {F, 'Right Pane',             '<C-w>l'},
--- }}}

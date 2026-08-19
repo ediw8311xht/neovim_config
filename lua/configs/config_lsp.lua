@@ -4,11 +4,18 @@ local cmp_capabilities  = require('cmp_nvim_lsp').default_capabilities()
 local actions_preview   = require('actions-preview')
 local lspsaga           = require('lspsaga')
 
--- vim.diagnostic.config({ virtual_lines = true })
+vim.lsp.config('*', {
+  capabilities = {
+    textDocument = {
+      semanticTokens = {
+        multilineTokenSupport = true,
+      }
+    }
+  }
+})
 
 actions_preview.setup({})
 lspsaga.setup({})
-
 
 lspconfig('jsonls',  { capabilities = cmp_capabilities })
 lspconfig('ts_ls',   { capabilities = cmp_capabilities })
@@ -113,6 +120,7 @@ lspconfig('hls', {
 
 -- harper {{{
 lspconfig("harper_ls", {
+  filetypes = { 'markdown', 'text', 'tex', 'typst' },
   settings = {
     ["harper-ls"] = {
       userDictPath = vim.g.personal_dictionary,
@@ -145,86 +153,8 @@ lspconfig("harper_ls", {
     }
   }
 }) -- }}}
---
--- -- General LSP setup
--- vim.lsp.config['*'] = {
---     capabilities = { textDocument = { semanticTokens = { multilineTokenSupport = true } } },
---     root_markers = { '.git' },
--- }
---
--- -- Harper specific setup
--- vim.lsp.config['harper'] = {
---     cmd = { 'harper-ls', '--stdio' },
---     filetypes = { 'markdown', 'text', 'tex', 'typst' }
--- }
--- vim.lsp.enable('harper')
 
 for _,v in ipairs(vim.g.lsp_lang_servers) do
   vim.lsp.enable(v)
 end
 
--- {{{
--- lspconfig.jedi_language_server.setup( { capabilities = cmp_capabilities , })
---
--- lspconfig.pyright.setup{
---   on_attach = lsp_status.on_attach,
---   capabilities = cmp_capabilities,
---   settings = {
---       python = {
---         analysis = {
---           typeCheckingMode = "standard",
---       }
---     }
---   }
--- }
---
--- lspconfig.ccls.setup({
---   filetypes = {"c", "cpp", "h", "cc", "hpp"},
--- })
---
--- vim.lsp.config('*', {
---   capabilities = {
---     textDocument = {
---       semanticTokens = {
---         multilineTokenSupport = true,
---       }
---     }
---   }
--- })
--- }}}
-
--------------------------------------------- {{{
--- local configs = require 'lspconfig.configs'
--- -- https://github.com/neovim/nvim-lspconfig/issues/1767#issuecomment-1100913208
--- if not configs.cl_lsp then
--- configs.cl_lsp = {
---   default_config = {
---     cmd = { vim.env.HOME .. "/.roswell/bin/cl-lsp"},
---     filetypes = {'lisp'},
---     root_dir = require("lspconfig.util").find_git_ancestor,
---     settings = {},
---   },
--- }
--- end
--- require('lspconfig').cl_lsp.setup {}
--------------------------------------------- }}}
-
--------------------------------------------- {{{
--- vim.lsp.handlers["textDocument/hover"] =
--- function (f)
---   vim.lsp.handlers.hover(f, {
---     border = "rounded",
---     width = 75,
---     height = 50,
---   })
--- end
-
-
--- vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
---   vim.lsp.handlers.hover, {
---     border = "rounded",
---     width = 50,
---     height = 25,
---   }
--- )
--------------------------------------------- }}}

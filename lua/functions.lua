@@ -1,7 +1,11 @@
 
 require("helper_functions")
 
--- [[ gui funcs {{{ 
+function TabBufName(tab)
+  return API.nvim_buf_get_name(API.nvim_win_get_buf(API.nvim_tabpage_get_win(tab)))
+end
+
+-- [[ gui funcs {{{
 --]]
 
 local original_floating_preview = vim.lsp.util.open_floating_preview
@@ -47,6 +51,8 @@ end
 
 ---Tab Line
 function TabLineFunc()
+  local tabs = FN.tabpagenr('$')
+  if tabs < 2 then return "" end
   local active_tab_page = API.nvim_tabpage_get_number(0)
   local function tab_calc(accum, v)
     if v == active_tab_page then
@@ -69,7 +75,7 @@ function TabLineFunc()
       })
     end
   end
-  return Reduce( FN.range(1, FN.tabpagenr('$')), tab_calc, "")
+  return Reduce( FN.range(1, tabs), tab_calc, "")
 end
 -- }}}
 
@@ -79,23 +85,30 @@ function ClipBoardExit()
   end
 end
 
-function Cycle(check_var, list, func)
-  local o = API.nvim_get_option_value(check_var, {})
-  func = func or function(l)
-    API.nvim_set_option_value(check_var, l[2], { scope = "global" })
-    return l[1]
-  end
-  if #list <= 0 then
-    return
-  end
-  for i, v in ipairs(list) do
-    if v[2] == o then
-      return func(list[i % #list + 1])
-    end
-  end
-  return func(list[1])
-end
 
+---@generic T: table, K, V
+---@param check_var string
+---@param list      T<K, V>
+---@param fn      fun(arg: V)
+---@param opts? { increment: integer, scope: string}
+function Cycle(check_var, list, fn, opts)
+  local size = #list
+  if size <= 0 then return end
+  local increment = opts and opts.increment or 1
+  local scope = opts and opts.scope or "o"
+  local computed_check = vim[scope][check_var]
+  local funct = fn or function(v)
+    vim.print(v)
+    vim[scope][check_var] = v
+    return v
+  end
+  local _, index = Find(list, function(v) return v == computed_check end)
+  if index then
+    return funct(list[index % size + increment])
+  else
+    return funct(list[1])
+  end
+end
 
 ---custom highlighting settings
 ---runs highlight settings from vim.g.my_highlight with a few additional rules
@@ -249,24 +262,24 @@ function LspDocumentHighlight()
 end
 
 ---Create toggle command
----@param options { namespace    : string,
----                 scope        : string,
----                 description  : string,
----                 command_name : string,
----                 var?         : string|(fun(): boolean),
----                 on           : function,
----                 off          : function  }
+---@param opts { namespace    : string,
+---              scope        : string,
+---              description  : string,
+---              command_name : string,
+---              var?         : string|(fun(): boolean),
+---              on           : function,
+---              off          : function  }
 ---@return function|nil
-function CreateToggle(options)
-  local namespace         = options.namespace or "CreateToggle__"
-  local scope             = options.scope or "g"
-  local description       = options.description or ""
-  local command_name      = options.command_name
-  local var               = options.var or command_name
-  local on_function       = options.on
-  local off_function      = options.off
+function CreateToggle(opts)
+  local namespace         = opts.namespace or "CreateToggle__"
+  local scope             = opts.scope or "g"
+  local description       = opts.description or ""
+  local command_name      = opts.command_name
+  local var               = opts.var or command_name
+  local on_function       = opts.on
+  local off_function      = opts.off
   if type(var) ~= "function" then
-    local cvar = namespace .. (options.var or command_name or "temp")
+    local cvar = namespace .. (opts.var or command_name or "temp")
     vim[scope][cvar] = false
     var = function()
       vim[scope][cvar] = not vim[scope][cvar]
@@ -321,21 +334,21 @@ end
 ---Write contents of input_file to output_file
 ---@param input_file  string
 ---@param output_file string
----@param options? {
+---@param opts? {
 ---                  chmod: string,
 ---                  line: number,
 ---               }
 ---
-function ReadInFile(input_file, output_file, options)
+function ReadInFile(input_file, output_file, opts)
   -- options
-  local opts = options or { line = 0, chmod = nil }
+  local options = opts or { line = 0, chmod = nil }
   if not PathValid(output_file) then
     error("path: '" .. output_file .. "' is invalid.")
   else
-    CMD(Printf("keepalt %dread %s", opts.line, input_file))
+    CMD(Printf("keepalt %dread %s", options.line, input_file))
     CMD.write({ mods = { silent = true } })
-    if opts.chmod then
-      CMD["!"]("chmod", opts.chmod, output_file)
+    if options.chmod then
+      CMD["!"]("chmod", options.chmod, output_file)
       -- os.execute(printf("chmod %s '%s'", opts.chmod, output_file))
     end
   end
@@ -350,15 +363,15 @@ function LspStatus()
 end
 
 ---get part of file path
----@param options? {
+---@param opts? {
 ---               tilde_home: boolean,
 ---               expand: string,
 ---               }
 ---@return string
-function GetFile(options)
-  local opts = TableDifference({ tilde_home = false, expand = "%" }, (options or {}), false)
-  local file = FN.expand(opts.expand)
-  if opts.tilde_home then
+function GetFile(opts)
+  local options = TableDifference({ tilde_home = false, expand = "%" }, (opts or {}), false)
+  local file = FN.expand(options.expand)
+  if options.tilde_home then
     return FN.substitute(file, "\\V" .. HOME, "~", "")
   else
     return file
@@ -367,12 +380,12 @@ end
 
 ---Get extension of file
 ---@param filename? string
----@param options? {
+---@param opts? {
 ---               glob: boolean,
 ---               }
 ---@return string
-function GetExtension(filename, options)
-  local glob = options and options.glob
+function GetExtension(filename, opts)
+  local glob = opts and opts.glob
   if glob or not filename then
     return FN.expand((filename or "%") .. ":e")
   else
@@ -455,8 +468,8 @@ end
 ---View or Hide floating window by buffer number or buffer name
 ---@param buf integer|string
 ---@param enter? boolean
----@param options? table
-function FloatingWindowToggle(buf, enter, options)
+---@param opts? table
+function FloatingWindowToggle(buf, enter, opts)
   local buffer
   if type(buf) == "string" then
     buffer = FN.bufnr(buf)
@@ -488,8 +501,8 @@ function FloatingWindowToggle(buf, enter, options)
     width = width,
     height = height,
   }
-  local opts = TableDifference(default_opts, options or {}, false)
-  local out_window = API.nvim_open_win(buffer or 0, enter or false, opts)
+  local options = TableDifference(default_opts, opts or {}, false)
+  local out_window = API.nvim_open_win(buffer or 0, enter or false, options)
   -- prevents buffer from changing in floating window (very annoying)
   -- API.nvim_win_set_option(out_window, 'winfixbuf', true)
   return out_window
@@ -522,9 +535,6 @@ function SubAllBuffers(x, y)
   )
 end
 
-function TabBufName(tab)
-  return API.nvim_buf_get_name(API.nvim_win_get_buf(API.nvim_tabpage_get_win(tab)))
-end
 
 
 -- [[ do later {{{

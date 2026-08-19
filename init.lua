@@ -32,7 +32,6 @@ vim.g.dir_config_vim = vim.fs.joinpath(vim.g.dir_config, "vim")
 --[[ config files to load --]]
 local lua_files = {
   "functions",
-  "variables",
   "settings",
   "autocmd",
   "my_highlight",
