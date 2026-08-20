@@ -11,6 +11,11 @@ toc: true
 
 # lua
 
+## converting from vim
+
+- `nvim_parse_cmd`
+  - convert ex command from vimscript to lua:
+
 ## [luals](https://luals.github.io/)
 
 - annotation with [LuaCATS](https://luals.github.io/wiki/annotations/)
@@ -46,7 +51,6 @@ toc: true
 | `(#eq? @cap "val")`         | filter where node text equals `"val"`                   | `(#eq? @tag "script")`                                                    |
 | `(#match? @cap "reg")`      | filter using regex                                      | `(#match? @attr "^on")`                                                   |
 | `[ (node_1) (node_2) ... ]` | any that matches on at least one of the pattern in `[]` | `[ (paired_statement) (unpaired_statement) ] @htmldjango_statement.outer` |
-
 
 # reset option back to default
 
@@ -84,7 +88,7 @@ toc: true
     provided, the user will be prompted for a path using |input()|.
 
     Parameters: ~
-      • {workspace_folder}  (`string?`)
+      - {workspace_folder}  (`string?`)
     ```
 
 # locations

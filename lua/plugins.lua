@@ -47,6 +47,8 @@ vim.g.my_plugins =  {
   easy_align          =  {  user='junegunn',         repo='vim-easy-align'  },
   -- Lf File Manager
   lf                  =  {  user='ptzz',             repo='lf.vim'  },
+  -- Search & Replace
+  spectre_sub_buffers =  {  user='nvim-pack',        repo='nvim-spectre' },
   -- Key Hints
   whichkeys           =  {  user='folke',            repo='which-key.nvim'  },
   -- Treesitter

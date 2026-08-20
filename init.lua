@@ -50,6 +50,7 @@ Map(vim_files, -- source vim files
 --[[ base setup --]]
 require('plugins')
 require('base')
+require('neovide-config')
 
 --[[ set colorscheme and correct colors --]]
 vim.cmd.colorscheme("pop-punk")

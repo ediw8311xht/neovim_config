@@ -52,26 +52,26 @@ end
 ---Tab Line
 function TabLineFunc()
   local tabs = FN.tabpagenr('$')
-  if tabs < 2 then return "" end
+  if not tabs or tabs <= 1 then return "" end
   local active_tab_page = API.nvim_tabpage_get_number(0)
   local function tab_calc(accum, v)
+    local sucess, bufname = pcall(TabBufName, v)
+    local filename = (sucess and FS.basename(bufname) or "")
     if v == active_tab_page then
       return table.concat( { accum,
-        '%#CursorLineNr#', '#',
-        '%#Normal#', v,
-        '%#CursorLineNr#', ' ',
-        '%', v, 'T', ' ',
-        '%#Keyword#', '    ', vim.fs.basename(TabBufName(v)),
-        '%#Comment#', '    ',
+        "%#CursorLineNr#",    "#",
+        "%#Normal#",          v,
+        "%#CursorLineNr#",    " ", "%", v, "T", " ",
+        "%#Keyword#",         "   ", filename,
+        "%#Comment#",         "   ",
       })
     else
       return table.concat( { accum,
-        '%#Special#', '#',
-        '%#Normal#', v,
-        '%#Special#', ' ',
-        '%', v, 'T', ' ',
-        '%#Normal#', '    ', vim.fs.basename(TabBufName(v)),
-        '%#Comment#', '    ',
+        "%#Special#",   "#",
+        "%#Normal#",    v,
+        "%#Special#",   " ", "%", v, "T", " ",
+        "%#Normal#",    "   ", filename,
+        "%#Comment#",   "   ",
       })
     end
   end
@@ -534,8 +534,6 @@ function SubAllBuffers(x, y)
     repl
   )
 end
-
-
 
 -- [[ do later {{{
 --]]

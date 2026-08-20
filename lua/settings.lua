@@ -44,6 +44,8 @@ vim.g.formatdef_fnlfmt           = "'fnlfmt -'"
 vim.g.formatters_fennel          = { "fnlfmt" }
 vim.g.formatdef_pandoc_format    = Printf("'%s'", FS.joinpath(vim.g.dir_config, "/scripts/pandoc_format.sh"))
 vim.g.formatters_markdown        = { "pandoc_format" }
+vim.g.formatdef_stylua           = "'stylua -'"
+vim.g.formatters_lua             = { "stylua" }
 -- lf
 vim.g.lf_height                  = 0.9
 vim.g.lf_map_keys                = 0
@@ -84,20 +86,20 @@ vim.g.DefaultColorScheme = 'pop-punk'
 vim.g.ColorSchemes = { 'pop-punk', 'wildcharm', 'cyberpunk-neon', 'eldar', 'elflord', 'delek', 'morning', 'blue', 'peachpuff', 'industry', 'murphy', 'vividchalk' }
 -- lsp
 vim.g.lsp_lang_servers = {
- 'cssls',
- 'bashls',
- 'clangd',
- 'eslint',
- 'hls',
- 'html',
- 'jsonls',
- 'lua_ls',
- 'pyright',
- 'tailwindcss',
- 'ts_ls',
- 'vimls',
- 'harper',
- 'harper_ls',
+  'cssls',
+  'bashls',
+  'clangd',
+  'eslint',
+  'hls',
+  'html',
+  'jsonls',
+  'lua_ls',
+  'pyright',
+  'tailwindcss',
+  'ts_ls',
+  'vimls',
+  'harper',
+  'harper_ls',
 }
 -- treesitter
 vim.g.treesitter_disable                     = { tex = true }
@@ -111,8 +113,8 @@ vim.g.fullscreen_window_toggle = {
   on = function()
     vim.t.fullscreen_state = vim.fn.winrestcmd()
     vim.cmd([[
-        vertical resize
-        horizontal resize
+    vertical resize
+    horizontal resize
     ]])
     return "fullscreen"
   end,

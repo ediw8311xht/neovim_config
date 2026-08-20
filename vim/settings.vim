@@ -72,34 +72,3 @@ set cmdwinheight=30 "for cmd history `q:`
 "for fennel nfnl
 autocmd FileType bash setlocal keywordprg=:Man
 
-let g:mapleader = " "
-let g:maplocalleader = ","
-
-"------------------- Plugin options -------------------"
-let g:NERDTreeIgnore             = ['\.o$','.cache$','.git$']
-let g:floaterm_opener            = 'edit'
-let g:html_mode                  = 1
-let g:is_bash                    = 1
-let g:markdown_recommended_style = 0
-let g:vimwiki_global_ext         = 0 "Prevent vimwiki from running on markdown not in ~/vimwiki dir.
-"let g:neoterm_automap_keys=',Tt'
-
-"--------------------------------------------vim-autoformat
-":Autoformat
-let g:formatterpath = [ '/usr/bin/' ]
-let g:formatters_bash = [ 'shfmt' ]
-let g:formatdef_fnlfmt = "'fnlfmt -'"
-let g:formatters_fennel = [ 'fnlfmt' ]
-let g:formatdef_pandoc_format = "'" .. g:dir_config .. '/scripts/pandoc_format.sh' .. "'"
-let g:formatters_markdown = [ 'pandoc_format' ]
-
-"--------------------------------------------LF
-let g:lf_height   = 0.9
-let g:lf_map_keys = 0
-let g:lf_width    = 0.9
-
-"-------------------------------------lf
-let g:NERDTreeHijackNetrw = 0 " Add this line if you use NERDTree
-let g:lf_replace_netrw    = 1
-let g:loaded_netrw        = 1
-

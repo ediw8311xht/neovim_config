@@ -250,4 +250,9 @@ function CatchError(func, options)
   end
   return { success = success, output = output }
 end
+
+function CreateToggleOpt(opt, scope)
+  scope = scope or "g"
+  return Bind(function() vim[scope][opt] = not vim[scope][opt] end)
+end
 -- }}}
