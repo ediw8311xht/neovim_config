@@ -50,32 +50,46 @@ function TitleStringFunc()
 end
 
 ---Tab Line
-function TabLineFunc()
+---@param options? { 
+---                 left_padding: integer,
+---                 partition: string,
+---                }
+function TabLineFunc(options)
+  --[[ tab-id is unique to tab (doesn't change), and tab number is index of tab
+       nvim_list_tabpages() returns tab-ids
+       nvim_tabpage_get_number returns the tab number
+  --]]
+  local partition    = options and options.partition    or "%#Keyword#|%#Normal#"
+  local left_padding = options and options.left_padding or 4
   local tabs = FN.tabpagenr('$')
   if not tabs or tabs <= 1 then return "" end
+
+  local index    = 0
   local active_tab_page = API.nvim_tabpage_get_number(0)
-  local function tab_calc(accum, v)
-    local sucess, bufname = pcall(TabBufName, v)
-    local filename = (sucess and FS.basename(bufname) or "")
-    if v == active_tab_page then
+  local function tab_calc(accum, val)
+    index = index + 1
+    local filename = FS.basename(TabBufName(val))
+    if index == active_tab_page then
       return table.concat( { accum,
-        "%#CursorLineNr#",    "#",
-        "%#Normal#",          v,
-        "%#CursorLineNr#",    " ", "%", v, "T", " ",
-        "%#Keyword#",         "   ", filename,
-        "%#Comment#",         "   ",
+        -- "%#Special#",   "[",
+        "%",index,"T",
+        "%#TabLineActive#",         " ", filename, " ",
+         " ", index, " ",
+        -- "%#Special#",         "]"
+        partition,
       })
     else
       return table.concat( { accum,
-        "%#Special#",   "#",
-        "%#Normal#",    v,
-        "%#Special#",   " ", "%", v, "T", " ",
-        "%#Normal#",    "   ", filename,
-        "%#Comment#",   "   ",
+        -- "%#Comment#",   "[",
+        "%",index,"T",
+        "%#TabLineInactive#",     " ", filename, " ",
+         " ", index, " ",
+        -- "%#Comment#",   "]"
+        partition,
       })
     end
   end
-  return Reduce( FN.range(1, tabs), tab_calc, "")
+  return Reduce( API.nvim_list_tabpages(), tab_calc, vim.fn["repeat"](" ", left_padding) .. partition)
 end
 -- }}}
 
@@ -307,7 +321,10 @@ end
 function RunKeepCursorPosition(func)
   local last_cursor_position = API.nvim_win_get_cursor(0)
   func()
-  API.nvim_win_set_cursor(0, last_cursor_position)
+  local success, out = pcall(API.nvim_win_set_cursor, 0, last_cursor_position)
+  if not success then
+    vim.print("Restoring cursor position failed.")
+  end
 end
 
 ---Check if path to file exists and is writable

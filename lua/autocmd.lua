@@ -23,12 +23,12 @@ local special_settings = {
 ---sets templates for extension. on new file with extension will read in template.
 ---options are passed to ReadInFile
 local template_extensions = {
-  ["nvim.lua"] = nil, -- this sets project settings for a directory (must trust if want to use)
+  ["nvim.lua"] = {}, -- this sets project settings for a directory (must trust if want to use)
+  html         = {},
+  lisp         = {},
+  md           = {},
+  page         = {}, -- gitit
   Makefile     = { exact_match = true },
-  html         = nil,
-  lisp         = nil,
-  md           = nil,
-  page         = nil, -- gitit
   -- executable
   sh     = { chmod = "700" },
   py     = { chmod = "700" },

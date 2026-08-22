@@ -81,6 +81,7 @@ vim.g.my_plugins =  {
   cmp_conjure         =  {  user='PaterJason',       repo='cmp-conjure'  },
   latex_snips_vimtex  =  {  user='micangl',          repo='cmp-vimtex'  },
   luasnip             =  {  user='L3MON4D3',         repo='LuaSnip', args={ run="make install_jsregexp" } },
+  devicons            =  {  user='nvim-tree',        repo='nvim-web-devicons' },
 }
 
 local function install_plugins()
@@ -88,8 +89,9 @@ local function install_plugins()
   for _,v in pairs(vim.g.my_plugins) do
     vim.cmd.Plug { args = { Printf("'%s/%s'", v.user, v.repo), unpack(v.args or {}) } }
   end
-  vim.cmd.Plug { args = { '"AndrewRadev/tagalong.vim"' } }
-  vim.cmd.Plug { args = { '"alvan/vim-closetag"' } }
+  vim.cmd.Plug( '"AndrewRadev/tagalong.vim"' )
+  vim.cmd.Plug(  '"alvan/vim-closetag"' )
+  vim.cmd.Plug(  '"nvim-tree/nvim-tree.lua"' )
   vim.call("plug#end")
 end
 

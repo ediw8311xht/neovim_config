@@ -1,32 +1,36 @@
-local lsp_status        = require('lsp-status')
-local lspconfig         = vim.lsp.config
-local cmp_capabilities  = require('cmp_nvim_lsp').default_capabilities()
-local actions_preview   = require('actions-preview')
-local lspsaga           = require('lspsaga')
+local lsp_status       = require("lsp-status")
+local lspconfig        = vim.lsp.config
+local cmp_capabilities = require("cmp_nvim_lsp").default_capabilities()
+local actions_preview  = require("actions-preview")
+local lspsaga          = require("lspsaga")
 
-vim.lsp.config('*', {
+vim.lsp.config("*", {
   capabilities = {
     textDocument = {
       semanticTokens = {
         multilineTokenSupport = true,
-      }
-    }
-  }
+      },
+    },
+  },
 })
 
 actions_preview.setup({})
 lspsaga.setup({})
 
-lspconfig('jsonls',  { capabilities = cmp_capabilities })
-lspconfig('ts_ls',   { capabilities = cmp_capabilities })
-lspconfig('vimls',   { capabilities = cmp_capabilities })
-lspconfig('eslint',  { } )
+lspconfig("jsonls", { capabilities = cmp_capabilities })
+lspconfig("ts_ls",  { capabilities = cmp_capabilities })
+lspconfig("vimls",  { capabilities = cmp_capabilities })
+lspconfig("eslint", {
+  capabilities = cmp_capabilities,
+  filetypes = { "css", "html" },
 
-lspconfig('html', {
-  capabilities = cmp_capabilities
 })
 
-lspconfig('cssls', {
+lspconfig("html", {
+  capabilities = cmp_capabilities,
+})
+
+lspconfig("cssls", {
   capabilities = cmp_capabilities,
   settings = {
     css = {
@@ -36,7 +40,7 @@ lspconfig('cssls', {
     },
   },
 })
-lspconfig('pyright', {
+lspconfig("pyright", {
   on_attach = lsp_status.on_attach,
   capabilities = cmp_capabilities,
   settings = {
@@ -48,14 +52,15 @@ lspconfig('pyright', {
         autoSearchPaths = true,
         diagnosticMode = "openFilesOnly",
         typeCheckingMode = "off",
-      }
-    }
-  }
+      },
+    },
+  },
 })
 
-lspconfig('tailwindcss', {
+lspconfig("tailwindcss", {
   -- filetype = {},
   -- filetypes = { "heex", "eex"},
+  filetypes = { "css" },
   capabilities = cmp_capabilities,
   -- init_options = {
   --   userLanguages = {
@@ -66,7 +71,7 @@ lspconfig('tailwindcss', {
   -- }
 })
 
-lspconfig('lua_ls', {
+lspconfig("lua_ls", {
   capabilities = cmp_capabilities,
   settings = {
     Lua = {
@@ -78,40 +83,40 @@ lspconfig('lua_ls', {
       diagnostics = {
         enable = true,
         disable = {},
-        globals = { 'vim' },
+        globals = { "vim" },
         type = {
           checkTableIndex = true,
           paramTypeMismatch = true,
         },
-      }
-    }
-  }
+      },
+    },
+  },
 })
 
-lspconfig('bashls', {
+lspconfig("bashls", {
   on_attach = lsp_status.on_attach,
   capabilities = cmp_capabilities,
   filetypes = { "bash" },
   settings = {
     bashIde = {
-      shellcheckArguments = Printf("--rcfile %s", vim.fs.joinpath(vim.env.HOME, ".config/", "shellcheckrc"))
-    }
-  }
+      shellcheckArguments = Printf("--rcfile %s", vim.fs.joinpath(vim.env.HOME, ".config/", "shellcheckrc")),
+    },
+  },
 })
 
-lspconfig('clangd', {
+lspconfig("clangd", {
   capabilities = cmp_capabilities,
   cmd = { "clangd", "--log=verbose" },
-  filetypes = {'c', 'cpp'},
+  filetypes = { "c", "cpp" },
   init_options = {
     fallbackFlags = {
-      '--std=gnu++23',
+      "--std=gnu++23",
       -- '-DMAGICKCORE_HDRI_ENABLE=1',
-    }
-  }
+    },
+  },
 })
 
-lspconfig('hls', {
+lspconfig("hls", {
   capabilities = cmp_capabilities,
   cmd = { "haskell-language-server-wrapper", "--lsp" },
   filestypes = { "haskell", "lhaskell" },
@@ -120,7 +125,7 @@ lspconfig('hls', {
 
 -- harper {{{
 lspconfig("harper_ls", {
-  filetypes = { 'markdown', 'text', 'tex', 'typst' },
+  filetypes = { "markdown", "text", "tex", "typst" },
   settings = {
     ["harper-ls"] = {
       userDictPath = vim.g.personal_dictionary,
@@ -136,25 +141,24 @@ lspconfig("harper_ls", {
         LongSentences = true,
         RepeatedWords = true,
         Spaces = true,
-        CorrectNumberSuffix = true
+        CorrectNumberSuffix = true,
       },
       codeActions = {
-        ForceStable = false
+        ForceStable = false,
       },
       markdown = {
-        IgnoreLinkTitle = false
+        IgnoreLinkTitle = false,
       },
       diagnosticSeverity = "hint",
       isolateEnglish = false,
       dialect = "American",
       maxFileLength = 120000,
       ignoredLintsPath = "",
-      excludePatterns = {}
-    }
-  }
+      excludePatterns = {},
+    },
+  },
 }) -- }}}
 
-for _,v in ipairs(vim.g.lsp_lang_servers) do
+for _, v in ipairs(vim.g.lsp_lang_servers) do
   vim.lsp.enable(v)
 end
-

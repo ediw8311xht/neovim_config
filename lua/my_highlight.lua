@@ -30,6 +30,10 @@ vim.g.my_highlight = {
       -- Custom ---
       -- LuaDocLine = { gui = "NONE", guibg = "#FF0000", guifg="#0099FF" },
   },
+  TabLine = {
+    Active   = { gui="none", guibg="#23746c", guifg="#000000" },
+    Inactive = { gui="none", guibg="#111111", guifg="#378537" },
+  },
   --- Personal Highlights
   My = {
       TextYank = { gui = "bold", guibg = "#FFFF00", guifg = "#000000" },
