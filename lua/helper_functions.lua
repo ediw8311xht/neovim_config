@@ -202,6 +202,11 @@ function Bind(func, ...)
 end
 --}}}
 
+function GetPadding(str, n, min_padding)
+  min_padding = min_padding or 0
+  return string.rep(" ", math.max(min_padding, n - #str))
+end
+
 --{{{ VIM SPECIFIC
 
 --- interpolate string

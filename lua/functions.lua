@@ -61,8 +61,8 @@ function TabLineFunc(options)
   --]]
   local partition    = options and options.partition    or "%#Keyword#|%#Normal#"
   local left_padding = options and options.left_padding or 4
-  local tabs = FN.tabpagenr('$')
-  if not tabs or tabs <= 1 then return "" end
+  local tabs = API.nvim_list_tabpages()
+  if not tabs or #tabs <= 1 then return "" end
 
   local index    = 0
   local active_tab_page = API.nvim_tabpage_get_number(0)
@@ -89,7 +89,7 @@ function TabLineFunc(options)
       })
     end
   end
-  return Reduce( API.nvim_list_tabpages(), tab_calc, vim.fn["repeat"](" ", left_padding) .. partition)
+  return Reduce( tabs, tab_calc, string.rep(" ", left_padding) .. partition)
 end
 -- }}}
 
@@ -131,8 +131,8 @@ function CorrectColors()
     return CMD.highlight(
       Reduce(
         hl_table,
-        function(accum, v, k)
-          return accum .. " " .. k .. "=" .. v
+        function(accum, val, key)
+          return accum .. " " .. key .. "=" .. val
         end,
         hl_group
       )
@@ -526,18 +526,20 @@ function FloatingWindowToggle(buf, enter, opts)
 end
 
 --- @param script string
---- @param opts? { path: string, after: function }
+--- @param opts? { path: string, 
+---                after: function, 
+---                silent: boolean,
+---              }
 --- @vararg any
 function ExecuteScript(script, opts, ...)
   local options = opts or {}
-  local after = options.after or vim.print
+  local after = options.after or (options.silent and vim.print or function() end)
   local path = options.path or vim.g.dir_scripts
   if not path and not FN.isdirectory(path) then
     error(Printf("vim.g._dir_scripts isn't set or couldn't be found. value: '%s' ", path))
   end
 
   local fullpath = vim.fs.joinpath(path or FN.expand("%:p:h"), script)
-  vim.print(FN.filereadable(fullpath))
   if FN.filereadable(fullpath) ~= 1 then
     error(Printf("File '%s' not found", fullpath))
   end

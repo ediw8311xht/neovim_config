@@ -1,7 +1,7 @@
 local lsp_status       = require("lsp-status")
 local lspconfig        = vim.lsp.config
 local cmp_capabilities = require("cmp_nvim_lsp").default_capabilities()
-local actions_preview  = require("actions-preview")
+-- local actions_preview  = require("actions-preview")
 local lspsaga          = require("lspsaga")
 
 vim.lsp.config("*", {
@@ -15,7 +15,11 @@ vim.lsp.config("*", {
 })
 
 actions_preview.setup({})
-lspsaga.setup({})
+lspsaga.setup({
+  lightblub = {
+    enable = false,
+  }
+})
 
 lspconfig("jsonls", { capabilities = cmp_capabilities })
 lspconfig("ts_ls",  { capabilities = cmp_capabilities })
@@ -125,7 +129,8 @@ lspconfig("hls", {
 
 -- harper {{{
 lspconfig("harper_ls", {
-  filetypes = { "markdown", "text", "tex", "typst" },
+  -- filetypes = { "markdown", "text", "tex", "typst", "doc" },
+  filetypes = { "doc" },
   settings = {
     ["harper-ls"] = {
       userDictPath = vim.g.personal_dictionary,

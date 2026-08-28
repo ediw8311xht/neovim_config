@@ -23,6 +23,8 @@ FN   = vim.fn
 HOME = vim.env.HOME
 FS   = vim.fs
 TS   = vim.treesitter
+ENV  = vim.env
+Fmt  = string.format
 
 --[[ global --]]
 vim.g.dir_config     = vim.fn.stdpath("config")
@@ -55,4 +57,5 @@ require('neovide-config')
 --[[ set colorscheme and correct colors --]]
 vim.cmd.colorscheme("pop-punk")
 CorrectColors()
+
 

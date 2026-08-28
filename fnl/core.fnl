@@ -38,7 +38,7 @@
   :<C-S-g>    { :desc "[!]float term"               :val "FloatermToggle" :typet :vim_command  }
   :<C-S-s>    { :desc "substitute +char +vmagic"    :val ":%s/\\v"  }
   :<C-Tab>    { :desc "next tab"                    :val :tabnext :typet :vim_command  }
-  :<C-n>      { :desc "[!]NerdTree"                 :val :NERDTreeToggle :typet :vim_command  }
+  :<C-n>      { :desc "[!]FileExplorer"             :val :NvimTreeToggle :typet :vim_command  }
   :<C-s>      { :desc "substitute i"                :val ":%s/\\v\\c"  }
   :<C-w>n     { :desc "new buffer right"            :val  :new<ESC><C-w>L  }
   :<esc>      { :desc :clear                        :val  :nohlsearch :typet :cmd  }

@@ -4,7 +4,7 @@
 
 -- {{{
 local function my_buffers()
-  require("telescope.builtin").buffers({ignore_current_buffer=true, disable_coordinates = true, sort_mru=true})
+  require("telescope.builtin").buffers({ignore_current_buffer=true, disable_coordinates = true, sort_mru=true, bufnr_width=0})
 end
 
 local function my_live_grep()
@@ -31,6 +31,7 @@ LEADER_MAPPINGS = {
     wk    = { desc='[+]width',                  default='40<c-w>>'},
     wo    = { desc='[!]fullscreen',             cmd='ToggleFullscreen'},
     x     = { desc='[execute]',                 cmd='!%:p'},
+    X     = { desc='[execute] w/args',          default=':!%:p '},
     y     = { desc='[set] bg transparent',      cmd='hi Normal guibg=Transparent'},
     z     = { desc='',                          default='z'},
     ---[misc-special]

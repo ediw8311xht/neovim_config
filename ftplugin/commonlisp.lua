@@ -122,41 +122,44 @@ function LispQlQuickload()      LispEvalInput({prompt="quickload package: ", pri
 local commonlisp_mappings = {
   [ {"n", "i", "v"} ] = {
     ["<C-S-i>"] = { desc="toggle floating repl", cmd='keepalt lua FloatingWindowToggle("cl-repl", false, {height=80})' },
+    ["<C-j>"]   = { desc="[repl] next history", cmd="call SlimvHandleDown()", },
+    ["<C-k>"]   = { desc="[repl] prev history", cmd="call SlimvHandleUp()", },
   },
 }
 local commonlisp_leader_mappings = {
   n = {
-    x   = { desc='execute [sbcl]',             cmd='!sbcl --script "%"' },
-    X   = { desc='execute [sbcl] w/ args',     default=':!sbcl --script "%" ' },
     cf  = { desc='format',                     cmd='Autoformat | silent! %s/([ ]\\+/(/g' },
 
     A   = { group="lisp" },
+
+    ASc = { desc="set clesh shebang",          lua_call='vim.api.nvim_buf_set_lines(0, 0, 0, false, {"#!/usr/bin/env clesh_script.sh"})' },
+    AX  = { desc='execute [sbcl] w/ args',     default=':!sbcl --script "%" ' },
     Ac  = { desc='complete lisp functions',    vim_call='feedkeys(":lua Lisp\\t", "t")' },
 
     Ae  = { group="lisp eval" },
     AeS = { desc="eval startup forms",         default=LispEvalStartupForms },
     Aee = { desc="slimv eval put into 'e",     default='"e\\e', remap=true },
+    Aef = { desc="eval input",                 default=Bind(LispEvalInput, {add_to_history=true} ) },
     Aeh = { desc='repl eval from history',     default=LispEvalFromHistory },
     Aer = { desc="slimv eval 'e",              default='"e\\r', remap=true },
     Aes = { desc='repl eval from saved forms', default=LispEvalSavedForms },
-    Aef = { desc="eval input",                 default=Bind(LispEvalInput, {add_to_history=true} ) },
-
-    Al  = { desc='load system',                default=function() LispLoadSystem(vim.g.lisp_session_system) end },
-    Ar  = { desc='reload slimv',               default='\\Q\\c' },
-    As  = { desc='lisp setup',                 default=LispQuickSetup },
-    At  = { desc='test system',                vim_call='SlimvEvalForm("(asdf:test-system :" .. g:lisp_session_system .. ")")' },
-    Au  = { desc='clear systems',              default=LispClearAllSystems },
-
-    Aq  = { group="lisp quicklisp"             },
-    Aqq = { desc='[ql] quickload',             default=LispQlQuickload },
 
     Ah  = { group="lisp help"                  },
     Ahp = { desc='paredit help',               cmd='execute (":vsplit " .. expand(g:paredit_help))' },
     Ahs = { desc='slime help',                 cmd='execute (":vsplit " .. expand(g:slime_help))' },
-    ASc = { desc="set clesh shebang",          lua_call='vim.api.nvim_buf_set_lines(0, 0, 0, false, {"#!/usr/bin/env clesh_script.sh"})' },
+    Al  = { desc='load system',                default=function() LispLoadSystem(vim.g.lisp_session_system) end },
+    Aq  = { group="lisp quicklisp"             },
+
+    Aqq = { desc='[ql] quickload',             default=LispQlQuickload },
+    Ar  = { desc='reload slimv',               default='\\Q\\c' },
+    As  = { desc='lisp setup',                 default=LispQuickSetup },
+    At  = { desc='test system',                vim_call='SlimvEvalForm("(asdf:test-system :" .. g:lisp_session_system .. ")")' },
+    Au  = { desc='clear systems',              default=LispClearAllSystems },
+    Ax  = { desc='execute [sbcl]',             cmd='!sbcl --script "%"' },
     -- Se  = { false, 'slimv eval at mark e',      '\'e' },
   }
 }
+
 
 KeyMapSetter2(commonlisp_mappings,        '', true, true)
 KeyMapSetter2(commonlisp_leader_mappings, '<leader>', true, true)
