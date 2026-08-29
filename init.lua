@@ -17,14 +17,15 @@
 require("helper_functions")
 
 --[[ global lua --]]
-CMD  = vim.cmd
-API  = vim.api
-FN   = vim.fn
-HOME = vim.env.HOME
-FS   = vim.fs
-TS   = vim.treesitter
-ENV  = vim.env
-Fmt  = string.format
+CMD    = vim.cmd
+API    = vim.api
+FN     = vim.fn
+HOME   = vim.env.HOME
+FS     = vim.fs
+TS     = vim.treesitter
+ENV    = vim.env
+Fmt    = string.format
+Repeat = string.rep
 
 --[[ global --]]
 vim.g.dir_config     = vim.fn.stdpath("config")

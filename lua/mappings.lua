@@ -69,7 +69,8 @@ LEADER_MAPPINGS = {
     ---[group] help
     H     = { group="help"},
     Hg    = { desc='helpgrep',                    default=':vert helpgrep '},
-    Hh    = { desc='[show] highlight',            default=GetHL},
+    Hhg   = { desc='[highlight] get',             default=GetHL },
+    Hhf   = { desc='[highlight] fuzzy-finder',    cmd='Telescope highlights' },
     Hme   = { desc='[open] mappings file',        cmd='edit ' .. vim.g.mapping_file},
     Hmp   = { desc='[print] all mappings',        default=GetMappings},
     Ho    = { desc='[vim] options',               cmd='Telescope vim_options'},

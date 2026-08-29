@@ -1,7 +1,6 @@
 local lsp_status       = require("lsp-status")
 local lspconfig        = vim.lsp.config
 local cmp_capabilities = require("cmp_nvim_lsp").default_capabilities()
--- local actions_preview  = require("actions-preview")
 local lspsaga          = require("lspsaga")
 
 vim.lsp.config("*", {
@@ -14,7 +13,8 @@ vim.lsp.config("*", {
   },
 })
 
-actions_preview.setup({})
+-- local actions_preview  = require("actions-preview")
+-- actions_preview.setup({})
 lspsaga.setup({
   lightblub = {
     enable = false,

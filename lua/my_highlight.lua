@@ -110,6 +110,8 @@ vim.g.my_highlight = {
   },
   Telescope = {
     Border = { gui = "NONE", guifg = "#004477" },
+    Selection = { gui="REVERSE" },
+    Matching = { gui="bold", guibg="#ff00ff", guifg="#000000" },
   },
   -- ["@function"] = {  gui = "bold", guibg="#00dd00", guifg="black" },
   ["@function."] = {
