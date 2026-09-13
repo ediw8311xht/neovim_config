@@ -1,11 +1,11 @@
 (local {: autoload} (require :nfnl.module))
 (local core (autoload :nfnl.core))
 
-(import-macros { : register_binding : register_binding_multiple } :macros)
+(import-macros { : register-binding : register-binding-multiple } :macros)
 
 (local mod {})
 
-(register_binding_multiple {} {
+(register-binding-multiple {} {
 "" {
   :+          { :desc "End of line"                 :val :g_ 
                 :remap true }
@@ -29,6 +29,7 @@
   :<C-S-u>u   { :desc :undo                          :val :<C-o>u  }
   :<C-u>      { :desc "[delete] chars before cursor" :val :<C-g>u<C-u>  }
   :jk         { :desc "exit Insert[m ]"              :val :<ESC>  }
+  ; :<C-5>      { :desc "" }
 }
 :n {
   "`"         { :desc :fold                         :val "@=(foldlevel('.')?'za':\"<Space>\")<CR>"  }
@@ -80,15 +81,15 @@
   :<C-BS>   { :desc "delete word backwards"  :val :<C-w>  }
 }
 [ :n :v :t :i ] {
-  :<C-1>      { :desc "go to tab 1"    :val :1gt  }
-  :<C-2>      { :desc "go to tab 2"    :val :2gt  }
-  :<C-3>      { :desc "go to tab 3"    :val :3gt  }
-  :<C-4>      { :desc "go to tab 4"    :val :4gt  }
-  :<C-5>      { :desc "go to tab 5"    :val :5gt  }
-  :<C-6>      { :desc "go to tab 6"    :val :6gt  }
-  :<C-7>      { :desc "go to tab 7"    :val :7gt  }
-  :<C-8>      { :desc "go to tab 8"    :val :8gt  }
-  :<C-9>      { :desc "go to last tab" :val :tablast :typet :vim_command }
+  :<C-1>      { :desc "go to tab 1"    :val :tabfirst    :typet :cmd }
+  :<C-2>      { :desc "go to tab 2"    :val "tabnext 2"  :typet :cmd }
+  :<C-3>      { :desc "go to tab 3"    :val "tabnext 3"  :typet :cmd }
+  :<C-4>      { :desc "go to tab 4"    :val "tabnext 4"  :typet :cmd }
+  :<C-5>      { :desc "go to tab 5"    :val "tabnext 5"  :typet :cmd }
+  :<C-6>      { :desc "go to tab 6"    :val "tabnext 6"  :typet :cmd }
+  :<C-7>      { :desc "go to tab 7"    :val "tabnext 7"  :typet :cmd }
+  :<C-8>      { :desc "go to tab 8"    :val "tabnext 8"  :typet :cmd }
+  :<C-9>      { :desc "go to last tab" :val :tablast     :typet :cmd }
   :<C-S-H>    { :desc "left pane"                   :val :<C-w>h  }
   :<C-S-J>    { :desc "down pane"                   :val :<C-w>j  }
   :<C-S-K>    { :desc "up Pane"                     :val :<C-w>k  }

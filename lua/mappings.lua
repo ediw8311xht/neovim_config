@@ -17,6 +17,7 @@ end
 LEADER_MAPPINGS = {
   n = {
     ---[misc]
+    f     = { desc='[autosession] picker',      cmd='Autosession search', },
     U     = { desc='[run] lf cd',               cmd='Lfcd'},
     W     = { desc='[buffer] write',            cmd='silent write | echom printf("file: \'%s\' - written: %s", expand("%:p"), strftime("%r"))'},
     b     = { desc='[switch] buffer',           default=my_buffers},
@@ -86,6 +87,7 @@ LEADER_MAPPINGS = {
     Id    = { desc='[goto] definition',         default=vim.lsp.buf.definition},
     Ihc   = { desc='[-highlight] symbol',       default=vim.lsp.buf.clear_references},
     Ihs   = { desc='[+highlight] symbol',       default=LspDocumentHighlight},
+    Iht   = { desc='toggle inline hints',       default=function() vim.lsp.inlay_hint.enable( not vim.lsp.inlay_hint.is_enabled()) end },
     Ii    = { desc='[show] diagnostics',        lua_call='vim.diagnostic.open_float(nil, {focus=T, scope="cursor"})'},
     Il    = { desc='[hover] lsp info',          lua_call='vim.lsp.buf.hover({max_height=30, max_width=30})'},
     In    = { desc='[goto] next error',         lua_call='vim.diagnostic.jump({count=1, float=true})'},
@@ -118,6 +120,10 @@ LEADER_MAPPINGS = {
     Tl    = { desc='[show] treesitter parser',  lua_call='vim.treesitter.get_parser(0):lang()', print=true},
     Ts    = { desc='[show] treesitter status',  lua_call='MyTreesitterStatus()', print=true},
     Tt    = { desc='[open] treesitter tree',    default=vim.treesitter.inspect_tree},
+    ---[group] Modify (with Visual)
+    V     = {group="modify"},
+        -- '%s/\v\c^#[ ](.*)[ ]*$/\= "# ---------- " . submatch(1) . ' ' . repeat("-", 40 - len(submatch(0))) . '-#'/'
+    -- Vp    = { desc='pad left and right', },
     ---[group] editor settings
     c     = { group="editor setting"},
     cA    = { desc='[off] autofold comments',   cmd='AutoFoldComments off'},

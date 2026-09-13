@@ -15,12 +15,6 @@ vim.lsp.config("*", {
 
 -- local actions_preview  = require("actions-preview")
 -- actions_preview.setup({})
-lspsaga.setup({
-  lightblub = {
-    enable = false,
-  }
-})
-
 lspconfig("jsonls", { capabilities = cmp_capabilities })
 lspconfig("ts_ls",  { capabilities = cmp_capabilities })
 lspconfig("vimls",  { capabilities = cmp_capabilities })
@@ -127,42 +121,14 @@ lspconfig("hls", {
   single_file_support = true,
 })
 
--- harper {{{
-lspconfig("harper_ls", {
-  -- filetypes = { "markdown", "text", "tex", "typst", "doc" },
-  filetypes = { "doc" },
-  settings = {
-    ["harper-ls"] = {
-      userDictPath = vim.g.personal_dictionary,
-      workspaceDictPath = "",
-      fileDictPath = "",
-      linters = {
-        SpellCheck = true,
-        SpelledNumbers = false,
-        AnA = true,
-        SentenceCapitalization = true,
-        UnclosedQuotes = true,
-        WrongApostrophe = false,
-        LongSentences = true,
-        RepeatedWords = true,
-        Spaces = true,
-        CorrectNumberSuffix = true,
-      },
-      codeActions = {
-        ForceStable = false,
-      },
-      markdown = {
-        IgnoreLinkTitle = false,
-      },
-      diagnosticSeverity = "hint",
-      isolateEnglish = false,
-      dialect = "American",
-      maxFileLength = 120000,
-      ignoredLintsPath = "",
-      excludePatterns = {},
-    },
+
+
+-- lspsaga --
+require("lspsaga").setup({
+  lightbulb = {
+    sign = false,
   },
-}) -- }}}
+})
 
 for _, v in ipairs(vim.g.lsp_lang_servers) do
   vim.lsp.enable(v)

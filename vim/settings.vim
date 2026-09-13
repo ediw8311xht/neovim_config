@@ -6,6 +6,7 @@ filetype on
 filetype plugin on
 syntax enable
 "set tags=$HOME/.config/.ctags
+set autoread "check for changes
 set title
 set shada=!,'500,<2000,:200,s100,h
 set termguicolors

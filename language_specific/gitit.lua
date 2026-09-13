@@ -21,7 +21,9 @@ local page_keymap_leader = {
   n = {
     Ax = {
       desc = "[update] gitit",
-      default = Bind(ExecuteScript, "commit_push.sh", { path = vim.fn.getenv("MY_WIKI") }),
+      default = Bind(ExecuteScript, "commit_push.sh", {
+        path = vim.fn.getenv("MY_WIKI"),
+      }, "--quick"),
     },
     AX = {
       desc = "[update refresh] gitit",

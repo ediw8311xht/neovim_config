@@ -3,7 +3,8 @@
 ;; .nfnl.fnl config so you don't need to prefix globals like _G.vim.*
 ;; {:compiler-options {:compilerEnv _G}}
 
-(fn register_binding [{: mode : key}
+(fn handle-f [] false )
+(fn register-binding [{: mode : key}
                       {: typet
                        : val
                        : desc
@@ -29,14 +30,14 @@
      ,(when desc
         `((. (require :which-key) :add) {1 ,key :desc ,desc :mode ,mode}))))
 
-(fn register_binding_multiple [{ : with_leader } base_table]
+(fn register-binding-multiple [{ : with_leader } base_table]
   (local result `(do))
   (each [mode sub_table (pairs base_table)]
     (each [key mapping (pairs sub_table)]
       (when (~= with_leader nil) (tset mapping :with_leader with_leader))
-      (each [_ i (ipairs (register_binding {: key : mode} mapping))]
+      (each [_ i (ipairs (register-binding {: key : mode} mapping))]
         (when (not= i `do)
             (table.insert result i)))))
   result)
 
-{: register_binding : register_binding_multiple}
+{: register-binding : register-binding-multiple}

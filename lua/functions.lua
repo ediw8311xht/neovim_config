@@ -50,7 +50,7 @@ function TitleStringFunc()
 end
 
 ---Tab Line
----@param options? { 
+---@param options? {
 ---                 left_padding: integer,
 ---                 partition: string,
 ---                }
@@ -59,7 +59,12 @@ function TabLineFunc(options)
        nvim_list_tabpages() returns tab-ids
        nvim_tabpage_get_number returns the tab number
   --]]
-  local partition    = options and options.partition    or "%#Keyword#|%#Normal#"
+  local partition
+  if options and options.partition then
+    partition = "%#Keyword#" .. options.partition .. "%#Normal#"
+  else
+    partition = "%#Keyword#|%#Normal#"
+  end
   local left_padding = options and options.left_padding or 4
   local tabs = API.nvim_list_tabpages()
   if not tabs or #tabs <= 1 then return "" end
@@ -73,8 +78,8 @@ function TabLineFunc(options)
       return table.concat( { accum,
         -- "%#Special#",   "[",
         "%",index,"T",
-        "%#TabLineActive#",         " ", filename, " ",
-         " ", index, " ",
+        "%#TabLineActiveIndex#", " ", index,    " ",
+        "%#TabLineActive#",      " ", filename, " ",
         -- "%#Special#",         "]"
         partition,
       })
@@ -82,8 +87,8 @@ function TabLineFunc(options)
       return table.concat( { accum,
         -- "%#Comment#",   "[",
         "%",index,"T",
-        "%#TabLineInactive#",     " ", filename, " ",
-         " ", index, " ",
+        "%#TabLineInactiveIndex#", " ", index,    " ",
+        "%#TabLineInactive#",      " ", filename, " ",
         -- "%#Comment#",   "]"
         partition,
       })
@@ -139,21 +144,20 @@ function CorrectColors()
     )
   end
   local function recursion_set(hl_group, hl_table)
-    local _, test_v = next(hl_table)
-    if type(test_v) == "string" then
+    local _,test = next(hl_table)
+    if type(test) == "string" then
       return set_highlight_from_table(hl_group, hl_table)
-    end
-
-    for c, v in pairs(hl_table) do
-      if type(v) == "string" then
-        CMD.highlight(Printf("%s%s %s", hl_group, c, v))
-      else
-        recursion_set(hl_group .. c, v)
+    else
+      for c, v in pairs(hl_table) do
+          recursion_set(hl_group .. c, v)
       end
     end
   end
-  CMD("hi clear @lsp.mod")
+  CMD.highlight("clear", "@lsp.mod")
+  CMD.highlight("link", "@custom.bash.boolean", "@boolean")
   API.nvim_set_option_value("winhighlight", "NormalNC:WindowInactive", { scope = "global" })
+
+  --- Linking highlight groups
   recursion_set("", vim.g.my_highlight)
 end
 
@@ -526,8 +530,8 @@ function FloatingWindowToggle(buf, enter, opts)
 end
 
 --- @param script string
---- @param opts? { path: string, 
----                after: function, 
+--- @param opts? { path: string,
+---                after: function,
 ---                silent: boolean,
 ---              }
 --- @vararg any
@@ -553,6 +557,19 @@ function SubAllBuffers(x, y)
     repl
   )
 end
+
+-- API.nvim_create_user_command("PadLine",
+--   function(options)
+--     local fargs      = options.fargs or {0, " ", "#"}
+--     local pad_amount = fargs[1]
+--     local pad_char   = fargs[2]
+--     local end_char   = fargs[3]
+--     CMD.substitute('/\\v\\c(\\s*([^\\s]*)\\s*/b/')
+--     vim.print("HI")
+--   end, {
+--   nargs = "?",
+--   desc="paddtext" }
+-- )
 
 -- [[ do later {{{
 --]]

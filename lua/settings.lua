@@ -1,5 +1,6 @@
 --[[ vim {{{
 --]]
+-- vim.fn.sign_define("DiagnosticSignHint", { text="", texthl="" })
 vim.g.mapleader      = " "
 vim.g.maplocalleader = ","
 vim.g.python3_host_prog="/usr/bin/python"
@@ -102,7 +103,7 @@ vim.g.lsp_lang_servers = {
   'harper_ls',
 }
 -- treesitter
-vim.g.treesitter_disable                     = { tex = true }
+vim.g.treesitter_disable                     = { tex = true, kitty=true }
 vim.g.treesitter_with_vim_regex_highlighting = { lua = true }
 -- toggles
 vim.g.fullscreen_window_toggle = {
@@ -126,7 +127,7 @@ vim.g.fullscreen_window_toggle = {
 -- misc
 vim.g.my_statuslines      = { default = "%!v:lua.StatusLineFunc()", }
 vim.g.my_titlestring      = { default = "%{v:lua.TitleStringFunc()}", }
-vim.g.my_tabline          = { default = "%!v:lua.TabLineFunc()", }
+vim.g.my_tabline          = { default = "%!v:lua.TabLineFunc({'partition': ' '})", }
 vim.g.mapping_file        = vim.fs.joinpath(vim.g.dir_config, "lua/mappings.lua")
 vim.g.personal_dictionary = FS.joinpath(vim.env.XDG_DATA_HOME, "dict/en_words")
 vim.g.my_floating_preview_options = {

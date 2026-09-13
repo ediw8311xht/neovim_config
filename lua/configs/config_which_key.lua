@@ -8,12 +8,13 @@ which_key.setup({
   },
   triggers = {
     {"<auto>"   , mode = "nixostc"},
-    {"m"        , mode = "nixostc"},
-    {"M"        , mode = "nixostc"},
+    {"m"        , mode = "nxostc"},
+    {"M"        , mode = "nxostc"},
+    {"mk"       , mode = "nixostc" },
     {"<leader>" , mode = "vnixostc"},
+
     {"<auto>"    , mode = "i" },
   },
-  -- sort = { "group", "local", "alphanum" },
   sort = { "alphanum" },
   expand = 2,
   win = {
@@ -33,15 +34,15 @@ which_key.setup({
   },
   icons = {
     breadcrumb = "> ", -- symbol used in the command line area that shows your active key combo
-    separator = "|>", -- symbol used between a key and it's label
+    separator = "", -- symbol used between a key and it's label
     group = "+", -- symbol prepended to a group
     ellipsis = "…",
     mappings = false, -- set to false to disable all mapping icons, both those explicitely added in a mapping and those from rules
     rules = {},
     colors = true,
     keys = {
-        BS    = '<BS>',    Space           = '<leader>',  Tab           = '<Tab>',
-        Up    = '<up>',    Down            = '<down>',    Left          = '<left>',
+        BS    = '<BS>',    Space           = '<leader>',  Tab           = '⇥',
+        Up    = '<up>',    Down            = '<down>',    Left          = '<L>',
         Right = '<right>', C               = '^',         M             = '󰘵 ',
         D     = '󰘳 ',      S               = '<S>',       CR            = '<CR>',
         Esc   = '<ESC>',   ScrollWheelDown = '󱕐 ',        ScrollWheelUp = '󱕑 ',

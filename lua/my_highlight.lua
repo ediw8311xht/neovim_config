@@ -1,7 +1,5 @@
 --- Highlighting that runs on starting vim and with CorrectColors.
 vim.g.my_highlight = {
-  --- Linking highlight groups
-  link = "@custom.bash.boolean @boolean",
   [""] = {
     CmpBorder       = { gui = "NONE",        guibg = "NONE",    guifg = "#009999"  },
     ColorColumn     = { gui = "underdotted", guibg = "#222222", guifg = "#999999"  },
@@ -9,15 +7,18 @@ vim.g.my_highlight = {
     ExtraWhiteSpace = { gui = "NONE",        guibg = "#0099ff", guifg = "NONE"     },
     FoldColumn      = { gui = "NONE",        guibg = "NONE",    guifg = "#00ff00"  },
     Folded          = { gui = "NONE",        guibg = "#222222", guifg = "#999999"  },
-    IncSearch       = { gui = "NONE",        guibg = "#ff0000", guifg = "black"    },
+    IncSearch       = { gui = "NONE",        guibg = "#000000", guifg = "#FF00FF"  },
     Keyword         = { gui = "NONE"                                               },
     LineNr          = { gui = "NONE",        guibg = "NONE",    guifg = "#999999"  },
     LineNrAbove     = { gui = "NONE",        guibg = "NONE",    guifg = "#990099"  },
     MatchParen      = { gui = "NONE",        guibg = "#aaaaaa", guifg = "black"    },
     ModeMsg         = { gui = "NONE",        guibg = "#009900", guifg = "black",   cterm = "NONE"    },
-    Search          = { gui = "NONE",        guibg = "#ff00ff", guifg = "black"    },
+
+    Search          = { gui = "NONE,nocombine,underline", guisp="#999999", guifg = "#000000", guibg = "#ff22ff"    },
+    SpellBad        = { gui = "undercurl,italic",      guibg = "NONE",    guifg = "NONE", guisp = "#ff4444" },
+
     SignColumn      = { gui = "NONE",        guibg = "NONE",    guifg = "NONE"     },
-    SpellBad        = { gui = "undercurl",   guibg = "NONE",    guifg = "#aaaaaa", guisp = "#ff0000" },
+
     TabLine         = { gui = "NONE",        guibg = "NONE",    guifg = "#999999"  },
     TabLineSel      = { gui = "NONE",        guibg = "NONE",    guifg = "#00ff00"  },
     TermCursor      = { gui = "NONE",        guibg = "NONE",    guifg = "#00aa00"  },
@@ -31,14 +32,17 @@ vim.g.my_highlight = {
     -- LuaDocLine = { gui = "NONE", guibg = "#FF0000", guifg="#0099FF" },
   },
   TabLine = {
-    Active   = { gui="none", guibg="#23746c", guifg="#000000" },
-    Inactive = { gui="none", guibg="#111111", guifg="#378537" },
+    Active   = { gui="none", guibg="#44D044", guifg="#000000", },
+    Inactive = { gui="none", guibg="#777777", guifg="#000000", },
+    -- Index    = { guibg="#292924", guifg="#AAAAAA", },
+    ActiveIndex    = { guibg="#010101", guifg="#CCCCCC", },
+    InactiveIndex  = { guibg="#010101", guifg="#777777", },
   },
   --- Personal Highlights
   My = {
     TextYank     = { gui = "bold", guibg = "#FFFF00", guifg = "#000000" },
-    BlackOnGreen = { gui = "none", guibg = "#55AA55", guifg = "#000000" },
-    LightGray    = { gui = "none", guibg = "NONE", guifg = "#999999" },
+    BlackOnGreen = { gui = "none", guibg = "NONE",    guifg = "#22AA55" },
+    LightGray    = { gui = "none", guibg = "NONE",    guifg = "#999999" },
   },
 
   man = {
@@ -109,9 +113,9 @@ vim.g.my_highlight = {
     _7 = { gui = "NONE", guifg = "#f032e6" }, -- Magenta
   },
   Telescope = {
-    Border = { gui = "NONE", guifg = "#004477" },
-    Selection = { gui="REVERSE" },
-    Matching = { gui="bold", guibg="#ff00ff", guifg="#000000" },
+    Border    = { gui="BOLD", guibg="#NONE", guifg = "#005544" },
+    Selection = { gui="dim,underline", guisp="#224422", guibg="NONE", guifg="NONE" },
+    Matching  = { gui="NONE,bold,nocombine,underline", guibg="#222222", guifg="#FF77FF" },
   },
   -- ["@function"] = {  gui = "bold", guibg="#00dd00", guifg="black" },
   ["@function."] = {
@@ -119,10 +123,10 @@ vim.g.my_highlight = {
     commonlisp           = { gui = "NONE", guibg = "#0c942b", guifg = "black" },
     ["macro.commonlisp"] = { gui = "NONE", guifg = "#eebb00" },
   },
-  ["@string.special.symbol.commonlisp"] = { gui = "none", guibg = "black", guifg = "#ff00ff" },
+  ["@string.special.symbol.commonlisp"] = { gui = "none", guibg = "black", guifg = "#AA2200" },
   ["@variable."] = {
     ["parameter."] = {
-        commonlisp = { gui = "underline", guisp = "#ffffff" },
+        commonlisp = { gui = "underline", guisp = "#004400" },
         -- ["commonlisp"] = { gui = "NONE", guibg="#003300", guifg="#aaaaaa" },
     },
   },

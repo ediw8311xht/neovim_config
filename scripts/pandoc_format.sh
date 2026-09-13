@@ -9,7 +9,7 @@ __main() {
   local DEFAULT_ARGS=(
     --standalone
     --wrap=none
-    --columns=250
+    --columns=350
   )
   local ENABLED_EXTS=(
     pipe_tables
@@ -18,9 +18,8 @@ __main() {
     subscript
     superscript
     task_lists
-    tex_math_dollars
-    tex_math_gfm
     yaml_metadata_block
+    tex_math_dollars
   )
   local DISABLED_EXTS=(
     alerts
@@ -42,6 +41,7 @@ __main() {
     rebase_relative_paths
     smart
     sourcepos
+    tex_math_gfm
     wikilinks_title_after_pipe
     wikilinks_title_before_pipe
   )
