@@ -2,37 +2,39 @@ require("auto-session").setup({
   suppressed_dirs = { "${HOME}/", "${HOME}/bin/" },
   auto_save = false,
   auto_restore = false,
-  preserve_buffer_on_restore = false,
+  show_auto_restore_notif = false,
+  preserve_buffer_on_restore = nil,
   purge_after_minutes = nil,
+  save_extra = nil,
 
   session_lens = {
-    picker = "telescope", -- "telescope"|"snacks"|"fzf"|"select"|nil Pickers are detected automatically but you can also set one manually. Falls back to vim.ui.select
-    load_on_setup = true, -- Only used for telescope, registers the telescope extension at startup so you can use :Telescope session-lens
-    previewer = "summary",
+    picker        = "telescope", -- "telescope"|"snacks"|"fzf"|"select"|nil Pickers are detected automatically but you can also set one manually. Falls back to vim.ui.select
+    load_on_setup = true,        -- Only used for telescope, registers the telescope extension at startup so you can use :Telescope session-lens
+    previewer     = "summary",
     mappings = {
       -- Mode can be a string or a table, e.g. {"i", "n"} for both insert and normal mode
-      delete_session = { "i", "<C-S-d>" }, -- mode and key for deleting a session from the picker
-      alternate_session = { "i", "<C-s>" }, -- mode and key for swapping to alternate session from the picker
-      copy_session = { "i", "<C-y>" }, -- mode and key for copying a session from the picker
+      delete_session    = { "i", "<C-S-d>" }, -- mode and key for deleting a session from the picker
+      alternate_session = { "i", "<C-s>"   }, -- mode and key for swapping to alternate session from the picker
+      copy_session      = { "i", "<C-y>"   }, -- mode and key for copying a session from the picker
     },
     session_control = {
-      control_dir = vim.fn.stdpath("data") .. "/auto_session/", -- Auto session control dir, for control files, like alternating between two sessions with session-lens
+      control_dir      = vim.fn.stdpath("data") .. "/auto_session/", -- Auto session control dir, for control files, like alternating between two sessions with session-lens
       control_filename = "session_control.json", -- File name of the session control file
     },
     -- picker_opts = nil, -- Table passed to Telescope / Snacks / Fzf-Lua to configure the picker. See below for more information
 
     picker_opts = {
-      preset = "dropdown",
-      border = true,
+      border          = true,
+      layout_strategy = 'horizontal',
+      preset          = "dropdown",
+      previewer       = true,
       defaults = {
         preview = true,
       },
-      layout_strategy = 'horizontal',
       layout_config = {
         height = 0.9,
-        width = 0.9,
+        width  = 0.9,
       },
-      previewer = true,
     },
   },
 })
@@ -92,4 +94,15 @@ session_lens = {
     control_filename = "session_control.json", -- File name of the session control file
   },
 },
+--]]
+
+--[[
+local function SaveDirWithNvimLua()
+  local path = FS.joinpath(FN.getcwd(), ".nvim.lua")
+  if FN.filewritable( path ) and not vim.g.AutoSession__current_session_directory then
+    return path
+  end
+end
+
+SaveDirWithNvimLua()
 --]]

@@ -1,8 +1,17 @@
+
 require("image").setup({
   backend = "kitty", -- or "ueberzug" or "sixel"
   processor = "magick_cli", -- or "magick_rock"
   integrations = {
     markdown = {
+      resolve_image_path = function(document_path, image_path, fallback) 
+        local static_image_path = vim.g.Static_image_path or vim.g.static_image_path
+        if static_image_path then
+          return FS.joinpath(static_image_path, image_path)
+        else
+          return fallback(document_path, image_path)
+        end
+      end,
       enabled = true,
       clear_in_insert_mode = false,
       download_remote_images = true,

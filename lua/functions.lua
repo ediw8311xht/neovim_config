@@ -43,7 +43,7 @@ end
 function TitleStringFunc()
   local session_name = AutoSessionGetCurrentName()
   if session_name ~= "" then
-    return "[session] " .. session_name
+    return "[ses] " .. session_name
   else
     return "[nvim] " .. FN.expand("%f")
   end
@@ -331,10 +331,11 @@ function RunKeepCursorPosition(func)
   end
 end
 
----Check if path to file exists and is writable
+---Check if dirname of some path is valid
+---Example: ~/mypath/afile.txt -> (checks that ~/mypath/ exists and is writable)
 ---@param path string Path to check
 ---@return boolean
-function PathValid(path)
+function ValidDirname(path)
   local match = string.match(path, "^(.*[/])[^/]*$")
   print(match)
   return FN.filewritable(match) == 2
@@ -363,7 +364,7 @@ end
 function ReadInFile(input_file, output_file, opts)
   -- options
   local options = opts or { line = 0, chmod = nil }
-  if not PathValid(output_file) then
+  if not ValidDirname(output_file) then
     error("path: '" .. output_file .. "' is invalid.")
   else
     CMD(Printf("keepalt %dread %s", options.line, input_file))

@@ -1,5 +1,6 @@
 
-setlocal tabstop=2 shiftwidth=2 softtabstop=4 expandtab
+" usually will be set with ~/.editorcongfig, but just in case
+setlocal tabstop=4 shiftwidth=4 softtabstop=4 expandtab
 let g:loaded_mark_preview=0
 
 fu! MakeSafe(f)
@@ -72,4 +73,3 @@ MARKDOWN_KEYMAP_LEADER = {
 KeyMapSetter(MARKDOWN_KEYMAP, "", true, true)
 KeyMapSetter(MARKDOWN_KEYMAP_LEADER, "<leader>", true, true)
 EOF
-

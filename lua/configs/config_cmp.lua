@@ -136,7 +136,7 @@ cmp_dict.setup({
   document = {
     enable = true,
     command = {
-      vim.fs.joinpath(vim.g.dir_scripts, "definition_search.sh"),
+      FS.joinpath(vim.g.dir_scripts, "definition_search.sh"),
       "${label}",
     },
   },

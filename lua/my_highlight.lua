@@ -33,7 +33,7 @@ vim.g.my_highlight = {
   },
   TabLine = {
     Active   = { gui="none", guibg="#44D044", guifg="#000000", },
-    Inactive = { gui="none", guibg="#777777", guifg="#000000", },
+    Inactive = { gui="none", guibg="#999999", guifg="#000000", },
     -- Index    = { guibg="#292924", guifg="#AAAAAA", },
     ActiveIndex    = { guibg="#010101", guifg="#CCCCCC", },
     InactiveIndex  = { guibg="#010101", guifg="#777777", },
