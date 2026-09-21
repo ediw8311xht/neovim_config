@@ -117,8 +117,6 @@ function LispEvalStartupForms() LispEvalForms(vim.g.lisp_startup_forms) end
 function LispQlQuickload()      LispEvalInput({prompt="quickload package: ", printf='(ql:quickload "%s")', add_to_history=false }) end
 
 
--- function CreateToggle(options: { namespace: string, scope: string, description: string, command_name: string, var: string, on: function, off: function })
-
 local commonlisp_mappings = {
   [ {"n", "i", "v"} ] = {
     ["<C-S-i>"] = { desc="toggle floating repl", cmd='keepalt lua FloatingWindowToggle("cl-repl", false, {height=80})' },

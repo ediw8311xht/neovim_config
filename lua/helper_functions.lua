@@ -200,14 +200,20 @@ function Bind(func, ...)
     return func(Unpack(bound_args, runtime_args))
   end
 end
---}}}
 
 function GetPadding(str, n, min_padding)
   min_padding = min_padding or 0
   return string.rep(" ", math.max(min_padding, n - #str))
 end
+--}}}
 
 --{{{ VIM SPECIFIC
+
+function BindRequire(name, rest)
+  return function(...)
+    return require(name)[rest](...)
+  end
+end
 
 --- interpolate string
 --- @param s string

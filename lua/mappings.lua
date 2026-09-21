@@ -17,7 +17,7 @@ end
 LEADER_MAPPINGS = {
   n = {
     ---[misc]
-    f     = { desc='[autosession] picker',      cmd='Autosession search', },
+    f     = { desc='[autosession] picker',      cmd='AutoSession search', },
     U     = { desc='[run] lf cd',               cmd='Lfcd'},
     W     = { desc='[buffer] write',            cmd='silent write | echom printf("file: \'%s\' - written: %s", expand("%:p"), strftime("%r"))'},
     b     = { desc='[switch] buffer',           default=my_buffers},
@@ -136,7 +136,9 @@ LEADER_MAPPINGS = {
     ce    = { desc='[!]cursorcolumn',           cmd='set cuc!'},
     cf    = { desc='format',                    cmd='lua RunKeepCursorPosition( function() vim.cmd.Autoformat { mods={ verbose=1 } } end)',},
     cg    = { desc='[!]git signs',              cmd='Gitsigns toggle_linehl'},
+    -- ci    = { desc='[!]images',                 default=
     ch    = { desc='format2',                   default=vim.lsp.buf.format},
+    ci    = { desc='[!]images',                 cmd="ToggleDisplayImages"},
     cj    = { desc='[next] scheme',             default=Bind(Cycle, "colors_name", vim.g.ColorSchemes, vim.cmd.colorscheme, {scope = "g"}),},
     ck    = { desc='correctcolors()',           cmd='lua CorrectColors()'},
     cl    = { desc='[!]cursorline',             cmd='lua ToggleHighlight({"CursorLine"})'},

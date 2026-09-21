@@ -1,9 +1,9 @@
 
 ---@diagnostic disable: deprecated
 -- lua configs for plugins
-local config_files   = FN.globpath(vim.g.dir_config .. "/lua/configs/",  "*.lua", 0, 1)
+local config_files   = FN.globpath(vim.g.dir_config .. "/lua/configs/",  "*.lua", false, true)
 -- fennel
-local compiled_files = FN.globpath(vim.g.dir_config .. "/lua/compiled/", "*.lua", 0, 1)
+local compiled_files = FN.globpath(vim.g.dir_config .. "/lua/compiled/", "*.lua", false, true)
 
 vim.opt.rtp:append({
   vim.g.dir_config .. "/lua/configs",
@@ -34,5 +34,9 @@ end
 
 MyImportedModules["my_treesitter_module"].create_commands()
 
-CreateToggle(vim.g.fullscreen_window_toggle)
+for v,i in pairs(vim.g.my_toggles) do
+  if not pcall(CreateToggle, i) then
+    PrintPrintf("Error creating toggle: %s\nSkipping...", v)
+  end
+end
 

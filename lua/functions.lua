@@ -289,7 +289,7 @@ end
 ---              off          : function  }
 ---@return function|nil
 function CreateToggle(opts)
-  local namespace         = opts.namespace or "CreateToggle__"
+  local namespace         = opts.namespace or "CreateToggle"
   local scope             = opts.scope or "g"
   local description       = opts.description or ""
   local command_name      = opts.command_name
@@ -299,18 +299,23 @@ function CreateToggle(opts)
   if type(var) ~= "function" then
     local cvar = namespace .. (opts.var or command_name or "temp")
     vim[scope][cvar] = false
+    vim.print({vim[scope][cvar], scope, cvar})
     var = function()
+      local val = vim[scope][cvar]
       vim[scope][cvar] = not vim[scope][cvar]
-      return vim[scope][cvar]
+      return val
     end
   end
 
   local callback_function = function()
-    if var() then
-      print(on_function())
+    local output
+    local status
+    if not var() then
+      output, status = on_function(), "ON"
     else
-      print(off_function())
+      output, status = off_function(), "OFF"
     end
+    PrintPrintf("%s: %s %s", command_name or namespace, status, output or "")
   end
   if command_name then
     API.nvim_create_user_command(command_name, callback_function, { nargs = 0, desc = description })
@@ -328,6 +333,7 @@ function RunKeepCursorPosition(func)
   local success, out = pcall(API.nvim_win_set_cursor, 0, last_cursor_position)
   if not success then
     vim.print("Restoring cursor position failed.")
+    vim.print(out)
   end
 end
 
