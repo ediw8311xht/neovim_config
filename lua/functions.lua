@@ -299,7 +299,7 @@ function CreateToggle(opts)
   if type(var) ~= "function" then
     local cvar = namespace .. (opts.var or command_name or "temp")
     vim[scope][cvar] = false
-    vim.print({vim[scope][cvar], scope, cvar})
+    -- vim.print({vim[scope][cvar], scope, cvar})
     var = function()
       local val = vim[scope][cvar]
       vim[scope][cvar] = not vim[scope][cvar]

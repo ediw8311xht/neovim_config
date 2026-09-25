@@ -1,6 +1,8 @@
-local treesitter = require("nvim-treesitter")
+
+-- vim.api.nvim_create_autocmd({"User", "TSUpdate"
+vim.g.MyTest = require("luasnip").session
 -- local treesitter_textobjs = require('nvim-treesitter-textobjects')
-treesitter.setup({
+require("nvim-treesitter").setup({
   -- A list of parser names, or "all" (the five listed parsers should always be installed)
   ensure_installed = {},
 
@@ -26,6 +28,19 @@ treesitter.setup({
     enable = true,
   },
 })
+
+-- require("nvim-treesitter.parsers").my_commonlisp = {
+--   install_info = {
+--     revision = '32aee31b0caa95784769f8476d5309fd47b3fdf6',
+--     url = 'https://github.com/ediw8311xht/tree-sitter-commonlisp-named-loops.git',
+--     branch = "master",
+--   },
+--   -- maintainers = { "@ediw8311xht" },
+--   -- files = { "src/parser.c" },
+-- }
+
+vim.treesitter.language.register("commonlisp", {"commonlisp", "lisp"})
+
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "*" },
 

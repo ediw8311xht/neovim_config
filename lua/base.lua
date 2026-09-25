@@ -35,8 +35,8 @@ end
 MyImportedModules["my_treesitter_module"].create_commands()
 
 for v,i in pairs(vim.g.my_toggles) do
-  if not pcall(CreateToggle, i) then
-    PrintPrintf("Error creating toggle: %s\nSkipping...", v)
+  local s, e = pcall(CreateToggle, i)
+  if not s then
+    PrintPrintf("Error creating toggle: %s\nError: %s\n", v, e)
   end
 end
-
