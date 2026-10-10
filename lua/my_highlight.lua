@@ -32,10 +32,16 @@ vim.g.my_highlight = {
     -- LuaDocLine = { gui="NONE", guibg="#FF0000", guifg="#0099FF" },
   },
   TabLine = {
-    Active        = { gui="none", guibg="#44D044", guifg="#000000", },
-    Inactive      = { gui="none", guibg="#999999", guifg="#000000", },
-    ActiveIndex   = {             guibg="#010101", guifg="#CCCCCC", },
-    InactiveIndex = {             guibg="#010101", guifg="#777777", },
+    Active = {
+      [""]  = { gui="none", guibg="#44D044", guifg="#000000", },
+      Path  = {             guibg="#22A022", guifg="#000000", },
+      Index = {             guibg="#498049", guifg="#000000", },
+    },
+    Inactive = {
+      [""]  = { gui="none", guibg="#999999", guifg="#000000", },
+      Path  = {             guibg="#555555", guifg="#000000", },
+      Index = {             guibg="#010101", guifg="#777777", },
+    },
     -- Index    = { guibg="#292924", guifg="#AAAAAA", },
   },
   --- Personal Highlights
@@ -83,6 +89,7 @@ vim.g.my_highlight = {
     Warn           = { guifg="black", guibg="#aa8500" },
     UnderlineWarn  = { gui="underdouble", guisp="#999999" },
     UnderlineError = { gui="underdouble", guisp="#ff0000" },
+    DiagnosticUnderlineHint = { gui="underline", guisp="#999999" },
   },
   LspReference = {
     Text   = { gui="reverse" }, -- , 'guibg=#009999' ,
@@ -117,23 +124,11 @@ vim.g.my_highlight = {
     Selection = { gui="dim,underline", guisp="#224422", guibg="NONE", guifg="NONE" },
     Matching  = { gui="NONE,bold,nocombine,underline", guibg="#222222", guifg="#FF77FF" },
   },
-  -- ["@function"] = {  gui="bold", guibg="#00dd00", guifg="black" },
   ["@function."] = {
+    -- ["@function"] = {  gui="bold", guibg="#00dd00", guifg="black" },
     call                 = { gui="NONE", guifg="#55bbbb" },
-    commonlisp           = { gui="NONE", guibg="#0c942b", guifg="black" },
-    ["macro.commonlisp"] = { gui="NONE", guifg="#eebb00" },
   },
-  ["@string.special.symbol.commonlisp"] = { gui="none", guibg="black", guifg="#DD5555" },
-  Lisp = {
-    Func = { gui="underline", guisp="#449944" },
-  },
-  ["@variable."] = {
-    ["parameter."] = {
-        commonlisp = { gui="underline", guisp="#004400" },
-        -- ["commonlisp"] = { gui="NONE", guibg="#003300", guifg="#aaaaaa" },
-    },
-  },
-  -- markup / markdown
+  --[[ markup / markdown  {{{ --]]
   ["@comment."] = {
     ["documentation."] = {
         lua = { gui="reverse,bold" },
@@ -152,7 +147,33 @@ vim.g.my_highlight = {
         ["label.markdown_inline"] = { guibg="#d070a0", guifg="black" },
         ["url.markdown_inline"]   = { guibg="#00aaaa", guifg="black" },
     },
+  }, --[[ }}} --]]
+  --[[ lisp {{{ --]]
+  Lisp = {
+    Func = { gui="bold", guisp="#449944" },
   },
+  [".commonlisp" .. "$"] = {
+    ["@loop."] =  {
+      -- ["macro"] = { gui="NONE", guibg="NONE", guifg="#f58231" },
+      -- ["clause"] = { gui="NONE", guibg="NONE", guifg="#f58231" },
+      ["clause."] = {
+        ["named"]      = { gui="NONE", guibg="NONE", guifg="#2277DD" },
+        ["named.name"] = { gui="NONE", guibg="#111111", guifg="#0099FF" },
+      },
+    },
+    ["@function."] = {
+      -- commonlisp = { gui="NONE", guibg="#0c942b", guifg="black" },
+      macro      = { gui="NONE", guifg="#eebb00" },
+    },
+    ["@string."] = {
+      ["special.symbol"] = { gui="none", guibg="black", guifg="#DD5555" },
+    },
+    ["@variable."] = {
+      ["parameter."] = { gui="underline", guisp="#004400" },
+      --  { gui="NONE", guibg="#003300", guifg="#aaaaaa" },
+    },
+  },
+  --[[ }}} --]]
 }
 -- ["EndOfBuffer"]     = { gui="NONE",      guibg="NONE",    guifg="#333333",   },
 -- ["Normal"]          = { gui="NONE",      guibg="NONE",    guifg="#d0d0d0",   },

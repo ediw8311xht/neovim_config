@@ -73,15 +73,15 @@ lspconfig("lua_ls", {
   capabilities = cmp_capabilities,
   settings = {
     Lua = {
-      runtime = { version = "LuaJIT" },
+      runtime = { version = "LuaJIT", },
       workspace = {
         library = { vim.env.VIMRUNTIME },
         checkThirdParty = false,
       },
       diagnostics = {
         enable = true,
-        disable = {},
-        globals = { "vim" },
+        disable = { "unused-label", },
+        globals = { "vim", },
         type = {
           checkTableIndex = true,
           paramTypeMismatch = true,
@@ -97,7 +97,7 @@ lspconfig("bashls", {
   filetypes = { "bash" },
   settings = {
     bashIde = {
-      shellcheckArguments = Printf("--rcfile %s", vim.fs.joinpath(vim.env.HOME, ".config/", "shellcheckrc")),
+      shellcheckArguments = Printf("--rcfile %s", FS.joinpath(vim.env.HOME, ".config/", "shellcheckrc")),
     },
   },
 })

@@ -66,7 +66,7 @@ set sessionoptions=blank,buffers,curdir,help,tabpages,winsize,winpos,terminal,gl
 set viewoptions=cursor
 set fillchars=fold:\ ,horiz:█,vert:░
 set background=dark
-set scrolloff=4
+set scrolloff=5
 set exrc "enable project-local configuration |exrc|
 set secure
 set cmdwinheight=30 "for cmd history `q:`

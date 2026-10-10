@@ -71,7 +71,7 @@ vim.g.fzf_layout = {
 --[[ colorscheme --]]
 vim.g.DefaultColorScheme = "pop-punk"
 vim.g.ColorSchemes = {
-  "pop-punk", "wildcharm", "cyberpunk-neon", "eldar", "elflord", "delek",
+  "pop-punk", "habamax", "tokyonight-storm", "wildcharm", "cyberpunk-neon", "eldar", "elflord", "delek",
   "morning",  "blue", "peachpuff", "industry", "murphy", "vividchalk",
 }
 --[[ lsp --]]
@@ -85,7 +85,10 @@ vim.g.treesitter_with_vim_regex_highlighting = { lua = true }
 --[[ misc --]]
 vim.g.mapping_file        = vim.fs.joinpath(vim.g.dir_config, "lua/mappings.lua")
 vim.g.my_statuslines      = { default = "%!v:lua.StatusLineFunc()" }
-vim.g.my_tabline          = { default = "%!v:lua.TabLineFunc({'partition': ' '})" }
+vim.g.my_tabline          = {
+  default       = "%!v:lua.TabLineFunc({'partition': ' '})",
+  only_basename = "%!v:lua.TabLineFunc({'partition': ' ', 'only_basename': 1})",
+}
 vim.g.my_titlestring      = { default = "%{v:lua.TitleStringFunc()}" }
 vim.g.personal_dictionary = FS.joinpath(vim.env.XDG_DATA_HOME, "dict/en_words")
 vim.g.my_floating_preview_options = {
@@ -122,10 +125,17 @@ vim.g.my_toggles = {
     on        = BindRequire("image", "enable"),
     off       = BindRequire("image", "disable"),
   },
+  TabLineShowPath = {
+    command_name = "ToggleTabLineShowPath",
+    namespace = "TabLinePath",
+    scope = "t",
+    on  = Bind(API.nvim_set_option_value, "tabline", vim.g.my_tabline.default, {}),
+    off = Bind(API.nvim_set_option_value, "tabline", vim.g.my_tabline.only_basename, {}),
+  },
 } -- }}}
 
 --[[ setting options {{{ --]]
-vim.api.nvim_set_option_value("statusline",  vim.g.my_statuslines.default, {})
-vim.api.nvim_set_option_value("titlestring", vim.g.my_titlestring.default, {})
-vim.api.nvim_set_option_value("tabline",     vim.g.my_tabline.default,     {})
+API.nvim_set_option_value("statusline",  vim.g.my_statuslines.default, {})
+API.nvim_set_option_value("titlestring", vim.g.my_titlestring.default, {})
+API.nvim_set_option_value("tabline",     vim.g.my_tabline.default,     {})
 -- }}}

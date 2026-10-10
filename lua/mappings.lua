@@ -17,7 +17,7 @@ end
 LEADER_MAPPINGS = {
   n = {
     ---[misc]
-    f     = { desc='[autosession] picker',      cmd='AutoSession search', },
+    f     = { desc='[autosession] picker',      cmd='AutoSession search',},
     U     = { desc='[run] lf cd',               cmd='Lfcd'},
     W     = { desc='[buffer] write',            cmd='silent write | echom printf("file: \'%s\' - written: %s", expand("%:p"), strftime("%r"))'},
     b     = { desc='[switch] buffer',           default=my_buffers},
@@ -36,17 +36,17 @@ LEADER_MAPPINGS = {
     y     = { desc='[set] bg transparent',      cmd='hi Normal guibg=Transparent'},
     z     = { desc='',                          default='z'},
     ---[misc-special]
-    [ '<C-s>'   ] = { desc='[spectre] sub buffs',  cmd='lua require("spectre").toggle()', },
-    [ '<C-S-x>' ] = { desc='[execute] w/ args', default=':!%:p '},
-    [ '<C-x>'   ] = { desc='[execute]',         default=':!%:p<ESC>'},
-    [ '<S-Tab>' ] = { desc='later',             cmd='later'},
-    [ '<Tab>'   ] = { desc='earlier',           cmd='earlier'},
-    [ '.'       ] = { desc='next window',       cmd='keepalt wincmd w'},
-    [ ','       ] = { desc='alternate file',    default='<C-^>'},
-    [ '-'       ] = { desc='resize split -20',  default='20<c-w><'},
-    [ '='       ] = { desc='resize split +20',  default='20<c-w>>'},
-    [ '['       ] = { desc='prev buffer',       cmd='bprevious'},
-    [ ']'       ] = { desc='next buffer',       cmd='bnext'},
+    [ '<C-s>'   ] = { desc='[spectre] sub buffs',  cmd='lua require("spectre").toggle()',},
+    [ '<C-S-x>' ] = { desc='[execute] w/ args',    default=':!%:p '},
+    [ '<C-x>'   ] = { desc='[execute]',            default=':!%:p<ESC>'},
+    [ '<S-Tab>' ] = { desc='later',                cmd='later'},
+    [ '<Tab>'   ] = { desc='earlier',              cmd='earlier'},
+    [ '.'       ] = { desc='next window',          cmd='keepalt wincmd w'},
+    [ ','       ] = { desc='alternate file',       default='<C-^>'},
+    [ '-'       ] = { desc='resize split -20',     default='20<c-w><'},
+    [ '='       ] = { desc='resize split +20',     default='20<c-w>>'},
+    [ '['       ] = { desc='prev buffer',          cmd='bprevious'},
+    [ ']'       ] = { desc='next buffer',          cmd='bnext'},
     ---[group][reserved] filetype-specific
     A     = { group="filetype-specific" },
     ---[group] buffer
@@ -120,6 +120,7 @@ LEADER_MAPPINGS = {
     Tl    = { desc='[show] treesitter parser',  lua_call='vim.treesitter.get_parser(0):lang()', print=true},
     Ts    = { desc='[show] treesitter status',  lua_call='MyTreesitterStatus()', print=true},
     Tt    = { desc='[open] treesitter tree',    default=vim.treesitter.inspect_tree},
+    Te    = { desc='[open] treesitter query',   cmd='EditQuery'},
     ---[group] Modify (with Visual)
     V     = {group="modify"},
         -- '%s/\v\c^#[ ](.*)[ ]*$/\= "# ---------- " . submatch(1) . ' ' . repeat("-", 40 - len(submatch(0))) . '-#'/'
@@ -144,6 +145,7 @@ LEADER_MAPPINGS = {
     cl    = { desc='[!]cursorline',             cmd='lua ToggleHighlight({"CursorLine"})'},
     cr    = { desc='[!]rainbow',                vim_call='rainbow_delimiters#toggle(0)'},
     cs    = { desc='[!]statusline',             vim_call='TogLastStatus()'},
+    ct    = { desc="[!]tabline",                cmd="ToggleTabLineShowPath"},
     cv    = { desc='[!]virtualedit',            vim_call='TogVirtualEdit()'},
     cw    = { desc='[!]wrap',                   cmd='set wrap!'},
   },

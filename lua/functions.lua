@@ -49,16 +49,20 @@ function TitleStringFunc()
   end
 end
 
----Tab Line
+---Tab line function for vim
 ---@param options? {
 ---                 left_padding: integer,
 ---                 partition: string,
+---                 only_basename: boolean|integer,
 ---                }
 function TabLineFunc(options)
+--                 max_path_shown?: integer,
+  -- local max_path_shown = options and options.max_path_shown or 1
   --[[ tab-id is unique to tab (doesn't change), and tab number is index of tab
        nvim_list_tabpages() returns tab-ids
        nvim_tabpage_get_number returns the tab number
   --]]
+  local only_basename = options and options.only_basename and options.only_basename ~= 0 or nil
   local partition
   if options and options.partition then
     partition = "%#Keyword#" .. options.partition .. "%#Normal#"
@@ -73,13 +77,17 @@ function TabLineFunc(options)
   local active_tab_page = API.nvim_tabpage_get_number(0)
   local function tab_calc(accum, val)
     index = index + 1
-    local filename = FS.basename(TabBufName(val))
+    local bufname  = TabBufName(val)
+    local fullpath = FS.abspath(bufname)
+    local basename = FS.basename(fullpath)
+    local show_path = (only_basename and "") or (" " .. FN.fnamemodify(fullpath, ":p:h:t") .. " ")
     if index == active_tab_page then
       return table.concat( { accum,
         -- "%#Special#",   "[",
         "%",index,"T",
         "%#TabLineActiveIndex#", " ", index,    " ",
-        "%#TabLineActive#",      " ", filename, " ",
+        "%#TabLineActivePath#",       show_path,
+        "%#TabLineActive#",      " ", basename, " ",
         -- "%#Special#",         "]"
         partition,
       })
@@ -88,7 +96,8 @@ function TabLineFunc(options)
         -- "%#Comment#",   "[",
         "%",index,"T",
         "%#TabLineInactiveIndex#", " ", index,    " ",
-        "%#TabLineInactive#",      " ", filename, " ",
+        "%#TabLineInactivePath#",       show_path,
+        "%#TabLineInactive#",      " ", basename, " ",
         -- "%#Comment#",   "]"
         partition,
       })
@@ -143,18 +152,31 @@ function CorrectColors()
       )
     )
   end
-  local function recursion_set(hl_group, hl_table)
+  local function recursion_set(hl_group, hl_table, last)
     local _,test = next(hl_table)
+
     if type(test) == "string" then
+      if last and last ~= "" then hl_group = hl_group .. last end
       return set_highlight_from_table(hl_group, hl_table)
     else
       for c, v in pairs(hl_table) do
-          recursion_set(hl_group .. c, v)
+        if c:sub(-1, -1) == "$" then -- if key is endds in `$` then it should be added to last
+          recursion_set(hl_group, v, c:sub(1, -2) .. (last or ""))
+        else
+          recursion_set(hl_group .. c, v, last)
+        end
       end
     end
   end
+
+    -- ["@lloop."] = {
+    --   name = { gui="NONE", guibg="", },
+    --   ["clause.name"] = { gui="NONE", guibg="", },
+    -- },
   CMD.highlight("clear", "@lsp.mod")
-  CMD.highlight("link", "@custom.bash.boolean", "@boolean")
+  CMD.highlight("link",  "@custom.bash.boolean", "@boolean")
+  -- CMD.highlight("link",  "@loop.name.commonlisp", "Special")
+  -- CMD.highlight("link",  "@loop.clause.name.commonlisp", "Special")
   API.nvim_set_option_value("winhighlight", "NormalNC:WindowInactive", { scope = "global" })
 
   --- Linking highlight groups
@@ -494,9 +516,19 @@ function IsFloating(win_id)
 end
 
 ---View or Hide floating window by buffer number or buffer name
----@param buf integer|string
----@param enter? boolean
----@param opts? table
+---@param buf     integer|string
+---@param enter?  boolean
+---@param opts?   {
+---                 anchor         : string,
+---                 relative       : string,
+---                 border         : table,
+---                 col            : integer,
+---                 row            : integer,
+---                 width          : integer,
+---                 height         : integer,
+---                 width_percent  : integer,
+---                 height_percent : integer,
+---               }
 function FloatingWindowToggle(buf, enter, opts)
   local buffer
   if type(buf) == "string" then
@@ -515,22 +547,23 @@ function FloatingWindowToggle(buf, enter, opts)
     end
   end
   --[[ SHOW --]]
-  local window_width = API.nvim_win_get_width(0)
-  local width = math.floor(window_width / 3)
-  local height = math.floor(API.nvim_win_get_height(0) / 1.5)
-  local default_opts = {
-    anchor = "NE",
-    relative = "editor",
-    border = { "╔", "═", "╗", "║", "╝", "═", "╚", "║" },
+  local options         = opts or {}
+  local viewport_width  = vim.o.columns   -- view port width
+  local viewport_height = vim.o.lines     -- view port height
+  local width           = math.floor(viewport_width / (options.width_percent or 3))
+  local height          = math.floor(viewport_height / (options.height_percent or 1.5))
+  local table_options = {
+    relative = options.anchor or "editor",
+    border   = options.border or { "╔", "═", "╗", "║", "╝", "═", "╚", "║" },
     -- position
-    col = window_width - 1,
-    row = 1,
+    anchor = options.anchor or "NE",
+    col    = options.col    or (viewport_width - 1),
+    row    = options.row    or 1,
     -- size
-    width = width,
-    height = height,
+    width  = options.width  or width,
+    height = options.height or height,
   }
-  local options = TableDifference(default_opts, opts or {}, false)
-  local out_window = API.nvim_open_win(buffer or 0, enter or false, options)
+  local out_window = API.nvim_open_win(buffer or 0, enter or false, table_options)
   -- prevents buffer from changing in floating window (very annoying)
   -- API.nvim_win_set_option(out_window, 'winfixbuf', true)
   return out_window

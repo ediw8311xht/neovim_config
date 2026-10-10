@@ -104,9 +104,9 @@ function LispEvalInput(options)
   local printf         = opts.printf
   local fn
   if printf then
-    fn = function(x) LispEvalForm(Printf(printf, x), opts) end
+    fn = function(x) if x then LispEvalForm(Printf(printf, x), opts) end end
   else
-    fn = opts.fn or function(x) LispEvalForm(x, opts) end
+    fn = opts.fn or function(x) if x then LispEvalForm(x, opts) end end
   end
   vim.ui.input({prompt=prompt}, fn)
 end
@@ -119,9 +119,9 @@ function LispQlQuickload()      LispEvalInput({prompt="quickload package: ", pri
 
 local commonlisp_mappings = {
   [ {"n", "i", "v"} ] = {
-    ["<C-S-i>"] = { desc="toggle floating repl", cmd='keepalt lua FloatingWindowToggle("cl-repl", false, {height=80})' },
-    ["<C-j>"]   = { desc="[repl] next history", cmd="call SlimvHandleDown()", },
-    ["<C-k>"]   = { desc="[repl] prev history", cmd="call SlimvHandleUp()", },
+    ["<C-S-i>"] = { desc="toggle floating repl",  cmd='keepalt lua FloatingWindowToggle("cl-repl", false, {})' },
+    ["<C-j>"]   = { desc="[repl] next history",   cmd="call SlimvHandleDown()", },
+    ["<C-k>"]   = { desc="[repl] prev history",   cmd="call SlimvHandleUp()", },
   },
 }
 local commonlisp_leader_mappings = {
@@ -158,6 +158,9 @@ local commonlisp_leader_mappings = {
   }
 }
 
+-- API.nvim_create_autocmd({ "BufEnter" }, {
+--   pattern = "",
+-- })
 
 KeyMapSetter2(commonlisp_mappings,        '', true, true)
 KeyMapSetter2(commonlisp_leader_mappings, '<leader>', true, true)

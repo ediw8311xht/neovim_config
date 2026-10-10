@@ -37,6 +37,7 @@
   :<C-S-E>    { :desc "end of previous word"        :val :ge  }
   :<C-S-Tab>  { :desc "previous tab"                :val :tabprevious :typet :vim_command  }
   :<C-S-g>    { :desc "[!]float term"               :val "FloatermToggle" :typet :vim_command  }
+  :<C-S-n>    { :desc "[!]outline"                  :val :Outline :typet :vim_command }
   :<C-S-s>    { :desc "substitute +char +vmagic"    :val ":%s/\\v"  }
   :<C-Tab>    { :desc "next tab"                    :val :tabnext :typet :vim_command  }
   :<C-n>      { :desc "[!]FileExplorer"             :val :NvimTreeToggle :typet :vim_command  }
@@ -81,15 +82,16 @@
   :<C-BS>   { :desc "delete word backwards"  :val :<C-w>  }
 }
 [ :n :v :t :i ] {
-  :<C-1>      { :desc "go to tab 1"    :val :tabfirst    :typet :cmd }
-  :<C-2>      { :desc "go to tab 2"    :val "tabnext 2"  :typet :cmd }
-  :<C-3>      { :desc "go to tab 3"    :val "tabnext 3"  :typet :cmd }
-  :<C-4>      { :desc "go to tab 4"    :val "tabnext 4"  :typet :cmd }
-  :<C-5>      { :desc "go to tab 5"    :val "tabnext 5"  :typet :cmd }
-  :<C-6>      { :desc "go to tab 6"    :val "tabnext 6"  :typet :cmd }
-  :<C-7>      { :desc "go to tab 7"    :val "tabnext 7"  :typet :cmd }
-  :<C-8>      { :desc "go to tab 8"    :val "tabnext 8"  :typet :cmd }
-  :<C-9>      { :desc "go to last tab" :val :tablast     :typet :cmd }
+  :<C-1>      { :desc "goto tab 1"          :val :tabfirst            :typet :cmd }
+  :<C-2>      { :desc "goto tab 2"          :val "tabnext 2"          :typet :cmd }
+  :<C-3>      { :desc "goto tab 3"          :val "tabnext 3"          :typet :cmd }
+  :<C-4>      { :desc "goto tab 4"          :val "tabnext 4"          :typet :cmd }
+  :<C-5>      { :desc "goto tab 5"          :val "tabnext 5"          :typet :cmd }
+  :<C-6>      { :desc "goto tab 6"          :val "tabnext 6"          :typet :cmd }
+  :<C-7>      { :desc "goto tab 7"          :val "tabnext 7"          :typet :cmd }
+  :<C-8>      { :desc "goto tab 8"          :val "tabnext 8"          :typet :cmd }
+  :<C-9>      { :desc "goto tab last"       :val :tablast             :typet :cmd }
+  :<C-0>      { :desc "goto last used tab"  :val "exe \"tabn \".g:LastTab"     :typet :cmd }
   :<C-S-H>    { :desc "left pane"                   :val :<C-w>h  }
   :<C-S-J>    { :desc "down pane"                   :val :<C-w>j  }
   :<C-S-K>    { :desc "up Pane"                     :val :<C-w>k  }

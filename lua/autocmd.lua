@@ -1,22 +1,18 @@
 
 ---@diagnostic disable: deprecated
-local home  = vim.env.HOME
-local api   = vim.api
-local fn    = vim.fn
-local vauto = vim.api.nvim_create_autocmd
-local cmd   = vim.cmd
+local vauto = API.nvim_create_autocmd
 
 -- ConfigDir = fn.stdpath("config")
-LanguageSpecificDir = fn.stdpath("config") .. "/language_specific"
-TemplateDir = home .. "/.config/nvim/language_specific/templates"
+LanguageSpecificDir = FN.stdpath("config") .. "/language_specific"
+TemplateDir = HOME .. "/.config/nvim/language_specific/templates"
 MaxLinesCMP = 2000
 
 ---special settings based on filepath/filename 
 local special_settings = {
   [ "*.page"                                 ] = function() dofile( LanguageSpecificDir .. "/gitit.lua" ) end,
   [ "~/.bashrc"                              ] = function() dofile( LanguageSpecificDir .. "/bashrc.lua" ) end,
-  [ "~/.config/joplin-desktop/userstyle.css" ] = function() cmd.source( LanguageSpecificDir .. "/joplin_userstyle.vim" ) end,
-  [ "~/TEST/QUICK/*.cpp"                     ] = function() cmd.source( LanguageSpecificDir .. "/quick_cpp.vim"        ) end,
+  [ "~/.config/joplin-desktop/userstyle.css" ] = function() CMD.source( LanguageSpecificDir .. "/joplin_userstyle.vim" ) end,
+  [ "~/TEST/QUICK/*.cpp"                     ] = function() CMD.source( LanguageSpecificDir .. "/quick_cpp.vim"        ) end,
   [ "*.asd"                                  ] = function() vim.bo.filetype="commonlisp" ; vim.bo.syntax="commonlisp" end,
 }
 
@@ -41,7 +37,7 @@ local template_extensions = {
   tex    = { chmod = "700" }, -- maybe
 }
 
-api.nvim_create_augroup("cursorline_hide_inactive_buffer", { clear = true })
+API.nvim_create_augroup("cursorline_hide_inactive_buffer", { clear = true })
 MyAutoCommands = {
   ---hide cursor for inactive window
   [ { "BufLeave", "WinLeave" } ] = { group = "cursorline_hide_inactive_buffer",
@@ -53,24 +49,26 @@ MyAutoCommands = {
   ---large files disable cmp
   [ { "BufEnter", "BufWinEnter" } ] = {
     callback = function(args)
-      if api.nvim_buf_line_count(args.buf) > MaxLinesCMP then
+      if API.nvim_buf_line_count(args.buf) > MaxLinesCMP then
         vim.treesitter.stop()
         require('cmp').setup.buffer( { enabled = false } )
       end
     end
   },
   ---check file updates
-  [ { "FocusGained", "CursorHold", "CursorHoldI" } ] = { callback = function() cmd("silent! checktime") end },
+  [ { "FocusGained", "CursorHold", "CursorHoldI" } ] = { callback = function() CMD("silent! checktime") end },
   ---preserve clipboard when exiting
   [ { "VimLeave" } ] = { callback = function() ClipBoardExit() end },
   ---set status line to terminal title
-  [ { "TermOpen" } ] = { callback = function() cmd("setlocal statusline=%{b:term_title}") end },
+  [ { "TermOpen" } ] = { callback = function() CMD("setlocal statusline=%{b:term_title}") end },
   ---filetype formatting
-  [ { "FileType" } ] = { callback = function() cmd("setlocal formatoptions-=c formatoptions-=r formatoptions-=o") end },
+  [ { "FileType" } ] = { callback = function() CMD("setlocal formatoptions-=c formatoptions-=r formatoptions-=o") end },
   ---open help on right side
   [ { {"FileType"}, "help" } ] = { command = "wincmd L", },
   ---highlight text yank
   [ { "TextYankPost" } ] = { callback = function() vim.hl.on_yank( { higroup="MyTextYank", timeout=300 } ) end },
+  ---set last tab
+  [ { "TabLeave" } ]     = { command = "let g:LastTab = tabpagenr()", },
 }
 
 ---for filename/filepath specific code when reading in buffer
@@ -104,7 +102,7 @@ local function handle_auto_commands(autocommands)
   for group_pattern, value in pairs(autocommands) do
     local group, pattern = unpack(group_pattern)
     if pattern then value["pattern"] = pattern end
-    api.nvim_create_autocmd(group, value)
+    API.nvim_create_autocmd(group, value)
   end
 end
 

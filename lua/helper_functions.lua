@@ -266,4 +266,12 @@ function CreateToggleOpt(opt, scope)
   scope = scope or "g"
   return Bind(function() vim[scope][opt] = not vim[scope][opt] end)
 end
+
+-- function Parents(path)
+--   local parents={}
+--   for p in vim.fs.parents(path) do
+--     table.insert(parents, p)
+--   end
+--   return parents
+-- end
 -- }}}

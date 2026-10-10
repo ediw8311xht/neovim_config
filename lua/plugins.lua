@@ -27,6 +27,7 @@ vim.g.my_plugins =  {
   elixir              =  {  user='elixir-tools',     repo='elixir-tools.nvim'  },
   elixirfiledetect    =  {  user='elixir-editors',   repo='vim-elixir'  },
   -- UI/Formatting/Appearance
+  outline             =  {  user='hedyhli',          repo='outline.nvim' },
   graphical_undo      =  {  user='sjl',              repo='gundo.vim'  },
   floatterm           =  {  user='voldikss',         repo='vim-floaterm'  },
   colorful_comp_menu  =  {  user='xzbdmw',           repo='colorful-menu.nvim'  },
@@ -89,9 +90,9 @@ local function install_plugins()
   for _,v in pairs(vim.g.my_plugins) do
     vim.cmd.Plug { args = { Printf("'%s/%s'", v.user, v.repo), unpack(v.args or {}) } }
   end
-  vim.cmd.Plug( '"AndrewRadev/tagalong.vim"' )
-  vim.cmd.Plug(  '"alvan/vim-closetag"' )
-  vim.cmd.Plug(  '"nvim-tree/nvim-tree.lua"' )
+  vim.cmd.Plug(  '"AndrewRadev/tagalong.vim"' )
+  vim.cmd.Plug(  '"alvan/vim-closetag"'       )
+  vim.cmd.Plug(  '"nvim-tree/nvim-tree.lua"'  )
   vim.call("plug#end")
 end
 
