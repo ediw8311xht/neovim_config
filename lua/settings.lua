@@ -78,6 +78,9 @@ vim.g.ColorSchemes = {
 vim.g.lsp_lang_servers = {
   "cssls",   "bashls", "clangd", "eslint", "hls", "html", "jsonls", "lua_ls",
   "pyright", "tailwindcss", "ts_ls", "vimls", "harper", "harper_ls",
+  -- "jdtls",
+  -- "cl-lsp",
+  -- "sextant",
 }
 --[[ treesitter --]]
 vim.g.treesitter_disable                     = { tex = true, kitty = true }
@@ -86,8 +89,8 @@ vim.g.treesitter_with_vim_regex_highlighting = { lua = true }
 vim.g.mapping_file        = vim.fs.joinpath(vim.g.dir_config, "lua/mappings.lua")
 vim.g.my_statuslines      = { default = "%!v:lua.StatusLineFunc()" }
 vim.g.my_tabline          = {
-  default       = "%!v:lua.TabLineFunc({'partition': ' '})",
-  only_basename = "%!v:lua.TabLineFunc({'partition': ' ', 'only_basename': 1})",
+  default   = "%!v:lua.TabLineFunc({'partition': ' ', 'only_basename': 1})",
+  with_path = "%!v:lua.TabLineFunc({'partition': ' '})",
 }
 vim.g.my_titlestring      = { default = "%{v:lua.TitleStringFunc()}" }
 vim.g.personal_dictionary = FS.joinpath(vim.env.XDG_DATA_HOME, "dict/en_words")
@@ -103,9 +106,9 @@ vim.g.my_floating_preview_options = {
 vim.g.my_toggles = {
   ToggleFullscreen = {
     command_name = "ToggleFullscreen",
-    namespace    = "fullscreen",
+    namespace    = "MyToggle",
     scope        = "t",
-    var          = "_is_fullscreen",
+    var          = "Fullscreen",
     on = function()
       vim.t.fullscreen_previous_state = vim.fn.winrestcmd()
       vim.cmd([[
@@ -119,18 +122,19 @@ vim.g.my_toggles = {
   },
   DisplayImages = {
     command_name = "ToggleDisplayImages",
-    namespace = "DisplayImages",
-    scope     = "t",
+    namespace = "MyToggle",
+    scope     = "g",
     var       = BindRequire("image", "is_enabled"),
     on        = BindRequire("image", "enable"),
     off       = BindRequire("image", "disable"),
   },
   TabLineShowPath = {
     command_name = "ToggleTabLineShowPath",
-    namespace = "TabLinePath",
-    scope = "t",
-    on  = Bind(API.nvim_set_option_value, "tabline", vim.g.my_tabline.default, {}),
-    off = Bind(API.nvim_set_option_value, "tabline", vim.g.my_tabline.only_basename, {}),
+    namespace = "MyToggle",
+    scope = "g",
+    var   = "TabLineShowPath",
+    on  = Bind(API.nvim_set_option_value, "tabline", vim.g.my_tabline.with_path, {}),
+    off = Bind(API.nvim_set_option_value, "tabline", vim.g.my_tabline.default, {}),
   },
 } -- }}}
 

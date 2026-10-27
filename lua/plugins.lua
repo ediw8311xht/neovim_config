@@ -1,32 +1,32 @@
 
 vim.g.my_plugins =  {
-  -- Latex
+-- latex
   vim_latex           =  {  user='lervag',           repo='vimtex'  },
-  -- Session/View management
+-- session/view management
   auto_session        =  {  user='rmagatti',         repo='auto-session'  },
   restore_view        =  {  user='vim-scripts',      repo='restore_view.vim'  },
-  -- Documentation
-  -- Language Server
+-- documentation
+-- language server
   lspconfig           =  {  user='neovim',           repo='nvim-lspconfig'  },
   lsp_lines           =  {  user='maan2003',         repo='lsp_lines.nvim'  },
   lsp_statusline      =  {  user='nvim-lua',         repo='lsp-status.nvim'  },
   lsp_saga            =  {  user='nvimdev',          repo='lspsaga.nvim'  },
   code_action_preview =  {  user='aznhe21',          repo='actions-preview.nvim'  },
-  -- Tcl
+-- tcl
   nvim_lint           =  {  user='mfussenegger',     repo='nvim-lint'  },
-  -- Paredit
+-- paredit
   paredit             =  {  user='julienvincent',    repo='nvim-paredit', args={ ['for']={'clojure', 'fennel', 'scheme'}  }  },
-  -- Fennel for neovim
+-- fennel for neovim
   nfnl__fennel        =  {  user='Olical',           repo='nfnl'  },
-  -- Scheme
+-- scheme
   conjure             =  {  user='Olical',           repo='conjure'  },
-  -- Lisp
+-- lisp
   slimv               =  {  user='ediw8311xht',      repo='slimv-neovim', args={ ['for']={ 'lisp', 'commonlisp'  }  }  },
   cl_lsp              =  {  user='cxxxr',            repo='cl-lsp',       args={ ['for']={ 'lisp', 'commonlisp'  }  }  },
-  -- Elixir
+-- elixir
   elixir              =  {  user='elixir-tools',     repo='elixir-tools.nvim'  },
   elixirfiledetect    =  {  user='elixir-editors',   repo='vim-elixir'  },
-  -- UI/Formatting/Appearance
+-- other
   outline             =  {  user='hedyhli',          repo='outline.nvim' },
   graphical_undo      =  {  user='sjl',              repo='gundo.vim'  },
   floatterm           =  {  user='voldikss',         repo='vim-floaterm'  },
@@ -38,32 +38,32 @@ vim.g.my_plugins =  {
   gitsigns            =  {  user='lewis6991',        repo='gitsigns.nvim'  },
   marks               =  {  user='chentoast',        repo='marks.nvim'  },
   view_images         =  {  user='3rd',              repo='image.nvim'  },
-  -- Tools
-  plenary_telescope   =  {  user='nvim-lua',         repo='plenary.nvim'  },
+-- tools
+  plenary             =  {  user='nvim-lua',         repo='plenary.nvim', notes="needed for telescope/ java stuff", },
   telescope           =  {  user='nvim-telescope',   repo='telescope.nvim', args={ branch = 'master'  }  },
   file_explorer       =  {  user='preservim',        repo='nerdtree'  },
   neoterm             =  {  user='kassio',           repo='neoterm'  },
   markdown_preview    =  {  user='iamcco',           repo='markdown-preview.nvim', args={ ['do']='cd app && yarn install'  }  },
   fzf                 =  {  user='junegunn',         repo='fzf.vim'  },
   easy_align          =  {  user='junegunn',         repo='vim-easy-align'  },
-  -- Lf File Manager
+-- lf file manager
   lf                  =  {  user='ptzz',             repo='lf.vim'  },
-  -- Search & Replace
+-- search & replace
   spectre_sub_buffers =  {  user='nvim-pack',        repo='nvim-spectre' },
-  -- Key Hints
+-- key hints
   whichkeys           =  {  user='folke',            repo='which-key.nvim'  },
-  -- Treesitter
+-- treesitter
   treesitter          =  {  user='nvim-treesitter',  repo='nvim-treesitter', args={ branch='main', ['do']=':TSUpdate'}  },
   treesitter_textobjs =  {  user='nvim-treesitter',  repo='nvim-treesitter-textobjects', args={ branch='main'  }  },
-  -- Syntax
+-- syntax
   syntax_i3           =  {  user='PotatoesMaster',   repo='i3-vim-syntax'  },
   syntax_lfrc         =  {  user='VebbNix',          repo='lf-vim'  },
   syntax_kitty        =  {  user='fladson',          repo='vim-kitty', args={ tag='*'  }  },
   syntax_PlantUML     =  {  user='aklt',             repo='plantuml-syntax'  },
   syntax_markdown     =  {  user='drmingdrmer',      repo='vim-syntax-markdown'  },
-  -- Color scheme
+-- color scheme
   tokyonight          =  {  user='folke',            repo='tokyonight.nvim'  },
-  -- Cmp
+-- cmp
   nvim_cmp            =  {  user='hrsh7th',          repo='nvim-cmp'  },
   cmp_lsp             =  {  user='hrsh7th',          repo='cmp-nvim-lsp'  },
   cmp_lua             =  {  user='hrsh7th',          repo='cmp-nvim-lua'  },

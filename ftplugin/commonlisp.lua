@@ -1,6 +1,7 @@
 
 ---@alias EvalOptions { add_to_history: boolean }
 
+vim.opt.lispwords:append { "define-compiler-macro" }
 vim.g.paredit_help   = "$MY_INFORMATION/lisp/paredit.md"
 vim.g.vlime_help     = "$MY_INFORMATION/lisp/vlime.md"
 vim.g.slimv_help     = "$MY_INFORMATION/lisp/slimv.md"
@@ -69,11 +70,11 @@ function LispAddToCentralRegistry(directory)
   LispEvalForm(vim.fn.printf('(push (truename "%s") asdf:*central-registry*)', directory))
 end
 
-function LispAddAllDirectories() ForEach(vim.g.lisp_directories, LispAddToCentralRegistry) end
+function LispAddAllDirectories() ForEach(vim.g.Lisp_directories, LispAddToCentralRegistry) end
 function LispLoadSystem(system)  LispEvalForm({ '(asdf:load-system :%s)', system } ) end
-function LispLoadAllSystems()    ForEach(vim.g.lisp_systems, LispLoadSystem) end
+function LispLoadAllSystems()    ForEach(vim.g.Lisp_systems, LispLoadSystem) end
 function LispClearSystem(system) LispEvalForm({ '(asdf:clear-system :%s)', system }) end
-function LispClearAllSystems()   ForEach(vim.g.lisp_systems, LispClearSystem) end
+function LispClearAllSystems()   ForEach(vim.g.Lisp_systems, LispClearSystem) end
 
 function LispQuickSetup()
   LispAddAllDirectories()
@@ -112,8 +113,8 @@ function LispEvalInput(options)
 end
 
 function LispEvalFromHistory()  LispEvalFZF(vim.fn.reverse(vim.g.slimv_cmdhistory), {error="No command history found."}) end
-function LispEvalSavedForms()   LispEvalFZF(vim.g.lisp_saved_forms, {error="No command history found."}) end
-function LispEvalStartupForms() LispEvalForms(vim.g.lisp_startup_forms) end
+function LispEvalSavedForms()   LispEvalFZF(vim.g.Lisp_saved_forms, {error="No command history found."}) end
+function LispEvalStartupForms() LispEvalForms(vim.g.Lisp_startup_forms) end
 function LispQlQuickload()      LispEvalInput({prompt="quickload package: ", printf='(ql:quickload "%s")', add_to_history=false }) end
 
 
@@ -145,13 +146,13 @@ local commonlisp_leader_mappings = {
     Ah  = { group="lisp help"                  },
     Ahp = { desc='paredit help',               cmd='execute (":vsplit " .. expand(g:paredit_help))' },
     Ahs = { desc='slime help',                 cmd='execute (":vsplit " .. expand(g:slime_help))' },
-    Al  = { desc='load system',                default=function() LispLoadSystem(vim.g.lisp_session_system) end },
+    Al  = { desc='load system',                default=function() LispLoadSystem(vim.g.Lisp_session_system) end },
     Aq  = { group="lisp quicklisp"             },
 
     Aqq = { desc='[ql] quickload',             default=LispQlQuickload },
     Ar  = { desc='reload slimv',               default='\\Q\\c' },
     As  = { desc='lisp setup',                 default=LispQuickSetup },
-    At  = { desc='test system',                vim_call='SlimvEvalForm("(asdf:test-system :" .. g:lisp_session_system .. ")")' },
+    At  = { desc='test system',                vim_call='SlimvEvalForm("(asdf:test-system :" .. g:Lisp_session_system .. ")")' },
     Au  = { desc='clear systems',              default=LispClearAllSystems },
     Ax  = { desc='execute [sbcl]',             cmd='!sbcl --script "%"' },
     -- Se  = { false, 'slimv eval at mark e',      '\'e' },
