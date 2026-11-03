@@ -1,7 +1,20 @@
 
 ---@alias EvalOptions { add_to_history: boolean }
 
-vim.opt.lispwords:append { "define-compiler-macro" }
+vim.opt.lispwords:append {
+  "define-compiler-macro",
+  -- fiveam
+  "def-suite",
+  "test",
+  -- mine
+  "λ",
+  "bind-places",
+  "bindm",
+  "defun-memoize",
+  "pipe-arrow",
+  "defstruct-with-helpers",
+  "defclass-with-helpers",
+}
 vim.g.paredit_help   = "$MY_INFORMATION/lisp/paredit.md"
 vim.g.vlime_help     = "$MY_INFORMATION/lisp/vlime.md"
 vim.g.slimv_help     = "$MY_INFORMATION/lisp/slimv.md"

@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
-main() {
-  echo
+_%%filename%%() {
+  echo ""
 }
 
-main "${@}"
+_%%filename%% "${@}"

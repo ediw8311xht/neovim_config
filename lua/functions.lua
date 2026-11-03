@@ -380,6 +380,7 @@ function GetHL()
     end
   end
 end
+LastRead = ""
 
 ---Write contents of input_file to output_file
 ---@param input_file  string
@@ -387,19 +388,37 @@ end
 ---@param opts? {
 ---                  chmod: string,
 ---                  line: number,
+---                  template_args: table,
+---                  ignore_template_args: boolean,
 ---               }
 ---
 function ReadInFile(input_file, output_file, opts)
   -- options
-  local options = opts or { line = 0, chmod = nil }
+  local options = opts or { line = 0, chmod = nil, template_args = {}, ignore_template_args=false}
+  local after =function(result)
+    if result.code == 0 then
+      vim.schedule(function  ()
+      if options.chmod then
+        CMD["!"]({"chmod", options.chmod, output_file, mods={silent=true}})
+      end
+      vim.cmd(":edit!")
+      end
+      )
+    end
+  end
+  -- os.execute(printf("chmod %s '%s'", opts.chmod, output_file))
+
   if not ValidDirname(output_file) then
     error("path: '" .. output_file .. "' is invalid.")
   else
-    CMD(Printf("keepalt %dread %s", options.line, input_file))
-    CMD.write({ mods = { silent = true } })
-    if options.chmod then
-      CMD["!"]("chmod", options.chmod, output_file)
-      -- os.execute(printf("chmod %s '%s'", opts.chmod, output_file))
+    if options.ignore_template_args then
+      CMD(Printf("keepalt %dread %s", options.line, input_file))
+    else
+      LastRead = ExecuteScript(
+        'template-parse.sh',
+        { after=after },
+        input_file, output_file
+      ) --,  Reduce(options.template_args, Bind(Printf, "%s%s=%s "), ""))
     end
   end
 end
@@ -588,6 +607,7 @@ function ExecuteScript(script, opts, ...)
     error(Printf("File '%s' not found", fullpath))
   end
 
+  -- vim.print({fullpath, ...})
   return vim.system({ fullpath, ... }, after)
 end
 

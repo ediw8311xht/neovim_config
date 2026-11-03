@@ -51,8 +51,9 @@ LEADER_MAPPINGS = {
     A     = { group="filetype-specific" },
     ---[group] buffer
     B     = { group="buffer"},
+    Bc    = { desc='[clip] path',               lua_call='if (vim.fn.setreg("+", vim.fn.expand("%:p")) == 0) then print("copied path") end', },
+    Bd    = { desc='[del]  buffer',             cmd='bd'},
     By    = { desc='[clip] buffer',             default='gg"+yG<c-o>'},
-    Bd    = { desc='[-] buffer',                cmd='bd'},
     E     = { desc='cwd edit',                  lua_call='vim.fn.feedkeys(":e " .. GetFile({tilde_home=true, expand="%:p:h"}) .. "/")'},
     ---[group] AutoSession
     F     = { group="AutoSession"},
@@ -89,7 +90,7 @@ LEADER_MAPPINGS = {
     Ihs   = { desc='[+highlight] symbol',       default=LspDocumentHighlight},
     Iht   = { desc='toggle inline hints',       default=function() vim.lsp.inlay_hint.enable( not vim.lsp.inlay_hint.is_enabled()) end },
     Ii    = { desc='[show] diagnostics',        lua_call='vim.diagnostic.open_float(nil, {focus=T, scope="cursor"})'},
-    Il    = { desc='[hover] lsp info',          lua_call='vim.lsp.buf.hover({max_height=30, max_width=30})'},
+    Il    = { desc='[hover] lsp info',          lua_call='vim.lsp.buf.hover({height=20, max_width=80})'},
     In    = { desc='[goto] next error',         lua_call='vim.diagnostic.jump({count=1, float=true})'},
     Ip    = { desc='[goto] prev error',         lua_call='vim.diagnostic.goto_prev({count=-1, float=true})'},
     Iy    = { desc='[!]lsp_lines',              default=require("lsp_lines").toggle},
@@ -122,7 +123,7 @@ LEADER_MAPPINGS = {
     Tt    = { desc='[open] treesitter tree',    default=vim.treesitter.inspect_tree},
     Te    = { desc='[open] treesitter query',   cmd='EditQuery'},
     ---[group] Modify (with Visual)
-    V     = {group="modify"},
+    V     = { group="visual modify" },
         -- '%s/\v\c^#[ ](.*)[ ]*$/\= "# ---------- " . submatch(1) . ' ' . repeat("-", 40 - len(submatch(0))) . '-#'/'
     -- Vp    = { desc='pad left and right', },
     ---[group] editor settings
@@ -150,12 +151,17 @@ LEADER_MAPPINGS = {
     cw    = { desc='[!]wrap',                   cmd='set wrap!'},
   },
   v = {
-    vc     = { desc='[indent] column',  default=':%!column -o " " -t<ESC>'},
-    vmf    = { desc='[match] bc float', default=':!bc -l<ESC>'},
-    vmi    = { desc='[match] bc int',   default=':!bc -l<ESC>'},
-    vmq    = { desc='[match] qalc',     default=':!xargs qalc --color=never --terse<ESC>'},
-    vs     = { desc='[sort]',           default=':sort<ESC>',},
-    vt     = { desc='title case',       default=':s/\\%V\\v\\c\\w(\\a*(\'\\a{0,1})?\\w)?/\\u\\0/g<CR>'},
+    ---[group] modify
+    v     = { group="modify" },
+    vc    = { desc='[indent] column',  default=':%!column -o " " -t<ESC>'},
+    vs    = { desc='[sort]',           default=':sort<ESC>',},
+    vt    = { desc='title case',       default=':s/\\%V\\v\\c\\w(\\a*(\'\\a{0,1})?\\w)?/\\u\\0/g<CR>'},
+    -- vj    = { desc='[move] col down',  default='' },
+    -- vk    = { desc='[move] col up',    default='' },
+    m     = { group="math" },
+    mf    = { desc='[math] bc float',  default=':!bc -l<ESC>'},
+    mi    = { desc='[math] bc int',    default=':!bc -l<ESC>'},
+    mq    = { desc='[math] qalc',      default=':!xargs qalc --color=never --terse<ESC>'},
     -- vx     = { desc='execute selection',      'lua
   },
   [ { "v", "n" } ] = { }

@@ -10,7 +10,6 @@ set autoread "check for changes
 set title
 set shada=!,'500,<2000,:200,s100,h
 set termguicolors
-set autoread
 set nocindent
 set backup
 set clipboard=unnamedplus
