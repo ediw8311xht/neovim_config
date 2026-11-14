@@ -72,21 +72,22 @@ function MapSplit(s, f, opts)
     return {}
   elseif s == "" then
     return opts.remove_empty and {} or { "" }
-  end
-  local output_data = opts.output_data or {}
-  local callback = opts.callback or function(m, t)
-    table.insert(t, m)
-  end
-  local remove_empty = opts.remove_empty or false
-
-  repeat
-    local match, _, rest = string.match(s, "^(.-)(" .. f .. ")(.*)$")
-    if not remove_empty or match ~= "" then
-      callback(match or s, output_data)
+  else
+    local output_data = opts.output_data or {}
+    local callback = opts.callback or function(m, t)
+      table.insert(t, m)
     end
-    s = rest
-  until not s or s == ""
-  return output_data
+    local remove_empty = opts.remove_empty or false
+
+    repeat
+      local match, _, rest = string.match(s, "^(.-)(" .. f .. ")(.*)$")
+      if not remove_empty or match ~= "" then
+        callback(match or s, output_data)
+      end
+      s = rest
+    until not s or s == ""
+    return output_data
+  end
 end
 
 --- Split string into list based on string/regex
@@ -264,7 +265,9 @@ end
 
 function CreateToggleOpt(opt, scope)
   scope = scope or "g"
-  return Bind(function() vim[scope][opt] = not vim[scope][opt] end)
+  return Bind(function()
+    vim[scope][opt] = not vim[scope][opt]
+  end)
 end
 
 -- function Parents(path)

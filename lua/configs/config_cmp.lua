@@ -54,7 +54,8 @@ cmp.setup({
     MaxLinesCMP,
   },
   experimental = {
-    ghost_text = true,
+    -- ghost_text = true,
+    ghost_text = false, -- kinda cool, kinda annoying idk
   },
   mapping = {
     ["<C-p>"]     = cmp.mapping.select_prev_item(),

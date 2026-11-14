@@ -14,15 +14,15 @@
 "nnoremap <buffer> <leader>m i<span class="math inline">\(\)</span><esc>F(a
 ""nnoremap <leader>M 0f(a
 fu! HTMLSettings()
-    nnoremap <buffer> <leader>vp :%!tidy --parser="html"<esc>
-    nnoremap <buffer> <leader>x  :!xmllint %<esc>
-    setlocal tabstop=2 shiftwidth=2 softtabstop=2 expandtab
+  nnoremap <buffer> <leader>vp :!tidy --parser="html"<esc>
+  nnoremap <buffer> <leader>x  :!xmllint %<esc>
+  setlocal tabstop=2 shiftwidth=2 softtabstop=2 expandtab
 endfu
 
 fu! HTMLMain()
-    if &ft != "markdown" 
-        call HTMLSettings()
-    endif
+ if &ft != "markdown" 
+  call HTMLSettings()
+ endif
 endfu
 
 call HTMLMain()

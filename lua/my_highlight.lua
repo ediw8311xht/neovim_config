@@ -7,15 +7,15 @@ vim.g.my_highlight = {
     ExtraWhiteSpace = { gui="NONE",        guibg="#0099ff", guifg="NONE"     },
     FoldColumn      = { gui="NONE",        guibg="NONE",    guifg="#00ff00"  },
     Folded          = { gui="NONE",        guibg="#222222", guifg="#999999"  },
-    IncSearch       = { gui="NONE",        guibg="#000000", guifg="#FF00FF"  },
-    Keyword         = { gui="NONE"                                               },
+    IncSearch       = { gui="NONE",        guibg="#FFFF00", guifg="#000000"  },
+    Keyword         = { gui="NONE"                                           },
     LineNr          = { gui="NONE",        guibg="NONE",    guifg="#999999"  },
     LineNrAbove     = { gui="NONE",        guibg="NONE",    guifg="#990099"  },
     MatchParen      = { gui="NONE",        guibg="#aaaaaa", guifg="black"    },
     ModeMsg         = { gui="NONE",        guibg="#009900", guifg="black",   cterm = "NONE"    },
 
-    Search          = { gui="NONE,nocombine,underline", guisp="#999999", guifg="#000000", guibg="#ff22ff"    },
-    SpellBad        = { gui="undercurl,italic",      guibg="NONE",    guifg="NONE", guisp="#ff4444" },
+    Search          = { gui="NONE,nocombine",           guibg="#ff94ff", guifg="#000000", guisp="#999999",  },
+    SpellBad        = { gui="undercurl,italic",         guibg="NONE",    guifg="NONE",    guisp="#ff4444",  },
 
     SignColumn      = { gui="NONE",        guibg="NONE",    guifg="NONE"     },
 

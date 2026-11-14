@@ -41,7 +41,7 @@ which_key.setup({
     rules = {},
     colors = true,
     keys = {
-        BS    = '<BS>',    Space           = '<leader>',  Tab           = '⇥',
+        BS    = '<BS>',    Space           = '<leader>',  Tab           = '<tab>',
         Up    = '<up>',    Down            = '<down>',    Left          = '<L>',
         Right = '<right>', C               = '^',         M             = '󰘵 ',
         D     = '󰘳 ',      S               = '<S>',       CR            = '<CR>',

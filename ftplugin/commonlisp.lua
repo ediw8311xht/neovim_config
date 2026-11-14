@@ -38,7 +38,7 @@ end
 ---evaluates form in lisp repl, defaults to slimv
 ---@param form string|any[] @string of form or list of values to be computed with vim.fn.printf
 ---@param options? EvalOptions
----@return nil|0 @return 0 when vim.fn.SlimvEvalForm is successful
+---@return nil|any
 function LispEvalForm(form, options)
   ---@diagnostic disable-next-line: deprecated, param-type-mismatch
   local computed_form = (type(form) == "string" and form) or vim.fn.printf(unpack(form))
@@ -130,12 +130,21 @@ function LispEvalSavedForms()   LispEvalFZF(vim.g.Lisp_saved_forms, {error="No c
 function LispEvalStartupForms() LispEvalForms(vim.g.Lisp_startup_forms) end
 function LispQlQuickload()      LispEvalInput({prompt="quickload package: ", printf='(ql:quickload "%s")', add_to_history=false }) end
 
+function LispIfInSlimv(slimv, not_slimv, opts_slimv, opts_not_slimv)
+  if vim.fn.bufname():match(vim.g.slimv_repl_name or "cl-repl") then
+    if slimv then slimv(unpack(opts_slimv or {})) end
+  else
+    if not_slimv then not_slimv(unpack(opts_not_slimv or {})) end
+  end
+end
 
 local commonlisp_mappings = {
   [ {"n", "i", "v"} ] = {
-    ["<C-S-i>"] = { desc="toggle floating repl",  cmd='keepalt lua FloatingWindowToggle("cl-repl", false, {})' },
-    ["<C-j>"]   = { desc="[repl] next history",   cmd="call SlimvHandleDown()", },
-    ["<C-k>"]   = { desc="[repl] prev history",   cmd="call SlimvHandleUp()", },
+    ["<C-S-i>"] = { desc='toggle floating repl',  cmd='keepalt lua FloatingWindowToggle("cl-repl", false, {})' },
+    -- ["<C-j>"]   = { desc='[repl] next history',   cmd='call SlimvHandleDown()', },
+    -- ["<C-k>"]   = { desc='[repl] prev history',   cmd='call SlimvHandleUp()', },
+    ["<C-j>"]   = { desc='[lisp] prev (',         cmd="lua  LispIfInSlimv(vim.fn.SlimvHandleDown, vim.fn.search, {}, {'(', 'b'})", },
+    ["<C-k>"]   = { desc='[lisp] next )',         cmd="lua  LispIfInSlimv(vim.fn.SlimvHandleUp,   vim.fn.search, {}, {'('})", },
   },
 }
 local commonlisp_leader_mappings = {
@@ -144,16 +153,16 @@ local commonlisp_leader_mappings = {
 
     A   = { group="lisp" },
 
-    ASc = { desc="set clesh shebang",          lua_call='vim.api.nvim_buf_set_lines(0, 0, 0, false, {"#!/usr/bin/env clesh_script.sh"})' },
+    ASc = { desc='set clesh shebang',          lua_call='vim.api.nvim_buf_set_lines(0, 0, 0, false, {"#!/usr/bin/env clesh_script.sh"})' },
     AX  = { desc='execute [sbcl] w/ args',     default=':!sbcl --script "%" ' },
     Ac  = { desc='complete lisp functions',    vim_call='feedkeys(":lua Lisp\\t", "t")' },
 
     Ae  = { group="lisp eval" },
-    AeS = { desc="eval startup forms",         default=LispEvalStartupForms },
-    Aee = { desc="slimv eval put into 'e",     default='"e\\e', remap=true },
-    Aef = { desc="eval input",                 default=Bind(LispEvalInput, {add_to_history=true} ) },
+    AeS = { desc='eval startup forms',         default=LispEvalStartupForms },
+    Aee = { desc='slimv eval put into mark e', default='"e\\e', remap=true },
+    Aef = { desc='eval input',                 default=Bind(LispEvalInput, {add_to_history=true} ) },
     Aeh = { desc='repl eval from history',     default=LispEvalFromHistory },
-    Aer = { desc="slimv eval 'e",              default='"e\\r', remap=true },
+    Aer = { desc='slimv eval mark e',              default='"e\\r', remap=true },
     Aes = { desc='repl eval from saved forms', default=LispEvalSavedForms },
 
     Ah  = { group="lisp help"                  },
@@ -176,7 +185,7 @@ local commonlisp_leader_mappings = {
 --   pattern = "",
 -- })
 
-KeyMapSetter2(commonlisp_mappings,        '', true, true)
+KeyMapSetter2(commonlisp_mappings,        '',         true, true)
 KeyMapSetter2(commonlisp_leader_mappings, '<leader>', true, true)
 
 -- vim.cmd([[

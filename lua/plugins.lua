@@ -1,98 +1,116 @@
 
 vim.g.my_plugins =  {
--- latex
-  vim_latex           =  {  user='lervag',           repo='vimtex'  },
--- session/view management
-  auto_session        =  {  user='rmagatti',         repo='auto-session'  },
-  restore_view        =  {  user='vim-scripts',      repo='restore_view.vim'  },
--- documentation
--- language server
-  lspconfig           =  {  user='neovim',           repo='nvim-lspconfig'  },
-  lsp_lines           =  {  user='maan2003',         repo='lsp_lines.nvim'  },
-  lsp_statusline      =  {  user='nvim-lua',         repo='lsp-status.nvim'  },
-  lsp_saga            =  {  user='nvimdev',          repo='lspsaga.nvim'  },
-  code_action_preview =  {  user='aznhe21',          repo='actions-preview.nvim'  },
--- tcl
-  nvim_lint           =  {  user='mfussenegger',     repo='nvim-lint'  },
--- paredit
-  paredit             =  {  user='julienvincent',    repo='nvim-paredit', args={ ['for']={'clojure', 'fennel', 'scheme'}  }  },
--- fennel for neovim
-  nfnl__fennel        =  {  user='Olical',           repo='nfnl'  },
--- scheme
-  conjure             =  {  user='Olical',           repo='conjure'  },
--- lisp
-  slimv               =  {  user='ediw8311xht',      repo='slimv-neovim', args={ ['for']={ 'lisp', 'commonlisp'  }  }  },
-  cl_lsp              =  {  user='cxxxr',            repo='cl-lsp',       args={ ['for']={ 'lisp', 'commonlisp'  }  }  },
--- elixir
-  elixir              =  {  user='elixir-tools',     repo='elixir-tools.nvim'  },
-  elixirfiledetect    =  {  user='elixir-editors',   repo='vim-elixir'  },
--- other
-  outline             =  {  user='hedyhli',          repo='outline.nvim' },
-  graphical_undo      =  {  user='sjl',              repo='gundo.vim'  },
-  floatterm           =  {  user='voldikss',         repo='vim-floaterm'  },
-  colorful_comp_menu  =  {  user='xzbdmw',           repo='colorful-menu.nvim'  },
-  notify              =  {  user='rcarriga',         repo='nvim-notify'  },
-  nui                 =  {  user='MunifTanjim',      repo='nui.nvim'  },
-  rainbow_delimeters  =  {  user='HiPhish',          repo='rainbow-delimiters.nvim'  },
-  autoformat          =  {  user='vim-autoformat',   repo='vim-autoformat'  },
-  gitsigns            =  {  user='lewis6991',        repo='gitsigns.nvim'  },
-  marks               =  {  user='chentoast',        repo='marks.nvim'  },
-  view_images         =  {  user='3rd',              repo='image.nvim'  },
--- tools
-  plenary             =  {  user='nvim-lua',         repo='plenary.nvim', notes="needed for telescope/ java stuff", },
-  telescope           =  {  user='nvim-telescope',   repo='telescope.nvim', args={ branch = 'master'  }  },
-  file_explorer       =  {  user='preservim',        repo='nerdtree'  },
-  neoterm             =  {  user='kassio',           repo='neoterm'  },
-  markdown_preview    =  {  user='iamcco',           repo='markdown-preview.nvim', args={ ['do']='cd app && yarn install'  }  },
-  fzf                 =  {  user='junegunn',         repo='fzf.vim'  },
-  easy_align          =  {  user='junegunn',         repo='vim-easy-align'  },
--- lf file manager
-  lf                  =  {  user='ptzz',             repo='lf.vim'  },
--- search & replace
-  spectre_sub_buffers =  {  user='nvim-pack',        repo='nvim-spectre' },
--- key hints
-  whichkeys           =  {  user='folke',            repo='which-key.nvim'  },
--- treesitter
-  treesitter          =  {  user='nvim-treesitter',  repo='nvim-treesitter', args={ branch='main', ['do']=':TSUpdate'}  },
-  treesitter_textobjs =  {  user='nvim-treesitter',  repo='nvim-treesitter-textobjects', args={ branch='main'  }  },
--- syntax
-  syntax_i3           =  {  user='PotatoesMaster',   repo='i3-vim-syntax'  },
-  syntax_lfrc         =  {  user='VebbNix',          repo='lf-vim'  },
-  syntax_kitty        =  {  user='fladson',          repo='vim-kitty', args={ tag='*'  }  },
-  syntax_PlantUML     =  {  user='aklt',             repo='plantuml-syntax'  },
-  syntax_markdown     =  {  user='drmingdrmer',      repo='vim-syntax-markdown'  },
--- color scheme
-  tokyonight          =  {  user='folke',            repo='tokyonight.nvim'  },
--- cmp
-  nvim_cmp            =  {  user='hrsh7th',          repo='nvim-cmp'  },
-  cmp_lsp             =  {  user='hrsh7th',          repo='cmp-nvim-lsp'  },
-  cmp_lua             =  {  user='hrsh7th',          repo='cmp-nvim-lua'  },
-  cmp_buffer          =  {  user='hrsh7th',          repo='cmp-buffer'  },
-  cmp_cmdline         =  {  user='hrsh7th',          repo='cmp-cmdline'  },
-  cmp_path            =  {  user='hrsh7th',          repo='cmp-path'  },
-  cmp_auto_hint       =  {  user='hrsh7th',          repo='cmp-nvim-lsp-signature-help'  },
-  cmp_omni            =  {  user='hrsh7th',          repo='cmp-omni'  },
-  cmp_dictionary      =  {  user='uga-rosa',         repo='cmp-dictionary'  },
-  cmp_env             =  {  user='SergioRibera',     repo='cmp-dotenv'  },
-  cmp_luasnip         =  {  user='saadparwaiz1',     repo='cmp_luasnip'  },
-  cmp_plain_english   =  {  user='uga-rosa',         repo='cmp-dictionary'  },
-  cmp_nvim_tags       =  {  user='quangnguyen30192', repo='cmp-nvim-tags'  },
-  cmp_ctags           =  {  user='delphinus',        repo='cmp-ctags'  },
-  cmp_treesitter      =  {  user='ray-x',            repo='cmp-treesitter'  },
-  cmp_conjure         =  {  user='PaterJason',       repo='cmp-conjure'  },
-  latex_snips_vimtex  =  {  user='micangl',          repo='cmp-vimtex'  },
-  luasnip             =  {  user='L3MON4D3',         repo='LuaSnip', args={ run="make install_jsregexp" } },
-  devicons            =  {  user='nvim-tree',        repo='nvim-web-devicons' },
+  misc = {
+    -- graphical_undo      =  {  user='sjl',              repo='gundo.vim'  },
+    floatterm           =  {  user='voldikss',         repo='vim-floaterm'  },
+    colorful_comp_menu  =  {  user='xzbdmw',           repo='colorful-menu.nvim'  },
+    notify              =  {  user='rcarriga',         repo='nvim-notify'  },
+    nui                 =  {  user='MunifTanjim',      repo='nui.nvim'  },
+    rainbow_delimeters  =  {  user='HiPhish',          repo='rainbow-delimiters.nvim'  },
+    gitsigns            =  {  user='lewis6991',        repo='gitsigns.nvim'  },
+    marks               =  {  user='chentoast',        repo='marks.nvim'  },
+    view_images         =  {  user='3rd',              repo='image.nvim'  },
+    devicons            =  {  user='nvim-tree',        repo='nvim-web-devicons' },
+    plenary             =  {  user='nvim-lua',         repo='plenary.nvim', notes="needed for telescope/ java stuff", },
+  },
+  tools = {
+    autoformat          = {  user='vim-autoformat',   repo='vim-autoformat'  },
+    easy_align          = {  user='junegunn',         repo='vim-easy-align'  },
+    -- file_explorer    =  {  user='preservim',        repo='nerdtree'  },
+    fzf                 = {  user='junegunn',         repo='fzf.vim'  },
+    lf                  = {  user='ptzz',             repo='lf.vim'  },
+    markdown_preview    = {  user='iamcco',           repo='markdown-preview.nvim', args={ ['do']='cd app && yarn install'  }  },
+    neoterm             = {  user='kassio',           repo='neoterm'  },
+    spectre_sub_buffers = {  user='nvim-pack',        repo='nvim-spectre' },
+    telescope           = {  user='nvim-telescope',   repo='telescope.nvim', args={ branch = 'master'  }  },
+    whichkeys           = {  user='folke',            repo='which-key.nvim'  },
+    outline             = {  user='hedyhli',          repo='outline.nvim' },
+    nvim_tree           = {  user='nvim-tree',        repo='nvim-tree.lua' },
+    bracey              = {  user='turbio',           repo='bracey.vim', args={ ['do']='npm install --prefix server' } },
+  },
+  latex = {
+    vim_latex           =  {  user='lervag',           repo='vimtex'  },
+    latex_snips_vimtex  =  {  user='micangl',          repo='cmp-vimtex'  },
+  },
+  session = {
+    auto_session        =  {  user='rmagatti',         repo='auto-session'  },
+    restore_view        =  {  user='vim-scripts',      repo='restore_view.vim'  },
+  },
+  documentation = {
+  }, 
+  lsp = {
+    lspconfig           =  {  user='neovim',           repo='nvim-lspconfig'  },
+    lsp_lines           =  {  user='maan2003',         repo='lsp_lines.nvim'  },
+    lsp_statusline      =  {  user='nvim-lua',         repo='lsp-status.nvim'  },
+    lsp_saga            =  {  user='nvimdev',          repo='lspsaga.nvim'  },
+    code_action_preview =  {  user='aznhe21',          repo='actions-preview.nvim'  },
+  },
+  tcl = {
+    nvim_lint           =  {  user='mfussenegger',     repo='nvim-lint'  },
+  },
+  lisp = {
+    paredit             =  {  user='julienvincent',    repo='nvim-paredit', args={ ['for']={'clojure', 'fennel', 'scheme' }  }  },
+    nfnl__fennel        =  {  user='Olical',           repo='nfnl'        },
+    conjure             =  {  user='Olical',           repo='conjure'     },
+    slimv               =  {  user='ediw8311xht',      repo='slimv-neovim', args={ ['for']={ 'lisp', 'commonlisp'  }  }  },
+    cl_lsp              =  {  user='cxxxr',            repo='cl-lsp',       args={ ['for']={ 'lisp', 'commonlisp'  }  }  },
+  },
+  java = {
+    -- mason    = { 'mason-org', 'mason.nvim' },
+    dap         = { user='mfussenegger', repo='nvim-dap' },         -- required for nvim-java
+    spring_boot = { user='JavaHello',    repo='spring-boot.nvim' }, -- required for nvim-java
+    java        = { user='nvim-java',    repo='nvim-java' },
+  },
+  elixir = {
+    elixir              =  {  user='elixir-tools',     repo='elixir-tools.nvim'  },
+    elixirfiledetect    =  {  user='elixir-editors',   repo='vim-elixir'         },
+  },
+  ts = {
+    treesitter          =  {  user='nvim-treesitter',  repo='nvim-treesitter',             args={ branch='main', ['do']=':TSUpdate' }  },
+    treesitter_textobjs =  {  user='nvim-treesitter',  repo='nvim-treesitter-textobjects', args={ branch='main'  }  },
+  },
+  markdown = {
+    myst            = {  user='QuantEcon',            repo='myst-markdown-tree-sitter.nvim', args={ ["for"]={"myst", "markdown"} } },
+    syntax_markdown = {  user='drmingdrmer',          repo='vim-syntax-markdown'  },
+    markdown_render = {  user='MeanderingProgrammer', repo='render-markdown.nvim' },
+  },
+  syntax_colorscheme = {
+    PlantUML        = {  user='aklt',             repo='plantuml-syntax'  },
+    i3              = {  user='PotatoesMaster',   repo='i3-vim-syntax'  },
+    kitty           = {  user='fladson',          repo='vim-kitty', args={ tag='*'  }  },
+    lfrc            = {  user='VebbNix',          repo='lf-vim'  },
+    tokyonight      = {  user='folke',            repo='tokyonight.nvim'  },
+  },
+  completion = {
+    nvim_cmp            =  {  user='hrsh7th',          repo='nvim-cmp'  },
+    cmp_lsp             =  {  user='hrsh7th',          repo='cmp-nvim-lsp'  },
+    cmp_lua             =  {  user='hrsh7th',          repo='cmp-nvim-lua'  },
+    cmp_buffer          =  {  user='hrsh7th',          repo='cmp-buffer'  },
+    cmp_cmdline         =  {  user='hrsh7th',          repo='cmp-cmdline'  },
+    cmp_path            =  {  user='hrsh7th',          repo='cmp-path'  },
+    cmp_auto_hint       =  {  user='hrsh7th',          repo='cmp-nvim-lsp-signature-help'  },
+    cmp_omni            =  {  user='hrsh7th',          repo='cmp-omni'  },
+    cmp_dictionary      =  {  user='uga-rosa',         repo='cmp-dictionary'  },
+    cmp_env             =  {  user='SergioRibera',     repo='cmp-dotenv'  },
+    cmp_luasnip         =  {  user='saadparwaiz1',     repo='cmp_luasnip'  },
+    cmp_plain_english   =  {  user='uga-rosa',         repo='cmp-dictionary'  },
+    cmp_nvim_tags       =  {  user='quangnguyen30192', repo='cmp-nvim-tags'  },
+    cmp_ctags           =  {  user='delphinus',        repo='cmp-ctags'  },
+    cmp_treesitter      =  {  user='ray-x',            repo='cmp-treesitter'  },
+    cmp_conjure         =  {  user='PaterJason',       repo='cmp-conjure'  },
+    luasnip             =  {  user='L3MON4D3',         repo='LuaSnip', args={ run="make install_jsregexp" } },
+  }
 }
 
 local function install_plugins()
   vim.call("plug#begin")
-  for _,v in pairs(vim.g.my_plugins) do
-    vim.cmd.Plug { args = { Printf("'%s/%s'", v.user, v.repo), unpack(v.args or {}) } }
+  for _,t in pairs(vim.g.my_plugins) do
+    for _,v in pairs(t) do
+      vim.cmd.Plug { args = { Printf("'%s/%s'", v.user, v.repo), unpack(v.args or {}) } }
+    end
   end
   vim.cmd.Plug(  '"AndrewRadev/tagalong.vim"' )
   vim.cmd.Plug(  '"alvan/vim-closetag"'       )
-  vim.cmd.Plug(  '"nvim-tree/nvim-tree.lua"'  )
   vim.call("plug#end")
 end
 

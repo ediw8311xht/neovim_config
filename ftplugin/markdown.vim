@@ -1,6 +1,7 @@
 
 " usually will be set with ~/.editorcongfig, but just in case
-setlocal tabstop=4 shiftwidth=4 softtabstop=4 expandtab
+setlocal tabstop=2 shiftwidth=2 softtabstop=2 expandtab
+set tabstop=2 shiftwidth=2 softtabstop=2 expandtab
 let g:loaded_mark_preview=0
 
 fu! MakeSafe(f)
@@ -57,6 +58,7 @@ MARKDOWN_KEYMAP = {
 
 MARKDOWN_KEYMAP_LEADER = {
   n = {
+    At = { false, "Toggle render markdown", 'RenderMarkdown toggle', cmd=true },
     cT = { false, "Add table line",     'a| --- <ESC>a|<ESC>' },
     x  = { false, "Format",             'Autoformat', cmd=true },
     -- oo = { false, "Preview Markdown",   ':silent call PreviewMarkdown()<esc>' },

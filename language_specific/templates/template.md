@@ -1,8 +1,8 @@
 ---
 categories: _
-format: _
+format: markdown
 tags: _
-title: _
+title: %%filename%%
 ---
 
 

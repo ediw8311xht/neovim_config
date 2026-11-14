@@ -14,14 +14,17 @@ local special_settings = {
   [ "~/.config/joplin-desktop/userstyle.css" ] = function() CMD.source( LanguageSpecificDir .. "/joplin_userstyle.vim" ) end,
   [ "~/TEST/QUICK/*.cpp"                     ] = function() CMD.source( LanguageSpecificDir .. "/quick_cpp.vim"        ) end,
   [ "*.asd"                                  ] = function() vim.bo.filetype="commonlisp" ; vim.bo.syntax="commonlisp" end,
+  [ "*.myst"                                 ] = function() vim.bo.filetype="myst"       ; vim.bo.syntax="myst" ; end,
 }
 
 ---sets templates for extension. on new file with extension will read in template.
 ---options are passed to ReadInFile
 local template_extensions = {
   ["nvim.lua"] = {}, -- this sets project settings for a directory (must trust if want to use)
+  myst         = {},
   html         = {},
   lisp         = {},
+  java         = {},
   md           = {},
   page         = {}, -- gitit
   Makefile     = { exact_match = true },

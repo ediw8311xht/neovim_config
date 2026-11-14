@@ -2,6 +2,15 @@ local lsp_status = require("lsp-status")
 local lsp_config = vim.lsp.config
 local cmp_capabilities = require("cmp_nvim_lsp").default_capabilities()
 
+--[[ lsp --]]
+vim.g.lsp_lang_servers = {
+"cssls",  "bashls",    "clangd",  "eslint",      "hls",   "html",
+"jsonls", "lua_ls",    "pyright", "tailwindcss", "ts_ls", "vimls",
+"harper", "harper_ls", "marksman"
+  -- "jdtls",
+  -- "cl-lsp",
+  -- "sextant",
+}
 -- lsp saga
 require("lspsaga").setup({
   lightbulb = {
@@ -19,9 +28,15 @@ vim.lsp.config("*", {
   },
 })
 
+lsp_config("marksman", {
+  capabilities = cmp_capabilities,
+  filetypes = { "markdown", "myst" },
+  root_dir = require("lspconfig.util").root_pattern(".git", ".marksman.toml"),
+})
+
 lsp_config("jsonls", { capabilities = cmp_capabilities })
-lsp_config("ts_ls", { capabilities = cmp_capabilities })
-lsp_config("vimls", { capabilities = cmp_capabilities })
+lsp_config("ts_ls",  { capabilities = cmp_capabilities })
+lsp_config("vimls",  { capabilities = cmp_capabilities })
 lsp_config("eslint", {
   capabilities = cmp_capabilities,
   filetypes = { "css", "html" },
@@ -52,7 +67,7 @@ lsp_config("pyright", {
       analysis = {
         autoSearchPaths = true,
         diagnosticMode = "openFilesOnly",
-        typeCheckingMode = "off",
+        typeCheckingMode = "on",
       },
     },
   },
@@ -83,7 +98,11 @@ lsp_config("lua_ls", {
       },
       diagnostics = {
         enable = true,
-        disable = { "unused-label" },
+        disable = {
+          "empty-block",
+          "trailing-space",
+          "unused-label",
+        },
         globals = { "vim" },
         type = {
           checkTableIndex = true,
@@ -123,7 +142,6 @@ lsp_config("hls", {
   filestypes = { "haskell", "lhaskell" },
   single_file_support = true,
 })
-
 -- local configs = require("lspconfig.configs")
 -- if not configs.sextant then
 --   local util = require("lspconfig.util")

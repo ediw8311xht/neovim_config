@@ -5,8 +5,12 @@ require("image").setup({
   integrations = {
     markdown = {
       resolve_image_path = function(document_path, image_path, fallback) 
+        -- for setting image path in projects (gitit)
         local static_image_path = vim.g.Static_image_path or vim.g.static_image_path
-        if static_image_path then
+        -- letting global paths be set by ~/
+        if image_path:sub(1, 1) == "~" then
+          return fallback(document_path, image_path)
+        elseif static_image_path then
           return FS.joinpath(static_image_path, image_path)
         else
           return fallback(document_path, image_path)
@@ -52,7 +56,7 @@ require("image").setup({
   max_width_window_percentage = nil,
   max_height_window_percentage = 50,
   scale_factor = 1.0,
-  window_overlap_clear_enabled = false, -- toggles images when windows are overlapped
+  window_overlap_clear_enabled = true, -- toggles images when windows are overlapped
   window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "snacks_notif", "scrollview", "scrollview_sign" },
   editor_only_render_when_focused = false, -- auto show/hide images when the editor gains/looses focus
   tmux_show_only_in_active_window = false, -- auto show/hide images in the correct Tmux window (needs visual-activity off)

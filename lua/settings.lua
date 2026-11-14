@@ -36,14 +36,6 @@ vim.g.is_bash                    = 1
 vim.g.markdown_recommended_style = 0
 vim.g.vimwiki_global_ext         = 0 -- Prevent vimwiki from running on markdown not in ~/vimwiki dir.
 vim.g.neoterm_automap_keys       = ",Tt"
-vim.g.formatterpath              = { "/usr/bin/" }
-vim.g.formatters_bash            = { "shfmt" }
-vim.g.formatdef_fnlfmt           = "'fnlfmt -'"
-vim.g.formatters_fennel          = { "fnlfmt" }
-vim.g.formatdef_pandoc_format    = string.format("'%s'", FS.joinpath(vim.g.dir_config, "/scripts/pandoc_format.sh"))
-vim.g.formatters_markdown        = { "pandoc_format" }
-vim.g.formatdef_stylua           = "'stylua -'"
-vim.g.formatters_lua             = { "stylua" }
 --[[ lf --]]
 vim.g.lf_height           = 0.9
 vim.g.lf_map_keys         = 0
@@ -73,14 +65,6 @@ vim.g.DefaultColorScheme = "pop-punk"
 vim.g.ColorSchemes = {
   "pop-punk", "habamax", "tokyonight-storm", "wildcharm", "cyberpunk-neon", "eldar", "elflord", "delek",
   "morning",  "blue", "peachpuff", "industry", "murphy", "vividchalk",
-}
---[[ lsp --]]
-vim.g.lsp_lang_servers = {
-  "cssls",   "bashls", "clangd", "eslint", "hls", "html", "jsonls", "lua_ls",
-  "pyright", "tailwindcss", "ts_ls", "vimls", "harper", "harper_ls",
-  -- "jdtls",
-  -- "cl-lsp",
-  -- "sextant",
 }
 --[[ treesitter --]]
 vim.g.treesitter_disable                     = { tex = true, kitty = true }

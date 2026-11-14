@@ -4,11 +4,15 @@
 
 -- {{{
 local function my_buffers()
-  require("telescope.builtin").buffers({ignore_current_buffer=true, disable_coordinates = true, sort_mru=true, bufnr_width=0})
+  require("telescope.builtin").buffers(require("telescope.themes").get_ivy({ignore_current_buffer=true, disable_coordinates = true, sort_mru=true, bufnr_width=0}))
 end
 
 local function my_live_grep()
-  require("telescope.builtin").live_grep({grep_open_files = true, disable_coordinates = true})
+  require("telescope.builtin").live_grep(require("telescope.themes").get_ivy({grep_open_files = true, disable_coordinates = true}))
+end
+
+local function my_files()
+  require("telescope.builtin").find_files(require("telescope.themes").get_ivy(vim.g.telescope_opts))
 end
 -- }}}
 
@@ -17,13 +21,13 @@ end
 LEADER_MAPPINGS = {
   n = {
     ---[misc]
-    f     = { desc='[autosession] picker',      cmd='AutoSession search',},
     U     = { desc='[run] lf cd',               cmd='Lfcd'},
     W     = { desc='[buffer] write',            cmd='silent write | echom printf("file: \'%s\' - written: %s", expand("%:p"), strftime("%r"))'},
+    X     = { desc='[execute] w/args',          default=':!%:p '},
     b     = { desc='[switch] buffer',           default=my_buffers},
     df    = { desc='[search] space eol',        cmd='%s/\\s\\+\\ze$//gc'},
+    f     = { desc='[autosession] picker',      cmd='AutoSession search',},
     grg   = { desc='[search] all buffers',      default=my_live_grep},
-    -- grr   = { desc='[sub] all buffers',         default=":lua SubAllBuffers(" },
     i     = { desc='[show] diagnostics',        lua_call='vim.diagnostic.open_float(nil, {focus=T, scope="cursor"})'},
     s     = { desc='switch pane',               default='<C-w><C-p>'},
     u     = { desc='[run] lf',                  cmd='Lf'},
@@ -32,7 +36,6 @@ LEADER_MAPPINGS = {
     wk    = { desc='[+]width',                  default='40<c-w>>'},
     wo    = { desc='[!]fullscreen',             cmd='ToggleFullscreen'},
     x     = { desc='[execute]',                 cmd='!%:p'},
-    X     = { desc='[execute] w/args',          default=':!%:p '},
     y     = { desc='[set] bg transparent',      cmd='hi Normal guibg=Transparent'},
     z     = { desc='',                          default='z'},
     ---[misc-special]
@@ -90,7 +93,7 @@ LEADER_MAPPINGS = {
     Ihs   = { desc='[+highlight] symbol',       default=LspDocumentHighlight},
     Iht   = { desc='toggle inline hints',       default=function() vim.lsp.inlay_hint.enable( not vim.lsp.inlay_hint.is_enabled()) end },
     Ii    = { desc='[show] diagnostics',        lua_call='vim.diagnostic.open_float(nil, {focus=T, scope="cursor"})'},
-    Il    = { desc='[hover] lsp info',          lua_call='vim.lsp.buf.hover({height=20, max_width=80})'},
+    Il    = { desc='[hover] lsp info',          lua_call='vim.lsp.buf.hover({height=20, width=80,max_width=80})'},
     In    = { desc='[goto] next error',         lua_call='vim.diagnostic.jump({count=1, float=true})'},
     Ip    = { desc='[goto] prev error',         lua_call='vim.diagnostic.goto_prev({count=-1, float=true})'},
     Iy    = { desc='[!]lsp_lines',              default=require("lsp_lines").toggle},
@@ -105,7 +108,7 @@ LEADER_MAPPINGS = {
     OBb   = { desc='[open] w/ $BROWSER',        cmd='!"${BROWSER:-"brave"}"  %:p', silent=true},
     OBq   = { desc='[open] w/ qutebrowser',     cmd='!"qutebrowser" %:p', silent=true},
     ONb   = { desc='[open-new] buffer',         cmd='enew'},
-    ONf   = { desc="[open] file",               cmd="Telescope find_files"},
+    ONf   = { desc="[open] file",               default=my_files},
     ONn   = { desc='[open-new] file',           cmd='enew'},
     Or    = { desc='[open] recent files',       cmd='Telescope oldfiles'},
     Ot    = { desc='[open-new] tab',            cmd='tabnew'},

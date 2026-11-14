@@ -53,16 +53,16 @@ end
 
 MyTelescopeOpts = {
   defaults = {
-    color_devicons = true,
-    disable_devicons = false,
+    color_devicons        = true,
+    disable_devicons      = false,
     dynamic_preview_title = true,
-    disable_coordinates = true,
-    path_display = my_path_display,
-    multi_icon = "",
-    layout_strategy = "horizontal",
-    border = true,
+    disable_coordinates   = true,
+    path_display          = my_path_display,
+    multi_icon            = "",
+    layout_strategy       = "horizontal",
+    border                = true,
     layout_config = {
-      width = 0.95,
+      width = 0.90,
     },
     vimgrep_arguments = {
       "rg",
@@ -75,22 +75,31 @@ MyTelescopeOpts = {
       "--smart-case",
     },
     mappings = {
+      n = {
+        ["?"] = require("telescope.actions.generate").which_key {
+          name_width = 20, -- typically leads to smaller floats
+          max_height = 0.5, -- increase potential maximum height
+          separator = " > ", -- change sep between mode, keybind, and name
+          close_with_action = false, -- do not close float on action
+        },
+      },
       i = {
-        ["<C-t>"] = require("telescope.actions.layout").toggle_preview,
+        ["<C-t>"]   = require("telescope.actions.layout").toggle_preview,
         ["<C-S-t>"] = require("telescope.actions").select_tab,
-        ["<C-g>"] = require("telescope.actions").preview_scrolling_down,
-        ["<C-h>"] = require("telescope.actions").preview_scrolling_up,
-        ["<C-d>"] = require("telescope.actions").results_scrolling_down,
-        ["<C-u>"] = require("telescope.actions").results_scrolling_up,
-        ["<C-s>"] = require("telescope.actions").select_horizontal,
-        ["<C-v>"] = require("telescope.actions").select_vertical,
+        ["<C-g>"]   = require("telescope.actions").preview_scrolling_down,
+        ["<C-h>"]   = require("telescope.actions").preview_scrolling_up,
+        ["<C-d>"]   = require("telescope.actions").results_scrolling_down,
+        ["<C-u>"]   = require("telescope.actions").results_scrolling_up,
+        ["<C-s>"]   = require("telescope.actions").select_horizontal,
+        ["<C-v>"]   = require("telescope.actions").select_vertical,
         ["<C-S-d>"] = require("telescope.actions").delete_buffer,
       },
     },
   },
 }
--- require("telescope").setup(vim.g.telescope_opts)
 require("telescope").setup(MyTelescopeOpts)
+-- require("telescope").setup(vim.g.telescope_opts)
 -- local builtin = require("telescope.builtin")
 -- local themes = require("telescope.themes")
 -- builtin.find_files(themes.get_ivy(vim.g.telescope_opts))
+--
