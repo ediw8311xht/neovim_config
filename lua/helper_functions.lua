@@ -270,6 +270,7 @@ function CreateToggleOpt(opt, scope)
   end)
 end
 
+function DoNothing() end
 -- function Parents(path)
 --   local parents={}
 --   for p in vim.fs.parents(path) do

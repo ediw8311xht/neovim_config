@@ -2,23 +2,19 @@ local lsp_status = require("lsp-status")
 local lsp_config = vim.lsp.config
 local cmp_capabilities = require("cmp_nvim_lsp").default_capabilities()
 
---[[ lsp --]]
 vim.g.lsp_lang_servers = {
-"cssls",  "bashls",    "clangd",  "eslint",      "hls",   "html",
-"jsonls", "lua_ls",    "pyright", "tailwindcss", "ts_ls", "vimls",
-"harper", "harper_ls", "marksman"
-  -- "jdtls",
-  -- "cl-lsp",
-  -- "sextant",
+  "cssls",  "bashls",    "clangd",  "eslint",      "hls",   "html",
+  "jsonls", "lua_ls",    "pyright", "tailwindcss", "ts_ls", "vimls",
+  "harper", "harper_ls", "marksman" -- "jdtls", "cl-lsp", "sextant",
 }
--- lsp saga
+
 require("lspsaga").setup({
   lightbulb = {
     sign = false,
   },
 })
 
-vim.lsp.config("*", {
+vim.lsp.config('*', {
   capabilities = {
     textDocument = {
       semanticTokens = {
@@ -28,23 +24,22 @@ vim.lsp.config("*", {
   },
 })
 
+lsp_config("jsonls", { capabilities = cmp_capabilities, })
+lsp_config("ts_ls",  { capabilities = cmp_capabilities, })
+lsp_config("vimls",  { capabilities = cmp_capabilities, })
+lsp_config("html",   { capabilities = cmp_capabilities, })
+
 lsp_config("marksman", {
   capabilities = cmp_capabilities,
   filetypes = { "markdown", "myst" },
   root_dir = require("lspconfig.util").root_pattern(".git", ".marksman.toml"),
 })
 
-lsp_config("jsonls", { capabilities = cmp_capabilities })
-lsp_config("ts_ls",  { capabilities = cmp_capabilities })
-lsp_config("vimls",  { capabilities = cmp_capabilities })
 lsp_config("eslint", {
   capabilities = cmp_capabilities,
   filetypes = { "css", "html" },
 })
 
-lsp_config("html", {
-  capabilities = cmp_capabilities,
-})
 
 lsp_config("cssls", {
   capabilities = cmp_capabilities,

@@ -588,6 +588,13 @@ function FloatingWindowToggle(buf, enter, opts)
   return out_window
 end
 
+function PrintScriptOut(out)
+  if out.stderr ~= "" then
+    vim.print("ERROR:\n" .. out.stderr .. "\n\nOUT: " .. out.stdout)
+  else
+    vim.print(out.stdout)
+  end
+end
 --- @param script string
 --- @param opts? { path: string,
 ---                after: function,
@@ -596,7 +603,7 @@ end
 --- @vararg any
 function ExecuteScript(script, opts, ...)
   local options = opts or {}
-  local after = options.after or (options.silent and vim.print or function() end)
+  local after = options.after or ( options.silent and DoNothing or PrintScriptOut )
   local path = options.path or vim.g.dir_scripts
   if not path and not FN.isdirectory(path) then
     error(Printf("vim.g._dir_scripts isn't set or couldn't be found. value: '%s' ", path))

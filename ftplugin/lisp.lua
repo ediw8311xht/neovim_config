@@ -1,20 +1,18 @@
 
+---@diagnostic disable: duplicate-doc-alias
+-- duplicate alias because of hardlink (lisp.lua)
 ---@alias EvalOptions { add_to_history: boolean }
 
-vim.opt.lispwords:append {
+vim.opt.lispwords:append { -- {{{
   "define-compiler-macro",
   -- fiveam
-  "def-suite",
-  "test",
+  "def-suite", "test",
   -- mine
-  "λ",
-  "bind-places",
-  "bindm",
-  "defun-memoize",
-  "pipe-arrow",
-  "defstruct-with-helpers",
-  "defclass-with-helpers",
-}
+  "λ", "bind-places", "bindm", "defun-memoize", "pipe-arrow",
+  "defstruct-with-helpers", "defclass-with-helpers",
+} -- }}}
+
+-- {{{ lisp settings
 vim.g.paredit_help   = "$MY_INFORMATION/lisp/paredit.md"
 vim.g.vlime_help     = "$MY_INFORMATION/lisp/vlime.md"
 vim.g.slimv_help     = "$MY_INFORMATION/lisp/slimv.md"
@@ -25,7 +23,9 @@ vim.bo.softtabstop    = 4
 vim.bo.expandtab      = true
 vim.bo.syntax         = "lisp"
 vim.bo.filetype       = "lisp" -- ensure for slimv
+-- }}}
 
+-- {{{ functions
 ---Add list of forms to history for repl
 ---@param forms string[]
 function LispAddToHistory(forms)
@@ -137,8 +137,9 @@ function LispIfInSlimv(slimv, not_slimv, opts_slimv, opts_not_slimv)
     if not_slimv then not_slimv(unpack(opts_not_slimv or {})) end
   end
 end
+-- }}}
 
-local commonlisp_mappings = {
+local commonlisp_mappings = { -- {{{
   [ {"n", "i", "v"} ] = {
     ["<C-S-i>"] = { desc='toggle floating repl',  cmd='keepalt lua FloatingWindowToggle("cl-repl", false, {})' },
     -- ["<C-j>"]   = { desc='[repl] next history',   cmd='call SlimvHandleDown()', },
@@ -146,8 +147,9 @@ local commonlisp_mappings = {
     ["<C-j>"]   = { desc='[lisp] prev (',         cmd="lua  LispIfInSlimv(vim.fn.SlimvHandleDown, vim.fn.search, {}, {'(', 'b'})", },
     ["<C-k>"]   = { desc='[lisp] next )',         cmd="lua  LispIfInSlimv(vim.fn.SlimvHandleUp,   vim.fn.search, {}, {'('})", },
   },
-}
-local commonlisp_leader_mappings = {
+} -- }}}
+
+local commonlisp_leader_mappings = { -- {{{
   n = {
     cf  = { desc='format',                     cmd='Autoformat | silent! %s/([ ]\\+/(/g' },
 
@@ -179,17 +181,18 @@ local commonlisp_leader_mappings = {
     Ax  = { desc='execute [sbcl]',             cmd='!sbcl --script "%"' },
     -- Se  = { false, 'slimv eval at mark e',      '\'e' },
   }
-}
+} -- }}}
 
--- API.nvim_create_autocmd({ "BufEnter" }, {
+KeyMapSetter2(commonlisp_mappings,        '',         true, true) -- {{{
+KeyMapSetter2(commonlisp_leader_mappings, '<leader>', true, true) -- }}}
+
+-- {{{ commented_out
+-- API.nvim_create_autocmd({ "BufEnter" }, { 
 --   pattern = "",
--- })
-
-KeyMapSetter2(commonlisp_mappings,        '',         true, true)
-KeyMapSetter2(commonlisp_leader_mappings, '<leader>', true, true)
-
--- vim.cmd([[
+-- }) 
+-- vim.cmd([[ 
 --     augroup SlimvReplAutoCmd
 --         au!
 --     augroup END
---     ]])
+--     ]]) 
+-- }}}

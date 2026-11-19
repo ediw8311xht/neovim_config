@@ -58,7 +58,7 @@ vim.g.my_highlight = {
   },
   Window = {
     Active   = { guibg="NONE" },
-    Inactive = { gui="NONE", guibg="#111111" },
+    Inactive = { gui="NONE", guibg="#040404" },
   },
   StatusLine = {
     [""]      = { gui="BOLD,reverse", guibg="NONE", guifg="#555555" },
@@ -78,7 +78,7 @@ vim.g.my_highlight = {
     Border = { guibg="black", guifg="black" },
   },
   CursorLine = {
-    [""] = { gui="underline", guisp="#444444", guibg="NONE", guifg="NONE" },
+    [""] = { gui="bold,underline", guisp="#004400", guibg="NONE", guifg="NONE" },
     Nr   = { gui="NONE",      guibg="#111111", guifg="#ff9900" },
     Sign = { gui="NONE",      guibg="black", guifg="black" },
   },
@@ -128,13 +128,12 @@ vim.g.my_highlight = {
     -- ["@function"] = {  gui="bold", guibg="#00dd00", guifg="black" },
     call                 = { gui="NONE", guifg="#55bbbb" },
   },
-  --[[ markup / markdown  {{{ --]]
   ["@comment."] = {
     ["documentation."] = {
-        lua = { gui="reverse,bold" },
+        lua = { gui="bold,italic", guibg="#000000" },
     },
   },
-  ["@markup."] = {
+  ["@markup."] = { -- markup / markdown  {{{
     ["heading."] = {
         ["1.markdown"] = { gui="bold", guibg="black", guifg="#00ffff", guisp="black" },
         ["2.markdown"] = { gui="bold", guibg="black", guifg="#00dddd" },
@@ -147,9 +146,8 @@ vim.g.my_highlight = {
         ["label.markdown_inline"] = { guibg="#d070a0", guifg="black" },
         ["url.markdown_inline"]   = { guibg="#00aaaa", guifg="black" },
     },
-  }, --[[ }}} --]]
-  --[[ lisp {{{ --]]
-  Lisp = {
+  }, -- }}}
+  Lisp = { -- LISP {{{
     Func = { gui="bold", guisp="#449944" },
   },
   [".commonlisp" .. "$"] = {
@@ -173,6 +171,7 @@ vim.g.my_highlight = {
       --  { gui="NONE", guibg="#003300", guifg="#aaaaaa" },
     },
   },
+  [ "@lsp.type.modifier.java" ] = { gui="none" },
   --[[ }}} --]]
 }
 -- ["EndOfBuffer"]     = { gui="NONE",      guibg="NONE",    guifg="#333333",   },

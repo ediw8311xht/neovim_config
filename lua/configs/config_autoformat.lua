@@ -18,3 +18,6 @@ vim.g.formatters_lua             = { "stylua" }
 
 -- html
 vim.g.formatdef_html            = { "tidy_html" }
+
+vim.g.formatdef_autopep8        = '"autopep8 -".(g:DoesRangeEqualBuffer(a:firstline, a:lastline) ? " --range ".a:firstline." ".a:lastline : "")." ".(&textwidth ? "--max-line-length=".&textwidth : "")'
+vim.g.formatters_python         = { "autopep8" }

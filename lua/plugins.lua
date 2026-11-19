@@ -2,30 +2,33 @@
 vim.g.my_plugins =  {
   misc = {
     -- graphical_undo      =  {  user='sjl',              repo='gundo.vim'  },
-    floatterm           =  {  user='voldikss',         repo='vim-floaterm'  },
     colorful_comp_menu  =  {  user='xzbdmw',           repo='colorful-menu.nvim'  },
-    notify              =  {  user='rcarriga',         repo='nvim-notify'  },
-    nui                 =  {  user='MunifTanjim',      repo='nui.nvim'  },
-    rainbow_delimeters  =  {  user='HiPhish',          repo='rainbow-delimiters.nvim'  },
     gitsigns            =  {  user='lewis6991',        repo='gitsigns.nvim'  },
     marks               =  {  user='chentoast',        repo='marks.nvim'  },
-    view_images         =  {  user='3rd',              repo='image.nvim'  },
-    devicons            =  {  user='nvim-tree',        repo='nvim-web-devicons' },
+    nui                 =  {  user='MunifTanjim',      repo='nui.nvim'  },
     plenary             =  {  user='nvim-lua',         repo='plenary.nvim', notes="needed for telescope/ java stuff", },
+    rainbow_delimeters  =  {  user='HiPhish',          repo='rainbow-delimiters.nvim'  },
+    view_images         =  {  user='3rd',              repo='image.nvim'  },
+  },
+  ui = {
+    devicons   = {  user='nvim-tree', repo='nvim-web-devicons' },
+    floatterm           =  {  user='voldikss',         repo='vim-floaterm'  },
+    mini_icons = {  user='nvim-mini', repo='mini.icons' },
+    notify              =  {  user='rcarriga',         repo='nvim-notify'  },
   },
   tools = {
     autoformat          = {  user='vim-autoformat',   repo='vim-autoformat'  },
     easy_align          = {  user='junegunn',         repo='vim-easy-align'  },
-    -- file_explorer    =  {  user='preservim',        repo='nerdtree'  },
     fzf                 = {  user='junegunn',         repo='fzf.vim'  },
     lf                  = {  user='ptzz',             repo='lf.vim'  },
-    markdown_preview    = {  user='iamcco',           repo='markdown-preview.nvim', args={ ['do']='cd app && yarn install'  }  },
     neoterm             = {  user='kassio',           repo='neoterm'  },
+    nvim_tree           = {  user='nvim-tree',        repo='nvim-tree.lua' },
+    outline             = {  user='hedyhli',          repo='outline.nvim' },
     spectre_sub_buffers = {  user='nvim-pack',        repo='nvim-spectre' },
     telescope           = {  user='nvim-telescope',   repo='telescope.nvim', args={ branch = 'master'  }  },
     whichkeys           = {  user='folke',            repo='which-key.nvim'  },
-    outline             = {  user='hedyhli',          repo='outline.nvim' },
-    nvim_tree           = {  user='nvim-tree',        repo='nvim-tree.lua' },
+  },
+  html_css_js = {
     bracey              = {  user='turbio',           repo='bracey.vim', args={ ['do']='npm install --prefix server' } },
   },
   latex = {
@@ -36,8 +39,7 @@ vim.g.my_plugins =  {
     auto_session        =  {  user='rmagatti',         repo='auto-session'  },
     restore_view        =  {  user='vim-scripts',      repo='restore_view.vim'  },
   },
-  documentation = {
-  }, 
+  documentation = { }, 
   lsp = {
     lspconfig           =  {  user='neovim',           repo='nvim-lspconfig'  },
     lsp_lines           =  {  user='maan2003',         repo='lsp_lines.nvim'  },
@@ -56,7 +58,6 @@ vim.g.my_plugins =  {
     cl_lsp              =  {  user='cxxxr',            repo='cl-lsp',       args={ ['for']={ 'lisp', 'commonlisp'  }  }  },
   },
   java = {
-    -- mason    = { 'mason-org', 'mason.nvim' },
     dap         = { user='mfussenegger', repo='nvim-dap' },         -- required for nvim-java
     spring_boot = { user='JavaHello',    repo='spring-boot.nvim' }, -- required for nvim-java
     java        = { user='nvim-java',    repo='nvim-java' },
@@ -70,9 +71,10 @@ vim.g.my_plugins =  {
     treesitter_textobjs =  {  user='nvim-treesitter',  repo='nvim-treesitter-textobjects', args={ branch='main'  }  },
   },
   markdown = {
-    myst            = {  user='QuantEcon',            repo='myst-markdown-tree-sitter.nvim', args={ ["for"]={"myst", "markdown"} } },
-    syntax_markdown = {  user='drmingdrmer',          repo='vim-syntax-markdown'  },
-    markdown_render = {  user='MeanderingProgrammer', repo='render-markdown.nvim' },
+    markdown_preview  = {  user='iamcco',               repo='markdown-preview.nvim',           args={ ['do']='cd app && yarn install'  }  },
+    myst              = {  user='QuantEcon',            repo='myst-markdown-tree-sitter.nvim',  args={ ["for"]={"myst", "markdown"} } },
+    syntax_markdown   = {  user='drmingdrmer',          repo='vim-syntax-markdown'  },
+    markdown_render   = {  user='MeanderingProgrammer', repo='render-markdown.nvim' },
   },
   syntax_colorscheme = {
     PlantUML        = {  user='aklt',             repo='plantuml-syntax'  },
